@@ -1,1 +1,6 @@
-atabase# System
+local InSession = false
+local Username = ""
+
+
+local pet = ""
+local TradeWentThrough = ""
