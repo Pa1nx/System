@@ -1,4 +1,4 @@
-
+wait(25)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 local Library = require(ReplicatedStorage:WaitForChild("Library"))
