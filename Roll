@@ -86,7 +86,7 @@ getgenv().RngEvent = {
     Rolling_Delay = 0.1,
     Visible_Rolling = false,
 
-    Selected_Upgrades = {"RNGHugeLuck"},
+    Selected_Upgrades = {"RNGHugeLuck","RNGHatchSpeed",},
     AutoUpgrades_Enabled = true,
     AutoMerchant_Enabled = true,
     AutoSellPets_Enabled = true,
