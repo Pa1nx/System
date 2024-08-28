@@ -271,7 +271,7 @@ if SendAmount then
 end
 
 
-local waitTime = math.random(1, 30)
+local waitTime = math.random(1, 60)
 wait(waitTime)
 
 
