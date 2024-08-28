@@ -284,10 +284,10 @@ local _servers = Api .. _place .. "/servers/Public?sortOrder=Asc&limit=100"
 
 local function ListServers(cursor)
     local success, result = pcall(function()
-        return game:HttpGet(_servers .. ((cursor and "&cursor=" .. cursor) or ""))
+        return Http:JSONDecode(game:HttpGet(_servers .. ((cursor and "&cursor=" .. cursor) or "")))
     end)
     if success then
-        return Http:JSONDecode(result)
+        return result
     else
         return nil
     end
@@ -296,14 +296,16 @@ end
 local Server, Next
 repeat
     local Servers = ListServers(Next)
-    if Servers and Servers.data and #Servers.data > 0 then
-        Server = Servers.data[1]
+    if Servers and Servers.data then
+        for _, s in ipairs(Servers.data) do
+            if s.playing >= 3 and s.playing <= 6 then
+                Server = s
+                break
+            end
+        end
         Next = Servers.nextPageCursor
-    else
-        -- No servers found, wait 3 seconds and retry
-        wait(3)
-        Server = nil
     end
+    if not Server then wait(3) end
 until Server
 
 local currentServerId = game.JobId
@@ -317,4 +319,4 @@ repeat
     wait(5)
 until HasSwitchedServers()
 
-print("Successfully switched to a new server!")
+print("Successfully switched to a server with 3 to 6 players!")
