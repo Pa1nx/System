@@ -1,3 +1,11 @@
+if game.PlaceId == 17248043561 then
+    while true do
+        game:GetService("TeleportService"):Teleport(8737899170)
+        wait(10)
+    end
+end
+
+
 local function MonitorAndSpin()
     while true do
 
