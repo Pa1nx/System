@@ -174,7 +174,6 @@ end
 
 
 
-while true do
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
 local Api = "https://games.roblox.com/v1/games/"
@@ -182,7 +181,6 @@ local Api = "https://games.roblox.com/v1/games/"
 local _place = game.PlaceId
 local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
 
--- Updated HTTP request method
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
 function ListServers(cursor)
@@ -193,24 +191,37 @@ function ListServers(cursor)
     return Http:JSONDecode(Raw.Body)
 end
 
-local Server, Servers, Next
+local function FindServer()
+    local Server, Servers, Next
 
-repeat
-    Servers = ListServers(Next)
-    for _, v in ipairs(Servers.data) do
-        if v.id ~= game.JobId then  -- Skip the current server
-            Server = v
-            break
+    repeat
+        Servers = ListServers(Next)
+
+        -- Check if Servers.data is valid and not empty
+        if Servers and Servers.data and #Servers.data > 0 then
+            for _, v in ipairs(Servers.data) do
+                if v.id ~= game.JobId then  -- Skip the current server
+                    Server = v
+                    break
+                end
+            end
+        else
+            Server = nil  -- No servers available
         end
-    end
-    Next = Servers.nextPageCursor
-until Server
 
-if Server then
-    TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-else
-    print("No suitable server found.")
+        Next = Servers.nextPageCursor
+    until Server or not Next
+
+    return Server
 end
 
-wait(5)
+while true do
+    local Server = FindServer()
+    if Server then
+        TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
+        break  -- Exit the loop after a successful teleport
+    else
+        print("No suitable server found. Retrying in 2 seconds...")
+        wait(2)
+    end
 end
