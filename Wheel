@@ -41,7 +41,7 @@ for _, child in pairs(wheelCore:GetChildren()) do
     end
 end
 
-spawn(MonitorAndSpin)
+
 local function chest()
     while true do
         wait(0.1)
@@ -68,7 +68,6 @@ local function chest()
     end
 end
 
-spawn(chest)
 
 local SendAmount = false
 
@@ -124,6 +123,9 @@ local function PrintDiamonds()
 end
 
 spawn(PrintDiamonds)
+spawn(chest)
+spawn(MonitorAndSpin)
+wait(2)
 local thingsToDestroy = {
     "Flags",
     "Cannons",
