@@ -1,0 +1,47 @@
+wait(30)
+while true do
+local Http = game:GetService("HttpService")
+local TPS = game:GetService("TeleportService")
+local Api = "https://games.roblox.com/v1/games/"
+local _place = game.PlaceId
+local _servers = Api .. _place .. "/servers/Public?sortOrder=Asc&limit=100"
+
+local function ListServers(cursor)
+    local success, result = pcall(function()
+        return game:HttpGet(_servers .. ((cursor and "&cursor=" .. cursor) or ""))
+    end)
+    if success then
+        return Http:JSONDecode(result)
+    else
+        return nil
+    end
+end
+
+local Server, Next
+repeat
+    local Servers = ListServers(Next)
+    if Servers and Servers.data and #Servers.data > 0 then
+        Server = Servers.data[1]
+        Next = Servers.nextPageCursor
+    else
+        -- No servers found, wait 3 seconds and retry
+        wait(3)
+        Server = nil
+    end
+until Server
+
+local currentServerId = game.JobId
+TPS:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
+
+local function HasSwitchedServers()
+    return game.JobId ~= currentServerId
+end
+
+repeat
+    wait(5)
+until HasSwitchedServers()
+
+print("Successfully switched to a new server!")
+
+wait(5)
+end
