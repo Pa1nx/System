@@ -133,7 +133,7 @@ print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
 
 
-local waitTime = SendAmount and 30 or 30
+local waitTime = SendAmount and 30 or 10
 if waitTime == 30 then 
 local part = Instance.new("Part")
 part.Name = "Wait30"
