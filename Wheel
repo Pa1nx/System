@@ -183,6 +183,8 @@ local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
 
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
+local visitedServers = {}  -- Table to store visited server IDs
+
 function ListServers(cursor)
     local Raw = request({
         Url = _servers .. ((cursor and "&cursor="..cursor) or ""),
@@ -200,7 +202,7 @@ local function FindServer()
         -- Check if Servers.data is valid and not empty
         if Servers and Servers.data and #Servers.data > 0 then
             for _, v in ipairs(Servers.data) do
-                if v.id ~= game.JobId then  -- Skip the current server
+                if v.id ~= game.JobId and not visitedServers[v.id] then  -- Skip current and visited servers
                     Server = v
                     break
                 end
@@ -218,10 +220,11 @@ end
 while true do
     local Server = FindServer()
     if Server then
+        visitedServers[Server.id] = true  -- Mark the server as visited
         TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
         break  -- Exit the loop after a successful teleport
     else
         print("No suitable server found. Retrying in 2 seconds...")
-        wait(2)
+        wait(5)
     end
 end
