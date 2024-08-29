@@ -1,4 +1,4 @@
-wait(15)
+wait(30)
 while true do
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
