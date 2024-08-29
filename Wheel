@@ -175,7 +175,6 @@ end
 
 
 while true do
-
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
 local Api = "https://games.roblox.com/v1/games/"
@@ -184,7 +183,6 @@ local _place = game.PlaceId
 local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
 
 -- Updated HTTP request method
-local httpService = game:GetService("HttpService")
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
 function ListServers(cursor)
@@ -195,19 +193,24 @@ function ListServers(cursor)
     return Http:JSONDecode(Raw.Body)
 end
 
-local randomPlayers = math.random(5, 8)  -- Generate a random number between 1 and 8
-local Server, Next
+local Server, Servers, Next
 
 repeat
-    local Servers = ListServers(Next)
-    Server = Servers.data[1]
+    Servers = ListServers(Next)
+    for _, v in ipairs(Servers.data) do
+        if v.id ~= game.JobId then  -- Skip the current server
+            Server = v
+            break
+        end
+    end
     Next = Servers.nextPageCursor
-until Server and Server.playing >= randomPlayers  -- Ensure the server has more players than the random number
+until Server
 
 if Server then
     TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
 else
     print("No suitable server found.")
 end
+
 wait(5)
 end
