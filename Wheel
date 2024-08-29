@@ -39,7 +39,7 @@ end
         end
 end
 
-spawn(RejoinScript
+spawn(RejoinScript)
 
 
 local function MonitorAndSpin()
