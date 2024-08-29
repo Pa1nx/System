@@ -1,9 +1,4 @@
-if game.PlaceId == 17248043561 then
-    while true do
-        game:GetService("TeleportService"):Teleport(8737899170)
-        wait(10)
-    end
-end
+
 
 
 local function MonitorAndSpin()
@@ -227,7 +222,7 @@ print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
 
 
-local waitTime = SendAmount and 30 or 0
+local waitTime = SendAmount and 30 or 10
 if waitTime == 30 then 
 local part = Instance.new("Part")
 part.Name = "Wait30"
@@ -266,8 +261,7 @@ if SendAmount then
 end
 
 
-local waitTime = math.random(1, 10)
-wait(waitTime)
+
 
 
 
