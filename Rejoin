@@ -1,4 +1,4 @@
-wait(15)
+wait(45)
 
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
