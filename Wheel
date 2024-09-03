@@ -7,6 +7,23 @@ if game.PlaceId == 8737899170 then
     end
 end
 
+local Http = game:GetService("HttpService")
+local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+if game.PlaceId ~= 17503543197 and game.PlaceId ~= 8737899170 then
+while true do
+    local message = "<@1156400195072950355> " .. game.Players.LocalPlayer.Name .. " joined wrong game"
+    request({
+        Url = webhookURL,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = Http:JSONEncode({content = message})
+    })
+    wait(5)
+end
+end
+
 local function MonitorAndSpin()
     while true do
 
