@@ -20,7 +20,7 @@ while true do
         Headers = {["Content-Type"] = "application/json"},
         Body = Http:JSONEncode({content = message})
     })
-    wait(5)
+    wait(30)
 end
 end
 
