@@ -1,4 +1,12 @@
 print("went through")
+wait(2)
+if game.PlaceId == 8737899170 then
+    while true do
+        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+        wait(5)
+    end
+end
+
 local function MonitorAndSpin()
     while true do
 
