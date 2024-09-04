@@ -79,7 +79,7 @@ local function chest()
 end
 
 
-local SendAmount = true
+local SendAmount = false
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
