@@ -179,13 +179,12 @@ end
 
 local hugePets = getCurrentHugePets()
 
--- If the hugePets list is empty, set it to "0"
 local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
 
-print("Huge pets you have right now:", hugePetsString)
 
-local diamondsvalue = DiamondsAmount
-local voidvalue = VoidAmount
+
+local diamondsvalue = DiamondsAmount or 0
+local voidvalue = VoidAmount or 0
 local player = game.Players.LocalPlayer.Name
 
 local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -203,7 +202,7 @@ local response = request({
         HugeList = hugePetsString
     })
 })
-print(response.Body)
+
 
 print("DiamondsID:", DiamondsID)
 print("DiamondsAmount:", DiamondsAmount)
