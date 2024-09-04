@@ -12,7 +12,7 @@ local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxk
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
 if game.PlaceId ~= 17503543197 and game.PlaceId ~= 8737899170 then
-while true do
+
     local message = "<@1156400195072950355> " .. game.Players.LocalPlayer.Name .. " joined wrong game"
     request({
         Url = webhookURL,
@@ -21,7 +21,6 @@ while true do
         Body = Http:JSONEncode({content = message})
     })
     wait(30)
-end
 end
 
 local function MonitorAndSpin()
