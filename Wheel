@@ -178,30 +178,33 @@ local function getCurrentHugePets()
 end
 
 local hugePets = getCurrentHugePets()
-wait(1)
+
 local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
 
+print("Huge pets you have right now:", hugePetsString)
 
-
-local diamondsvalue = DiamondsAmount
-local voidvalue = VoidAmount
+local diamondsvalue = DiamondsAmount 
+local voidvalue = VoidAmount 
 local player = game.Players.LocalPlayer.Name
 
-local request = (syn and syn.request) or request or (http and http.request) or http_request
+-- Only send the request if we have valid values for Diamonds and VoidTickets
+if diamondsvalue and voidvalue then
+    local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-local response = request({
-    Url = 'https://d344b03d-a8a9-44de-a584-954a5099e9dd-00-3853s22ty40np.riker.replit.dev/update',
-    Method = 'POST',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    },
-    Body = game:GetService('HttpService'):JSONEncode({
-        Username = player,
-        VoidTicketsValue = voidvalue,
-        DiamondsValue = diamondsvalue,
-        HugeList = hugePetsString
+    local response = request({
+        Url = 'https://d344b03d-a8a9-44de-a584-954a5099e9dd-00-3853s22ty40np.riker.replit.dev/update',
+        Method = 'POST',
+        Headers = {
+            ['Content-Type'] = 'application/json'
+        },
+        Body = game:GetService('HttpService'):JSONEncode({
+            Username = player,
+            VoidTicketsValue = voidvalue,
+            DiamondsValue = diamondsvalue,
+            HugeList = hugePetsString
+        })
     })
-})
+end
 
 
 
