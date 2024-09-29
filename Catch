@@ -12,7 +12,7 @@ getgenv().Config = {
         ["HugeURL"] = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6",
         ["StatsURL"] = "",
         ["UserID"] = "",
-        ["SendEvery"] = 15
+        ["SendEvery"] = 3
     },
     ["Misc"] = {
         ["AutoHatch"] = true,
