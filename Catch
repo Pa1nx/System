@@ -6,7 +6,7 @@ getgenv().Config = {
         ["AutoFruits"] = true,
         ["AutoOpen"] = {"Gift Bag", "Large Gift Bag", "Mini Chest"},
         ["AutoPotions"] = {"Diamonds", "Damage", "Walkspeed", "Treasure Hunter"},
-        ["AutoFlags"] = {"Hasty Flag"}
+        ["AutoFlags"] = {"Diamonds"}
     },
     ["Webhook"] = {
         ["HugeURL"] = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6",
