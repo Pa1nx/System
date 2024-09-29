@@ -47,17 +47,107 @@ local questNames = {"Quest1", "Quest2", "Quest3"}
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
 
-while true do
-    local tradeWindow = game.Players.LocalPlayer.PlayerGui:FindFirstChild("TradeWindow")
-    if tradeWindow then
-        for _, child in pairs(tradeWindow:GetChildren()) do
-            if child:IsA("Frame") then
-                child.Size = UDim2.new(1, 0, 0.1, 115)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Player = game.Players.LocalPlayer
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+local function FrameFunction()
+    while true do
+        local tradeWindow = game.Players.LocalPlayer.PlayerGui:FindFirstChild("TradeWindow")
+        if tradeWindow then
+            for _, child in pairs(tradeWindow:GetChildren()) do
+                if child:IsA("Frame") then
+                    child.Size = UDim2.new(1, 0, 0.1, 115)
+                end
             end
         end
+        wait(0.1) -- Wait for 0.1 seconds before checking again
     end
-    wait(0.1)
 end
+
+spawn(FrameFunction)
+
+local diamondsvalue = 0
+local voidvalue = 0
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+local ItemLootbox = {"Elemental Gift"}
+local ItemMisc = {"Pet Cube"}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+for _, ItemInfo in pairs(LootboxItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        diamondsvalue = ItemData._am
+    end
+end
+
+local MiscItems = GetItemInfo("Misc", ItemMisc)
+for _, ItemInfo in pairs(MiscItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        voidvalue = ItemData._am
+    end
+end
+
+local player = Player.Name
+local HttpService = game:GetService("HttpService")
+local webhookURL = "https://discord.com/api/webhooks/1237152674735067380/fbzIUhQViqQ0e5YUBzq9FO5bOd_dR7xhJ-4kBxQ2yF-nQnMj6_fJYtDy2ul70xkRhQLJ"
+
+local function sendPlayerStats()
+    local contentMsg = {
+        embeds = {
+            {
+                title = "***Player Stats***",
+                description = player,
+                color = 16777215,
+                fields = {
+                    {
+                        name = "***Gift Quest***",
+                        value = tostring(diamondsvalue)
+                    },
+                    {
+                        name = "***Cube Amount***",
+                        value = tostring(voidvalue)
+                    }
+                }
+            }
+        }
+    }
+
+    local requestFunction = (syn and syn.request) or request or (http and http.request) or http_request
+    requestFunction({
+        Url = webhookURL,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json",
+        },
+        Body = HttpService:JSONEncode(contentMsg),
+    })
+end
+
+-- Spawn a new thread to send player stats
+local function dataFunction2() 
+    while true do
+        sendPlayerStats()
+        wait(189) -- Wait for 189 seconds before sending again
+    end
+end
+
+spawn(dataFunction2)
 
 while true do
     wait(3)
