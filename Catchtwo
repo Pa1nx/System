@@ -175,66 +175,8 @@ spawn(dataFunction2)
 
 
 while true do
-    wait(0.1)
-
-    highestNumber = 0
-    targetPart = nil
-
-    for _, questName in ipairs(questNames) do
-        local quest = itemsFrame:FindFirstChild(questName)
-        if quest then
-            local descText = quest.Desc.Text
-            local number1, number2 = descText:match("(%d+)/(%d+)")
-            if number1 and number2 and tonumber(number1) < tonumber(number2) then
-                if quest:FindFirstChild("PetHolder") then
-                    local iconImage = quest.PetHolder.ItemSlot.Icon.Image
-                    local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-                    for _, pet in pairs(pets:GetChildren()) do
-                        if pet:IsA("Model") then
-                            local part = pet:FindFirstChildWhichIsA("Part")
-                            if part then
-                                local specialMesh = part:FindFirstChildWhichIsA("SpecialMesh")
-                                if (iconImage == "rbxassetid://137347951628505" and specialMesh and specialMesh.MeshId == "rbxassetid://130111664567019") or
-                                   (iconImage == "rbxassetid://117139783052382" and specialMesh and specialMesh.MeshId == "rbxassetid://72515302633192") or
-                                   (iconImage == "rbxassetid://77616745628277" and specialMesh and specialMesh.MeshId == "rbxassetid://112335811276145") or
-                                   (iconImage == "rbxassetid://93181573916731" and specialMesh and specialMesh.MeshId == "rbxassetid://127584308923859") then
-                                    local attachment = part:FindFirstChild("center")
-                                    if attachment and attachment:FindFirstChild("RoamingPetBillboard") then
-                                        local chanceText = attachment.RoamingPetBillboard.Chance.Text
-                                        local number = tonumber(chanceText:match("%d+"))
-                                        if number and number > highestNumber then
-                                            highestNumber = number
-                                            targetPart = part
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    local questsCompleted = true
-    for _, questName in ipairs(questNames) do
-        local quest = itemsFrame:FindFirstChild(questName)
-        if quest then
-            local descText = quest.Desc.Text
-            local number1, number2 = descText:match("(%d+)/(%d+)")
-            if number1 and number2 and tonumber(number1) < tonumber(number2) then
-                questsCompleted = false
-                break
-            end
-        end
-    end
-
-    Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Enabled = questsCompleted
-
-    if targetPart then
-        print("quest doing it ")
-    else
-        local randomNum = math.random(1, 50)
+    wait(3)
+local randomNum = math.random(1, 50)
 
 local args = {
     [1] = "Pet Cube",
@@ -242,5 +184,4 @@ local args = {
 }
 
 game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-end
 end
