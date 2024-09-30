@@ -290,27 +290,13 @@ while true do
     if targetPart then
         print("quest doing it ")
     else
-        local petsFolder = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-        if petsFolder then
-            local pets = petsFolder:GetChildren()
-            local numPets = 0
+        local randomNum = math.random(1, 50)
 
-            for _, child in pairs(pets) do
-                if child:IsA("Model") then
-                    numPets = numPets + 1
-                end
-            end
+local args = {
+    [1] = "Pet Cube",
+    [2] = randomNum
+}
 
-            if numPets > 0 then
-                local randomNum = math.random(1, numPets)
+game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
 
-                local args = {
-                    [1] = "Pet Cube",
-                    [2] = randomNum
-                }
-
-                game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-            end
-        end
-    end
 end
