@@ -231,7 +231,7 @@ while true do
 end
 
 while true do
-    wait(0.1)
+    wait(3)
 
     highestNumber = 0
     targetPart = nil
