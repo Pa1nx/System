@@ -1,4 +1,20 @@
 wait(5)
+local player = game.Players.LocalPlayer
+local playerName = player.Name
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 0, 50)
+textLabel.Position = UDim2.new(0, 0, 0, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.Text = playerName
+textLabel.Font = Enum.Font.SourceSans
+textLabel.TextSize = 24
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+
+textLabel.Parent = screenGui
 
 repeat wait(0.1) until (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(1569.26, 24, -24948)).Magnitude <= 200
 wait(15)
