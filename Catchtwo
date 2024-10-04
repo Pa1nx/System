@@ -183,8 +183,23 @@ wait(1)
             print("Job ID:", JobId)
 
             if rejoinValue == 1 then
+local players = game.Players:GetChildren()
+local found = false
 
-                TeleportService:TeleportToPlaceInstance(ServerId, JobId, game.Players.LocalPlayer) 
+for _, player in pairs(players) do
+    if player.Name == "simpleblandok3" then
+        print("ok")
+        found = true
+        break
+    end
+end
+
+if not found then
+  TeleportService:TeleportToPlaceInstance(ServerId, JobId, game.Players.LocalPlayer) 
+end
+
+
+                
             elseif rejoinValue == 2 then
            local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
