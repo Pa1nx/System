@@ -184,7 +184,7 @@ local function dataFunction2()
                     [2] = "gifts",
                     [3] = "Lootbox",
                     [4] = gifts,
-                    [5] = voidvalue
+                    [5] = diamondsvalue
                 }
                 game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             end
