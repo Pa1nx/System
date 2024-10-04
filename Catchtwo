@@ -309,7 +309,7 @@ local function PetCubeData()
     end
 end
 
-PetCubeData()
+spawn(PetCubeData)
 
 
 local function dataFunction2() 
