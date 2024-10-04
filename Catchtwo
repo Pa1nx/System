@@ -292,8 +292,9 @@ local function GetItemInfo(ItemsClass, ItemsName)
 end
 
 local function PetCubeData()
-ProcessHugePets()
+
     while true do
+ProcessHugePets()
         local PetCubeAmount = 0
         local MiscItems = GetItemInfo("Misc", ItemMisc)
 
