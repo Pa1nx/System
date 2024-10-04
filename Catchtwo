@@ -197,6 +197,7 @@ spawn(dataFunction2)
 
 
 
+
 while true do
     wait(3)
 local randomNum = math.random(1, 50)
