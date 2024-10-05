@@ -329,6 +329,7 @@ for _, ItemInfo in pairs(LootboxItems) do
     local ItemData = ItemInfo.data
     if ItemData._am then
         diamondsvalue = ItemData._am -- Fix: Removed the extra '0'
+gifts = ItemData.uid
     end
 end
 
