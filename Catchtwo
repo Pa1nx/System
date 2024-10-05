@@ -145,7 +145,7 @@ local TeleportService = game:GetService("TeleportService")
 
 local function CheckRejoin()
     while true do
-        wait(1)
+        wait(5)
         local rejoinUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkRejoin"
         local serverDataUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/getServerData"
         local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -356,7 +356,7 @@ local function dataFunction2()
                 game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             end
         end
-        wait(5)
+        wait(1)
     end
 end
 
