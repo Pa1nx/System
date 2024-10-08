@@ -1,6 +1,9 @@
 wait(5)
 
-repeat wait(0.1) until (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(1569.26, 24, -24948)).Magnitude <= 200
+repeat wait(1) until game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart
+
+repeat wait(0.1) until (hrp.Position - Vector3.new(1569.26, 24, -24948)).Magnitude <= 200
 wait(15)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1569.26, 24, -24948)
 wait(2)
