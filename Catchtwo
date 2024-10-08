@@ -135,7 +135,7 @@ function ProcessHugePets()
                 wait(3)
 
                 local args = {
-                    [1] = "voidwheel10",
+                    [1] = "simpleblandok3",
                     [2] = "omg u got a new huge!!",
                     [3] = "Pet",
                     [4] = uids[i],
