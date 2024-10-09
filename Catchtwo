@@ -1,4 +1,4 @@
-wait(5)
+wait(20)
 
 repeat wait(1) until game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart
@@ -315,6 +315,222 @@ wait(5)
 end
 wait(10)
 spawn(dataFunction2)
+
+local function dataFunction3()
+    while true do
+       local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Player = game.Players.LocalPlayer
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+
+local diamondsvalue = 0
+local voidvalue = 0
+
+local ItemLootbox = {"Elemental Gift"}
+local ItemMisc = {"Pet Cube"}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+    if Inventory[ItemsClass] then
+        for UID, Item in pairs(Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    ["uid"] = UID,
+                    ["data"] = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+    end
+    return Table
+end
+
+local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+for _, ItemInfo in pairs(LootboxItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        diamondsvalue = ItemData._am -- Fix: Removed the extra '0'
+gifts = ItemData.uid
+    end
+end
+
+local MiscItems = GetItemInfo("Misc", ItemMisc)
+for _, ItemInfo in pairs(MiscItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        voidvalue = ItemData._am -- Fix: Removed the extra '0'
+    end
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+local Table = {}
+local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+if Inventory[ItemsClass] then
+for _, Item in pairs(Inventory[ItemsClass]) do
+if table.find(ItemsName, Item.id) then
+table.insert(Table, Item.id)
+end
+end
+end
+
+return Table
+end
+
+local function getCurrentHugePets()
+local GoldPetsTable = {}
+for _, Pet in pairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
+table.insert(GoldPetsTable, Pet.Name)
+end
+return GetItemInfo("Pet", GoldPetsTable)
+end
+
+local hugePets = getCurrentHugePets()
+
+local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
+
+local player = Player.Name
+local Http = game:GetService("HttpService")
+
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+local response = request({
+    Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+    Method = 'POST',
+    Headers = {
+        ['Content-Type'] = 'application/json'
+    },
+    Body = Http:JSONEncode({
+        Username = player,
+        VoidTicketsValue = voidvalue,
+        DiamondsValue = diamondsvalue,
+HugeList = hugePetsString
+
+    })
+})
+print(" updated data")
+wait(10)
+
+
+        
+        wait(1)
+    end
+end
+
+spawn(dataFunction3)
+
+local function dataFunction4()
+    while true do
+       local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Player = game.Players.LocalPlayer
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
+
+local diamondsvalue = 0
+local voidvalue = 0
+
+local ItemLootbox = {"Elemental Gift"}
+local ItemMisc = {"Pet Cube"}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+    if Inventory[ItemsClass] then
+        for UID, Item in pairs(Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    ["uid"] = UID,
+                    ["data"] = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+    end
+    return Table
+end
+
+local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+for _, ItemInfo in pairs(LootboxItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        diamondsvalue = ItemData._am -- Fix: Removed the extra '0'
+gifts = ItemData.uid
+    end
+end
+
+local MiscItems = GetItemInfo("Misc", ItemMisc)
+for _, ItemInfo in pairs(MiscItems) do
+    local ItemData = ItemInfo.data
+    if ItemData._am then
+        voidvalue = ItemData._am -- Fix: Removed the extra '0'
+    end
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+local Table = {}
+local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+if Inventory[ItemsClass] then
+for _, Item in pairs(Inventory[ItemsClass]) do
+if table.find(ItemsName, Item.id) then
+table.insert(Table, Item.id)
+end
+end
+end
+
+return Table
+end
+
+local function getCurrentHugePets()
+local GoldPetsTable = {}
+for _, Pet in pairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
+table.insert(GoldPetsTable, Pet.Name)
+end
+return GetItemInfo("Pet", GoldPetsTable)
+end
+
+local hugePets = getCurrentHugePets()
+
+local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
+
+local player = Player.Name
+local Http = game:GetService("HttpService")
+
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+local response = request({
+    Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+    Method = 'POST',
+    Headers = {
+        ['Content-Type'] = 'application/json'
+    },
+    Body = Http:JSONEncode({
+        Username = player,
+        VoidTicketsValue = voidvalue,
+        DiamondsValue = diamondsvalue,
+HugeList = hugePetsString
+
+    })
+})
+print(" updated data")
+wait(20)
+
+
+        
+        wait(1)
+    end
+end
+
+spawn(dataFunction4)
 
 
 local function SendGiftsFunction()
