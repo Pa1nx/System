@@ -11,7 +11,7 @@ getgenv().Config = {
     ["Webhook"] = {
         ["HugeURL"] = "",
         ["StatsURL"] = "",
-        ["UserID"] = "1156400195072950355",
+        ["UserID"] = "731736164196679712",
         ["SendEvery"] = 3
     },
     ["Misc"] = {
