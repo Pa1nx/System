@@ -1,0 +1,300 @@
+local TweenService = game:GetService("TweenService")
+local player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local humanoidRootPart, humanoid, ModelFound = nil, nil, ""
+
+local function updateCharacter()
+    local character = player.Character or player.CharacterAdded:Wait()
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    humanoid = character:WaitForChild("Humanoid")
+end
+
+updateCharacter()
+
+player.CharacterAdded:Connect(function()
+    wait(1) -- Wait for character to fully load
+    updateCharacter()
+end)
+
+local function StartTablet()
+    while true do
+        local button = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("DeviceSelect").Container:WaitForChild("Tablet"):WaitForChild("Button")
+        
+        if button then
+            local connections = getconnections(button.MouseButton1Click)
+            if connections[1] then
+                connections[1]:Fire() 
+            end
+        end
+        wait(1) 
+    end
+end
+
+spawn(StartTablet)
+
+
+local randomNumber = math.random(1, 30)
+wait(5) 
+wait(randomNumber)
+
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local last
+
+local File = pcall(function()
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+    table.insert(AllIDs, actualHour)
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+
+for _, player in ipairs(game.Players:GetChildren()) do
+    if player.Name ~= game.Players.LocalPlayer.Name and (string.find(player.Name:lower(), "giftbatch") or #game.Players:GetChildren() == 3) then
+        function TPReturner()
+            local Site
+            if foundAnything == "" then
+                Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+            else
+                Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+            end
+            local ID = ""
+            if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+                foundAnything = Site.nextPageCursor
+            end
+            local num = 0
+            local extranum = 0
+            for i,v in pairs(Site.data) do
+                extranum += 1
+                local Possible = true
+                ID = tostring(v.id)
+                if tonumber(v.maxPlayers) > tonumber(v.playing) then
+                    if extranum ~= 1 and tonumber(v.playing) < last or extranum == 1 then
+                        last = tonumber(v.playing)
+                    elseif extranum ~= 1 then
+                        continue
+                    end
+                    for _,Existing in pairs(AllIDs) do
+                        if num ~= 0 then
+                            if ID == tostring(Existing) then
+                                Possible = false
+                            end
+                        else
+                            if tonumber(actualHour) ~= tonumber(Existing) then
+                                local delFile = pcall(function()
+                                    delfile("NotSameServers.json")
+                                    AllIDs = {}
+                                    table.insert(AllIDs, actualHour)
+                                end)
+                            end
+                        end
+                        num = num + 1
+                    end
+                    if Possible == true then
+                        table.insert(AllIDs, ID)
+                        wait(15)
+                        pcall(function()
+                            writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                            wait(30)
+                            game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                        end)
+                        wait(30)
+                    end
+                end
+            end
+        end
+
+        function Teleport()
+            while wait() do
+                pcall(function()
+                    TPReturner()
+                    if foundAnything ~= "" then
+                        TPReturner()
+                    end
+                end)
+            end
+        end
+    end
+end
+
+spawn(Teleport)
+
+
+
+
+
+
+local function MapDeleter()
+    while true do
+      
+for _, child in pairs(workspace:GetChildren()) do
+    if child.Name == ModelFound then
+        for _, modelChild in pairs(child:GetChildren()) do
+            if modelChild.Name ~= "CoinContainer" then
+                modelChild:Destroy()
+            end
+        end
+    end
+end
+
+        wait(1)
+    end
+end
+
+spawn(MapDeleter)
+
+local player = game.Players.LocalPlayer
+
+local function GetCandyData()
+    local candyText
+    pcall(function()
+        candyText = player.PlayerGui.MainGUI.Game.CoinBags.Container.Candy.CurrencyFrame.Icon.Coins.Text
+    end)
+    return candyText and tonumber(candyText:match("%d+")) or 0
+end
+
+local function CreateCandyDisplay()
+    local screenGui = Instance.new("ScreenGui", player.PlayerGui)
+    local candyLabel = Instance.new("TextLabel", screenGui)
+
+    candyLabel.Size = UDim2.new(0, 200, 0, 50)
+    candyLabel.Position = UDim2.new(0.5, -100, 0, 10) -- Centered at the top
+    candyLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
+    candyLabel.TextScaled = true
+    candyLabel.BackgroundTransparency = 1
+
+    return candyLabel
+end
+
+local candyLabel = CreateCandyDisplay()
+
+spawn(function()
+    while true do
+        local candyAmount = GetCandyData()
+        candyLabel.Text = "Candy: " .. candyAmount
+        wait(1) -- Update every second
+    end
+end)
+
+
+local function getCoinValue()
+    local coinText
+    pcall(function()
+        coinText = player.PlayerGui.MainGUI.Game.CoinBags.Container.Candy.CurrencyFrame.Icon.Coins.Text
+    end)
+    return coinText and tonumber(coinText:match("%d+")) or 0
+end
+
+local function hasWeaponInBackpack(plr)
+    return plr:FindFirstChild("Backpack") and (plr.Backpack:FindFirstChild("Knife") or plr.Backpack:FindFirstChild("Gun"))
+end
+
+local function CoinBagChecker()
+    while true do
+        if getCoinValue() >= 40 and hasWeaponInBackpack(player) then
+            humanoid.Health = 0
+        end
+        wait(0.1)
+    end
+end
+
+local function CoinContainerFinder()
+    while true do
+        for _, child in pairs(workspace:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+                ModelFound = child.Name
+            end
+        end
+        wait(0.1)
+    end
+end
+
+local function CaseOpener()
+    while true do
+Wait(1)
+local args = {
+    [1] = "Halloween2024Box",
+    [2] = "MysteryBox",
+    [3] = "Candies2024"
+}
+
+game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
+end
+end
+spawn(CaseOpener)
+spawn(CoinBagChecker)
+spawn(CoinContainerFinder)
+
+local function startTweenToPart(part, speed)
+    if not humanoidRootPart or humanoid.Health <= 0 then return end
+
+    local tweenInfo = TweenInfo.new((humanoidRootPart.Position - part.Position).Magnitude / speed, Enum.EasingStyle.Linear)
+    local targetCFrame = CFrame.new(part.Position - Vector3.new(0, 12, 0))
+    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+    tween:Play()
+    tween.Completed:Wait()
+end
+
+local function TeleportingFunction()
+    while true do
+        if not humanoidRootPart or humanoid.Health <= 0 then
+            updateCharacter()
+            continue
+        end
+
+        local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+        BV.velocity = Vector3.new(0, 0.001, 0)
+        BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+
+        local model = workspace:FindFirstChild(ModelFound)
+        if model and model:FindFirstChild("CoinContainer") then
+            local coinContainer = model.CoinContainer
+            local closestPart, shortestDistance = nil, math.huge
+
+            for _, part in pairs(coinContainer:GetChildren()) do
+                local distance = (part.Position - humanoidRootPart.Position).Magnitude
+                if distance <= 100 then
+                    local inRadiusOfKnifePlayer = false
+                    for _, otherPlayer in pairs(Players:GetPlayers()) do
+                        if otherPlayer ~= player and hasWeaponInBackpack(otherPlayer) then
+                            local otherHumanoidRootPart = otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart")
+                            if otherHumanoidRootPart and (otherHumanoidRootPart.Position - part.Position).Magnitude <= 30 then
+                                inRadiusOfKnifePlayer = true
+                                break
+                            end
+                        end
+                    end
+
+                    if not inRadiusOfKnifePlayer and distance < shortestDistance then
+                        closestPart = part
+                        shortestDistance = distance
+                    end
+                end
+            end
+
+            if closestPart and getCoinValue() < 40 and humanoid.Health > 0 then
+                if shortestDistance <= 25 then
+                    startTweenToPart(closestPart, 55)
+                else
+                    startTweenToPart(closestPart, 35)
+                end
+
+                humanoidRootPart.CFrame = CFrame.new(closestPart.Position)
+                wait(0.1)
+                humanoidRootPart.CFrame = CFrame.new(closestPart.Position + Vector3.new(0, 1, 0))
+                wait(0.1)
+                humanoidRootPart.CFrame = CFrame.new(closestPart.Position - Vector3.new(0, 9, 0))
+
+                if closestPart and closestPart.Parent == coinContainer then
+                    closestPart:Destroy()
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(TeleportingFunction)
