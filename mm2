@@ -37,6 +37,25 @@ local randomNumber = math.random(1, 30)
 wait(5) 
 wait(randomNumber)
 
+
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+local loadingScreen = PlayerGui:FindFirstChild("Loading")
+
+local function DestroyingScreen()
+    while true do
+        wait(10)
+        loadingScreen = PlayerGui:FindFirstChild("Loading")
+        if loadingScreen then
+            loadingScreen:Destroy()
+        end
+    end
+end
+
+DestroyingScreen()
+
+
+
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
