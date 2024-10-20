@@ -52,7 +52,7 @@ local function DestroyingScreen()
     end
 end
 
-DestroyingScreen()
+spawn(DestroyingScreen)
 
 
 
