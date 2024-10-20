@@ -55,13 +55,10 @@ end
 spawn(DestroyingScreen)
 
 
-
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
-local Deleted = false
-
 local last
 
 local File = pcall(function()
@@ -71,8 +68,9 @@ if not File then
    table.insert(AllIDs, actualHour)
    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
 end
+
 function TPReturner()
-   local Site;
+   local Site
    if foundAnything == "" then
        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
    else
@@ -82,7 +80,7 @@ function TPReturner()
    if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
        foundAnything = Site.nextPageCursor
    end
-   local num = 0;
+   local num = 0
    local extranum = 0
    for i,v in pairs(Site.data) do
        extranum += 1
@@ -125,7 +123,8 @@ function TPReturner()
 end
 
 function Teleport()
-   while wait() do
+   while true do
+       wait(5)
        pcall(function()
            TPReturner()
            if foundAnything ~= "" then
@@ -136,7 +135,6 @@ function Teleport()
 end
 
 spawn(Teleport)
-
 
 
 
