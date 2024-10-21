@@ -222,14 +222,7 @@ local function hasWeaponInBackpack(plr)
     return plr:FindFirstChild("Backpack") and (plr.Backpack:FindFirstChild("Knife") or plr.Backpack:FindFirstChild("Gun"))
 end
 
-local function CoinBagChecker()
-    while true do
-        if getCoinValue() >= 40 and hasWeaponInBackpack(player) then
-            humanoid.Health = 0
-        end
-        wait(0.1)
-    end
-end
+
 
 local function CoinContainerFinder()
     while true do
