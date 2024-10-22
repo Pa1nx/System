@@ -64,41 +64,66 @@ spawn(StartTablet)
 
 local function OpenInventory()
     while true do
-wait(1)
+        wait(1)
 
-      local VirtualInputManager = game:GetService('VirtualInputManager')
+        local VirtualInputManager = game:GetService('VirtualInputManager')
 
-        local inventory = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Dock.Inventory
-        if inventory then
-            inventory.Position = UDim2.new(0, 300, 0, 25)
-            wait(1)
-            local absPos = inventory.AbsolutePosition
-            local absSize = inventory.AbsoluteSize
+        local player = game.Players.LocalPlayer
+        if player and player:FindFirstChild("PlayerGui") then
+            local playerGui = player.PlayerGui
+            if playerGui:FindFirstChild("MainGUI") then
+                local mainGUI = playerGui.MainGUI
+                if mainGUI:FindFirstChild("Game") then
+                    local gameGui = mainGUI.Game
+                    if gameGui:FindFirstChild("Dock") then
+                        local dock = gameGui.Dock
+                        if dock:FindFirstChild("Inventory") then
+                            local inventory = dock.Inventory
+                            inventory.Position = UDim2.new(0, 300, 0, 25)
+                            wait(1)
+                            local absPos = inventory.AbsolutePosition
+                            local absSize = inventory.AbsoluteSize
 
-            local xPos = absPos.X + absSize.X / 2
-            local yPos = absPos.Y + absSize.Y / 2
+                            local xPos = absPos.X + absSize.X / 2
+                            local yPos = absPos.Y + absSize.Y / 2
 
-            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
-            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
-            wait(2)
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+                            wait(2)
 
-            local holidayViewButton = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Inventory.Main.Weapons.Items.Tabs.Holiday.View
-            if holidayViewButton and holidayViewButton:IsA("TextButton") then
-                getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
+                            if gameGui:FindFirstChild("Inventory") then
+                                local invMain = gameGui.Inventory.Main
+                                if invMain and invMain:FindFirstChild("Weapons") and invMain.Weapons:FindFirstChild("Items") then
+                                    local items = invMain.Weapons.Items
+                                    if items:FindFirstChild("Tabs") and items.Tabs:FindFirstChild("Holiday") then
+                                        local holidayViewButton = items.Tabs.Holiday:FindFirstChild("View")
+                                        if holidayViewButton and holidayViewButton:IsA("TextButton") then
+                                            getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
+                                        end
+                                    end
+                                end
+                            end
+
+                            wait(2)
+
+                            if inventory:FindFirstChild("Close") and inventory.Close:FindFirstChild("Button") then
+                                local closeButton = inventory.Close.Button
+                                if closeButton:IsA("ImageButton") then
+                                    getconnections(closeButton.MouseButton1Click)[1]:Fire()
+                                end
+                            end
+
+                            wait(10)
+                        end
+                    end
+                end
             end
-            wait(2)
-
-            local closeButton = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Inventory.Close.Button
-            if closeButton and closeButton:IsA("ImageButton") then
-                getconnections(closeButton.MouseButton1Click)[1]:Fire()
-            end
-            wait(10)
         end
-
     end
 end
 
 spawn(OpenInventory)
+
 
 local function KnifeData()
     while true do
