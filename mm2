@@ -309,6 +309,22 @@ local function GetCandyData()
     return candyText and tonumber(candyText:match("%d+")) or 0
 end
 
+local function CoinBagChecker()
+    while true do
+        if getCoinValue() >= 40 and hasWeaponInBackpack(player) then
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+
+            if BV then
+                BV:Destroy()
+            end
+        end
+        wait(0.1)
+    end
+end
+
+spawn(CoinBagChecker)
+
+
 local function CreateCandyDisplay()
     local screenGui = Instance.new("ScreenGui", player.PlayerGui)
     local candyLabel = Instance.new("TextLabel", screenGui)
