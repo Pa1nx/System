@@ -17,6 +17,7 @@ player.CharacterAdded:Connect(function()
 end)
 local function StartTablet()
     while true do
+wait(1)
         local VirtualInputManager = game:GetService("VirtualInputManager")
         local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
@@ -63,6 +64,7 @@ spawn(StartTablet)
 
 local function OpenInventory()
     while true do
+wait(1)
         local VirtualInputManager = game:GetService('VirtualInputManager')
 
         local playerGui = game.Players.LocalPlayer.PlayerGui
@@ -266,6 +268,7 @@ end
 
 local function CoinBagChecker()
     while true do
+wait(1)
         if getCoinValue() >= 40 and hasWeaponInBackpack(player) then
             local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
 
