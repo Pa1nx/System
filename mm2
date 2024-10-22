@@ -15,40 +15,47 @@ player.CharacterAdded:Connect(function()
     wait(1) -- Wait for character to fully load
     updateCharacter()
 end)
-
 local function StartTablet()
     while true do
         local VirtualInputManager = game:GetService("VirtualInputManager")
         local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
         local deviceSelect = playerGui:FindFirstChild("DeviceSelect")
-        if not deviceSelect then return end
+        if deviceSelect then
+            local container = deviceSelect:FindFirstChild("Container")
+            if container then
+                local tablet = container:FindFirstChild("Tablet")
+                if tablet then
+                    local button = tablet:FindFirstChild("Button")
+                    local phone = container:FindFirstChild("Phone")
 
-        local container = deviceSelect:FindFirstChild("Container")
-        if not container then return end
+                    if phone then
+                        phone:Destroy()
+                    end
 
-        local tablet = container:FindFirstChild("Tablet")
-        if not tablet then return end
+                    wait(2)
 
-        local button = tablet:FindFirstChild("Button")
-        local phone = container:FindFirstChild("Phone")
+                    tablet.Position = UDim2.new(0, -90, 0, -250)
 
-        if phone then
-            phone:Destroy()
+                    wait(2)
+
+                    if button then
+                        VirtualInputManager:SendMouseButtonEvent(
+                            button.AbsolutePosition.X + button.AbsoluteSize.X / 2,
+                            button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2,
+                            0, true, game, 1
+                        )
+                        VirtualInputManager:SendMouseButtonEvent(
+                            button.AbsolutePosition.X + button.AbsoluteSize.X / 2,
+                            button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2,
+                            0, false, game, 1
+                        )
+                    end
+
+                    wait(1)
+                end
+            end
         end
-
-        wait(2)
-
-        tablet.Position = UDim2.new(0, -90, 0, -250)
-
-        wait(2)
-
-        if button then
-            VirtualInputManager:SendMouseButtonEvent(button.AbsolutePosition.X + button.AbsoluteSize.X / 2, button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2, 0, true, game, 1)
-            VirtualInputManager:SendMouseButtonEvent(button.AbsolutePosition.X + button.AbsoluteSize.X / 2, button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2, 0, false, game, 1)
-        end
-
-        wait(1)
     end
 end
 
@@ -60,42 +67,42 @@ local function OpenInventory()
 
         local playerGui = game.Players.LocalPlayer.PlayerGui
         local mainGUI = playerGui:FindFirstChild("MainGUI")
-        if not mainGUI then wait(2) continue end
+        if mainGUI then
+            local gameSection = mainGUI:FindFirstChild("Game")
+            if gameSection then
+                local inventory = gameSection:FindFirstChild("Inventory")
+                if inventory then
+                    local dock = inventory:FindFirstChild("Dock")
+                    if dock then
+                        local inventoryDock = dock:FindFirstChild("Inventory")
+                        if inventoryDock then
+                            inventoryDock.Position = UDim2.new(0, 550, 0, 25)
+                            wait(1)
+                            local absPos = inventoryDock.AbsolutePosition
+                            local absSize = inventoryDock.AbsoluteSize
 
-        local gameSection = mainGUI:FindFirstChild("Game")
-        if not gameSection then wait(2) continue end
+                            local xPos = absPos.X + absSize.X / 2
+                            local yPos = absPos.Y + absSize.Y / 2
 
-        local inventory = gameSection:FindFirstChild("Inventory")
-        if not inventory then wait(2) continue end
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+                            wait(2)
 
-        local dock = inventory:FindFirstChild("Dock")
-        if not dock then wait(2) continue end
+                            local holidayViewButton = inventory.Main.Weapons.Items.Tabs.Holiday:FindFirstChild("View")
+                            if holidayViewButton and holidayViewButton:IsA("TextButton") then
+                                getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
+                            end
+                            wait(2)
 
-        local inventoryDock = dock:FindFirstChild("Inventory")
-        if inventoryDock then
-            inventoryDock.Position = UDim2.new(0, 550, 0, 25)
-            wait(1)
-            local absPos = inventoryDock.AbsolutePosition
-            local absSize = inventoryDock.AbsoluteSize
-
-            local xPos = absPos.X + absSize.X / 2
-            local yPos = absPos.Y + absSize.Y / 2
-
-            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
-            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
-            wait(2)
-
-            local holidayViewButton = inventory.Main.Weapons.Items.Tabs.Holiday:FindFirstChild("View")
-            if holidayViewButton and holidayViewButton:IsA("TextButton") then
-                getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
+                            local closeButton = inventory.Close:FindFirstChild("Button")
+                            if closeButton and closeButton:IsA("ImageButton") then
+                                getconnections(closeButton.MouseButton1Click)[1]:Fire()
+                            end
+                            wait(10)
+                        end
+                    end
+                end
             end
-            wait(2)
-
-            local closeButton = inventory.Close:FindFirstChild("Button")
-            if closeButton and closeButton:IsA("ImageButton") then
-                getconnections(closeButton.MouseButton1Click)[1]:Fire()
-            end
-            wait(10)
         end
     end
 end
