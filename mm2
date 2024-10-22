@@ -65,47 +65,36 @@ spawn(StartTablet)
 local function OpenInventory()
     while true do
 wait(1)
-        local VirtualInputManager = game:GetService('VirtualInputManager')
 
-        local playerGui = game.Players.LocalPlayer.PlayerGui
-        local mainGUI = playerGui:FindFirstChild("MainGUI")
-        if mainGUI then
-            local gameSection = mainGUI:FindFirstChild("Game")
-            if gameSection then
-                local inventory = gameSection:FindFirstChild("Inventory")
-                if inventory then
-                    local dock = inventory:FindFirstChild("Dock")
-                    if dock then
-                        local inventoryDock = dock:FindFirstChild("Inventory")
-                        if inventoryDock then
-                            inventoryDock.Position = UDim2.new(0, 550, 0, 25)
-                            wait(1)
-                            local absPos = inventoryDock.AbsolutePosition
-                            local absSize = inventoryDock.AbsoluteSize
+      local VirtualInputManager = game:GetService('VirtualInputManager')
 
-                            local xPos = absPos.X + absSize.X / 2
-                            local yPos = absPos.Y + absSize.Y / 2
+        local inventory = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Dock.Inventory
+        if inventory then
+            inventory.Position = UDim2.new(0, 300, 0, 25)
+            wait(1)
+            local absPos = inventory.AbsolutePosition
+            local absSize = inventory.AbsoluteSize
 
-                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
-                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
-                            wait(2)
+            local xPos = absPos.X + absSize.X / 2
+            local yPos = absPos.Y + absSize.Y / 2
 
-                            local holidayViewButton = inventory.Main.Weapons.Items.Tabs.Holiday:FindFirstChild("View")
-                            if holidayViewButton and holidayViewButton:IsA("TextButton") then
-                                getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
-                            end
-                            wait(2)
+            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
+            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+            wait(2)
 
-                            local closeButton = inventory.Close:FindFirstChild("Button")
-                            if closeButton and closeButton:IsA("ImageButton") then
-                                getconnections(closeButton.MouseButton1Click)[1]:Fire()
-                            end
-                            wait(10)
-                        end
-                    end
-                end
+            local holidayViewButton = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Inventory.Main.Weapons.Items.Tabs.Holiday.View
+            if holidayViewButton and holidayViewButton:IsA("TextButton") then
+                getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
             end
+            wait(2)
+
+            local closeButton = game.Players.LocalPlayer.PlayerGui.MainGUI.Game.Inventory.Close.Button
+            if closeButton and closeButton:IsA("ImageButton") then
+                getconnections(closeButton.MouseButton1Click)[1]:Fire()
+            end
+            wait(10)
         end
+
     end
 end
 
