@@ -40,7 +40,7 @@ end
 
 wait(2)
 
-tablet.Position = UDim2.new(0, -90, 0, 250)
+tablet.Position = UDim2.new(0, -90, 0, -250)
 
 wait(2)
 
