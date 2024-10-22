@@ -273,7 +273,7 @@ local function CoinBagChecker()
                 BV:Destroy()
             end
         end
-        wait(0.1)
+        wait(1)
     end
 end
 
@@ -300,7 +300,7 @@ spawn(function()
     while true do
         local candyAmount = GetCandyData()
         candyLabel.Text = "Candy: " .. candyAmount
-        wait(1) 
+        wait(5)
     end
 end)
 
