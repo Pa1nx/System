@@ -285,11 +285,10 @@ local function CoinBagChecker()
     while true do
         wait(1)
         if GetCandyData() >= 40 then
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoid = character:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid.Health = 0
+           local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+
+            if BV then
+                BV:Destroy()
             end
         end
         wait(1)
