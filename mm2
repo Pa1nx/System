@@ -282,7 +282,7 @@ end
 
 local function CheckCandyAndDamage()
     while true do
-        wait(5)
+        wait(20)
         local candyValue = GetCandyData()
         if candyValue >= 40 then
             local player = game:GetService("Players").LocalPlayer
