@@ -563,7 +563,8 @@ local function startTweenToPart(part, speed)
     tween:Play()
 
     while not tweenCompleted do
-        if not part:IsDescendantOf(workspace) or not humanoidRootPart or humanoid.Health <= 0 then
+        -- Only check if the part is still valid or exists
+        if not part or not part.Parent then
             tween:Cancel()
             return false
         end
