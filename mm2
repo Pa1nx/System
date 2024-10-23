@@ -244,6 +244,8 @@ spawn(MapDeleter)
 
 local player = game.Players.LocalPlayer
 
+local player = game.Players.LocalPlayer
+
 local function GetCandyData()
     local candyText
     pcall(function()
@@ -276,28 +278,26 @@ local function GetCandyData()
             end
         end
     end)
-    
     return candyText and tonumber(candyText:match("%d+")) or 0
 end
 
 local function CoinBagChecker()
     while true do
-wait(1)
-        if getCoinValue() >= 40 then
+        wait(1)
+        if GetCandyData() >= 40 then
             local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChild("Humanoid")
-
-if humanoid then
-    humanoid.Health = 0
-end
-
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoid = character:FindFirstChild("Humanoid")
+            if humanoid then
+                humanoid.Health = 0
+            end
         end
         wait(1)
     end
 end
 
 spawn(CoinBagChecker)
+
 
 
 
