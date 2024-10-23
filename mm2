@@ -294,17 +294,8 @@ local function CheckCandyAndDamage()
     end
 end
 
-spawn(function()
-    CheckCandyAndDamage()
-end)
+spawn(CheckCandyAndDamage)
 
-
-make a script that if CandyText is equal to 40 or above 40 then 
-local player = game:GetService("Players").LocalPlayer
-local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
-if humanoid then
-    humanoid:TakeDamage(humanoid.MaxHealth)
-end
 
 local candyCount = 0
 local lastCandyData = GetCandyData()
