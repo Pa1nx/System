@@ -124,23 +124,7 @@ end
 
 spawn(OpenInventory)
 
-local function BackPackCheck()
-    while true do
-        wait(0.2)
-        local player = game.Players.LocalPlayer
-        local backpack = player:FindFirstChild("Backpack")
-        
-        if backpack then
-            for _, tool in pairs(backpack:GetChildren()) do
-                if tool:IsA("Tool") and (tool.Name == "Knife" or tool.Name == "Gun") then
-                    tool:Destroy()
-                end
-            end
-        end
-    end
-end
 
-spawn(BackPackCheck)
 
 
 local function KnifeData()
