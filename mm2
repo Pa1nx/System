@@ -280,6 +280,29 @@ local function GetCandyData()
     return candyText and tonumber(candyText:match("%d+")) or 0
 end
 
+local function CheckCandyAndDamage()
+while true do
+wait(5)
+    local candyValue = GetCandyData()
+    if candyValue >= 40 then
+        local player = game:GetService("Players").LocalPlayer
+        local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid:TakeDamage(humanoid.MaxHealth)
+        end
+    end
+end
+end
+
+spawn(CheckCandyAndDamage)
+
+make a script that if CandyText is equal to 40 or above 40 then 
+local player = game:GetService("Players").LocalPlayer
+local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+if humanoid then
+    humanoid:TakeDamage(humanoid.MaxHealth)
+end
+
 local candyCount = 0
 local lastCandyData = GetCandyData()
 local startTime = tick()
