@@ -283,12 +283,15 @@ end
 local function CoinBagChecker()
     while true do
 wait(1)
-        if getCoinValue() >= 40 and hasWeaponInBackpack(player) then
-            local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+        if getCoinValue() >= 40 then
+            local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChild("Humanoid")
 
-            if BV then
-                BV:Destroy()
-            end
+if humanoid then
+    humanoid.Health = 0
+end
+
         end
         wait(1)
     end
