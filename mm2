@@ -597,7 +597,7 @@ local function TeleportingFunction()
             end)
 
             local topClosestParts = {}
-            for i = 1, math.min(10, #closestParts) do
+            for i = 1, math.min(5, #closestParts) do
                 table.insert(topClosestParts, closestParts[i].part)
             end
 
