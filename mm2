@@ -560,7 +560,7 @@ local function BodyVelocity()
 end
 
 spawn(BodyVelocity)
-
+local LastPosition = ""
 
 local function startTweenToPart(part, speed)
     if not humanoidRootPart or humanoid.Health <= 0 then return end
@@ -620,7 +620,7 @@ local function TeleportingFunction()
             if #topClosestParts > 0 and getCoinValue() < 40 and humanoid.Health > 0 then
                 local randomPart = topClosestParts[math.random(1, #topClosestParts)]
                 local distanceToPart = (randomPart.Position - humanoidRootPart.Position).Magnitude
-
+LastPosition = randomPart.Position
                 if distanceToPart <= 25 then
                     startTweenToPart(randomPart, 55)
                 else
@@ -643,3 +643,16 @@ local function TeleportingFunction()
 end
 
 spawn(TeleportingFunction)
+
+
+local function CheckCandyAndDamage()
+    while true do
+        wait(20)
+        local candyValue = GetCandyData()
+        if candyValue >= 40 then
+            humanoidRootPart.CFrame = LastPosition
+        end
+    end
+end
+
+spawn(CheckCandyAndDamage)
