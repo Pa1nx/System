@@ -594,6 +594,7 @@ local LastPosition = ""
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
+local processedPositions = {}
 
 local function getHumanoidRootPart()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -624,10 +625,11 @@ local function tweenToPart(part, speed)
 
             LastPosition = part.Position
 
-            if part.Parent and part.Parent:FindFirstChild("CoinContainer") then
+            if part:IsDescendantOf(workspace) and part.Parent and part.Parent:FindFirstChild("CoinContainer") then
                 part:Destroy()
             end
 
+            table.insert(processedPositions, part.Position)
             wait(0.3)
         end
         tweenInProgress = false
@@ -646,7 +648,7 @@ local function AutoFarm()
                     local parts = {}
 
                     for _, item in ipairs(coinContainer:GetChildren()) do
-                        if item:IsA("Part") and (humanoidRootPart.Position - item.Position).Magnitude <= 100 then
+                        if item:IsA("Part") and (humanoidRootPart.Position - item.Position).Magnitude <= 100 and not table.find(processedPositions, item.Position) then
                             table.insert(parts, item)
                         end
                     end
