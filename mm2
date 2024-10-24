@@ -666,7 +666,7 @@ local function AutoFarm()
                         local randomPart = selectedParts[math.random(1, #selectedParts)]
                         if randomPart and randomPart:IsDescendantOf(workspace) then
                             local distanceToPart = (humanoidRootPart.Position - randomPart.Position).Magnitude
-                            local speed = distanceToPart <= 25 and 55 or 35
+                            local speed = distanceToPart <= 25 and 25 or 20
                             tweenToPart(randomPart, speed)
                             while tweenInProgress do
                                 wait()
