@@ -622,9 +622,11 @@ local function TeleportingFunction()
             continue
         end
 
-       
+        local model
+        if workspace:FindFirstChild(ModelFound) then
+            model = workspace:FindFirstChild(ModelFound)
+        end
 
-        local model = workspace:FindFirstChild(ModelFound)
         if model and model:FindFirstChild("CoinContainer") then
             local coinContainer = model.CoinContainer
             local closestParts = {}
@@ -661,7 +663,7 @@ local function TeleportingFunction()
             if #topClosestParts > 0 and getCoinValue() < 40 and humanoid.Health > 0 then
                 local randomPart = topClosestParts[math.random(1, #topClosestParts)]
                 local distanceToPart = (randomPart.Position - humanoidRootPart.Position).Magnitude
-LastPosition = randomPart.Position
+                LastPosition = randomPart.Position
                 if distanceToPart <= 25 then
                     startTweenToPart(randomPart, 55)
                 else
