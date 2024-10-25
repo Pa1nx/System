@@ -40,6 +40,12 @@ for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
         descendant:Destroy()
     end
 end
+if game.GameId == 3317771874 then
+    while true do
+        game.ReplicatedStorage.Network:FindFirstChild("World3Teleport"):InvokeServer()
+        wait(10)
+    end
+end
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Player = game.Players.LocalPlayer
