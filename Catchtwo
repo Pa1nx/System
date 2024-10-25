@@ -650,14 +650,3 @@ wait(1)
 end
 end
 spawn(MailClaim)
-while true do
-    wait(3)
-local randomNum = math.random(1, 50)
-
-local args = {
-    [1] = "Pet Cube",
-    [2] = randomNum
-}
-
-game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-end
