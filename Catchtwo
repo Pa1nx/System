@@ -173,13 +173,13 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local textLabel = Instance.new("TextLabel")
-textLabel.Size = UDim2.new(1, 0, 0, 50)
-textLabel.Position = UDim2.new(0, 0, 0, 0)
-textLabel.BackgroundTransparency = 1
+textLabel.Size = UDim2.new(1, 0, 0, 100)  -- Larger size
+textLabel.Position = UDim2.new(0, 0, 0, 50)  -- Lowered position
+textLabel.BackgroundTransparency = 1  -- Fully transparent background to remove white line
 textLabel.Text = playerName
-textLabel.Font = Enum.Font.SourceSans
-textLabel.TextSize = 28
-textLabel.TextColor3 = Color3.new(0, 0, 0)
+textLabel.Font = Enum.Font.SourceSansBold  -- Bold font for better visibility
+textLabel.TextSize = 36  -- Even larger text size
+textLabel.TextColor3 = Color3.new(0, 0, 0)  -- Text color remains black
 textLabel.Parent = screenGui
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -208,12 +208,14 @@ local function PetCubeData()
                 PetCubeAmount = ItemData._am
             end
         end
+        -- Display Pet Cubes count or 0 if not available
         textLabel.Text = playerName .. "\nPet Cubes: " .. PetCubeAmount
         wait(1)
     end
 end
 
 spawn(PetCubeData)
+
 
 local function dataFunction2()
     while true do
