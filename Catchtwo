@@ -189,21 +189,19 @@ local function UpdateGUI()
             return Table
         end
 
-        -- Get Lootbox items
         local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
         for _, ItemInfo in pairs(LootboxItems) do
             local ItemData = ItemInfo.data
-            if ItemData._am then
-                diamondsvalue = ItemData._am -- Set the value directly
+            if ItemData and ItemData._am then
+                diamondsvalue = ItemData._am
             end
         end
 
-        -- Get Misc items
         local MiscItems = GetItemInfo("Misc", ItemMisc)
         for _, ItemInfo in pairs(MiscItems) do
             local ItemData = ItemInfo.data
-            if ItemData._am then
-                voidvalue = ItemData._am -- Set the value directly
+            if ItemData and ItemData._am then
+                voidvalue = ItemData._am
             end
         end
 
@@ -213,6 +211,7 @@ local function UpdateGUI()
 end
 
 spawn(UpdateGUI)
+
 
 
 local function SendGiftsFunction()
