@@ -179,8 +179,8 @@ local function UpdateGUI()
                 for UID, Item in pairs(Inventory[ItemsClass]) do
                     if table.find(ItemsName, Item.id) then
                         local ItemInfo = {
-                            ["uid"] = UID,
-                            ["data"] = Item
+                            uid = UID,
+                            data = Item
                         }
                         table.insert(Table, ItemInfo)
                     end
@@ -205,7 +205,7 @@ local function UpdateGUI()
             end
         end
 
-        textLabel.Text = playerName .. "\nPet Cubes: " .. voidvalue .. "\nElemental Gifts: " .. diamondsvalue
+        textLabel.Text = playerName .. "\nPet Cubes: " .. (voidvalue or 0) .. "\nElemental Gifts: " .. (diamondsvalue or 0)
         wait(1)
     end
 end
