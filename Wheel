@@ -72,7 +72,7 @@ local function ChangePosition()
     end
 end
 
-ChangePosition()
+spawn(ChangePosition)
 
 
 local function chest()
