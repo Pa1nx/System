@@ -333,7 +333,7 @@ end
 
 
 
-
+wait(5)
 local TPS = game:GetService("TeleportService")
 local player = game.Players.LocalPlayer
 local startTime = tick()
