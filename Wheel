@@ -9,7 +9,7 @@ if game.PlaceId == 8737899170 then
 end
 end
 spawn(GameCheck)
-wait(30)
+wait(40)
 local function MailClaim()
     while true do
         local gui = Player.PlayerGui:FindFirstChild("_MACHINES")
