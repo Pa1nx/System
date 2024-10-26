@@ -1,13 +1,14 @@
 print("went through")
 wait(2)
+local function GameCheck()
 if game.PlaceId == 8737899170 then
     while true do
         game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
         wait(5)
     end
 end
-
-
+end
+spawn(GameCheck)
 
 local function MonitorAndSpin()
     while true do
@@ -79,7 +80,7 @@ local function chest()
 end
 
 
-local SendAmount = true
+local SendAmount = false
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
