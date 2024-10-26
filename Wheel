@@ -338,7 +338,7 @@ local player = game.Players.LocalPlayer
 local startTime = tick()
 
 while true do
-    wait(15)
+ 
     
     if tick() - startTime >= 60 then
         player:Kick("Failed to rejoin within 1 minute.")
@@ -348,4 +348,5 @@ while true do
     pcall(function()
         TPS:Teleport(game.PlaceId, player)
     end)
+   wait(15)
 end
