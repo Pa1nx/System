@@ -52,6 +52,28 @@ for _, child in pairs(wheelCore:GetChildren()) do
     end
 end
 
+local function ChangePosition()
+    while true do
+        wait(1)
+        
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        if humanoidRootPart then
+            -- Check for existing BodyVelocity or create one
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+            BV.Velocity = Vector3.new(0, 0.001, 0)
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+            -- Set HumanoidRootPart's position using CFrame
+            humanoidRootPart.CFrame = CFrame.new(-10181, 7.1, -7289.9)
+        end
+    end
+end
+
+ChangePosition()
+
 
 local function chest()
     while true do
@@ -310,57 +332,24 @@ end
 
 
 
+while true do
 local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
 local Api = "https://games.roblox.com/v1/games/"
 
 local _place = game.PlaceId
 local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
-
-local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-local visitedServers = {}  -- Table to store visited server IDs
-
 function ListServers(cursor)
-    local Raw = request({
-        Url = _servers .. ((cursor and "&cursor="..cursor) or ""),
-        Method = "GET"
-    })
-    return Http:JSONDecode(Raw.Body)
+   local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+   return Http:JSONDecode(Raw)
 end
 
-local function FindServer()
-    local Server, Servers, Next
+local Server, Next; repeat
+   local Servers = ListServers(Next)
+   Server = Servers.data[1]
+   Next = Servers.nextPageCursor
+until Server
 
-    repeat
-        Servers = ListServers(Next)
-
-        -- Check if Servers.data is valid and not empty
-        if Servers and Servers.data and #Servers.data > 0 then
-            for _, v in ipairs(Servers.data) do
-                if v.id ~= game.JobId and not visitedServers[v.id] then  -- Skip current and visited servers
-                    Server = v
-                    break
-                end
-            end
-        else
-            Server = nil  -- No servers available
-        end
-
-        Next = Servers.nextPageCursor
-    until Server or not Next
-
-    return Server
-end
-
-while true do
-    local Server = FindServer()
-    if Server then
-        visitedServers[Server.id] = true  -- Mark the server as visited
-        TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-        break  -- Exit the loop after a successful teleport
-    else
-        print("No suitable server found. Retrying in 2 seconds...")
-        wait(5)
-    end
+TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+wait(10)
 end
