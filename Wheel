@@ -333,45 +333,19 @@ end
 
 
 
-local Http = game:GetService("HttpService")
 local TPS = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
-
-local _place = game.PlaceId
-local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
-local lastServerId -- To keep track of the last server ID to avoid rejoining it
-
-function ListServers(cursor)
-   local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
-   return Http:JSONDecode(Raw)
-end
-
-local function FindNewServer()
-   local Server, Next
-   repeat
-      local Servers = ListServers(Next)
-      for _, srv in ipairs(Servers.data) do
-         if srv.id ~= lastServerId and srv.playing < srv.maxPlayers then
-            Server = srv
-            break
-         end
-      end
-      Next = Servers.nextPageCursor
-   until Server or not Next
-   return Server
-end
+local player = game.Players.LocalPlayer
+local startTime = tick()
 
 while true do
-   local Server = FindNewServer()
-   if Server then
-      lastServerId = Server.id
-      pcall(function()
-         TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-      end)
-   else
-      print("No new server found. Retrying...")
-   end
-   wait(10)
+    wait(15)
+    
+    if tick() - startTime >= 60 then
+        player:Kick("Failed to rejoin within 1 minute.")
+        break
+    end
+    
+    pcall(function()
+        TPS:Teleport(game.PlaceId, player)
+    end)
 end
-
-
