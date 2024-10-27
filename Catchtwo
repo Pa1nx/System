@@ -435,6 +435,16 @@ local function MailClaim()
 end
 
 spawn(MailClaim)
+local part = Instance.new("Part")
+part.Name = "ExecutedOne"
+part.Parent = workspace
+
+wait(60)
+
+if not workspace:FindFirstChild("ExecutedTwo") then
+    print("not here")
+end
+
 while true do
     wait(3)
 local randomNum = math.random(1, 50)
