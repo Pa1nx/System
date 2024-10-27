@@ -42,13 +42,12 @@ for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
 end
 
 local function GameCheck()
-    if game.GameId == 3317771874 then
-        while true do
-wait(10)
-            game.ReplicatedStorage.Network:FindFirstChild("World3Teleport"):InvokeServer()
-            wait(10)
-        end
+if game.PlaceId == 8737899170 then
+    while true do
+        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+        wait(5)
     end
+end
 end
 spawn(GameCheck)
 
