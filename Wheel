@@ -160,7 +160,7 @@ spawn(PrintDiamonds)
 spawn(chest)
 spawn(MonitorAndSpin)
 
-
+local SendAmount = true
 
 print("DiamondsID:", DiamondsID)
 print("DiamondsAmount:", DiamondsAmount)
@@ -231,7 +231,7 @@ if diamondsvalue and voidvalue then
 end
 
 
-local SendAmount = true
+
 print("VoidAmount:", VoidAmount)
 local HugeCheck = false
 local DiamondsInput = DiamondsAmount - 1000000
