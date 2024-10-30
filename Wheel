@@ -161,13 +161,13 @@ spawn(chest)
 spawn(MonitorAndSpin)
 
 
-wait(2)  -- Initial wait before printing values
+
 print("DiamondsID:", DiamondsID)
 print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
 
 
-local waitTime = SendAmount and 30 or 10
+local waitTime = SendAmount and 30 or 0
 
 wait(waitTime)
 
