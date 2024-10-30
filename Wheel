@@ -167,7 +167,7 @@ print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
 
 
-local waitTime = SendAmount and 30 or 0
+local waitTime = SendAmount and 30 or 5
 
 wait(waitTime)
 
