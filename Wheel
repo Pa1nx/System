@@ -246,12 +246,7 @@ if SendAmount == true then
             [5] = DiamondsInput
         }
         ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-        
-    end
-end
-
-
-local playerName = game.Players.LocalPlayer.Name
+        local playerName = game.Players.LocalPlayer.Name
         local data = {
             ["content"] = playerName .. " | Successfully sent " .. DiamondsValue .. " | Currently " .. VoidAmount .. " Tickets Left"
         }
@@ -263,6 +258,11 @@ local playerName = game.Players.LocalPlayer.Name
             },
             Body = HttpService:JSONEncode(data)
         })
+    end
+end
+
+
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 local Library = require(ReplicatedStorage:WaitForChild("Library"))
