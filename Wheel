@@ -113,8 +113,6 @@ local function MailClaim()
 end
 
 spawn(MailClaim)
-wait(30)
-
 
 
 local function MonitorAndSpin()
