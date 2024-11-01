@@ -13,6 +13,7 @@ spawn(GameCheck)
 wait(40)
 local function MailClaim()
     while true do
+local player = game.Players.LocalPlayer
         local gui = Player.PlayerGui:FindFirstChild("_MACHINES")
         if gui then
             local mailboxMachine = gui.MailboxMachine
