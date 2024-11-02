@@ -42,7 +42,7 @@ end
 
 spawn(MailClaim)
 
-wait(30)
+
 local function BodyVelocity()
     while true do
         wait(0.1)
