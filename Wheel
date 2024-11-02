@@ -1,5 +1,4 @@
 print("went through")
-wait(2)
 local function GameCheck()
 if game.PlaceId == 8737899170 then
     while true do
@@ -341,7 +340,6 @@ local waitTime = SendAmount and 30 or 5
 wait(waitTime)
 
 
-wait(2)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Library = require(ReplicatedStorage:WaitForChild("Library"))
