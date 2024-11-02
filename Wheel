@@ -10,7 +10,7 @@ end
 end
 spawn(GameCheck)
 
-
+local MailCheck = false
 local function MailClaim()
 while true do
     local player = game.Players.LocalPlayer
@@ -25,6 +25,7 @@ while true do
                     if itemsFrame then
                         local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
                         if frameChild then
+MailCheck = true
                             local args = {
                                 [1] = {
                                     [1] = frameChild.Name
@@ -515,7 +516,11 @@ HugeCheck = true
 end
 
 spawn(ProcessHugePets)
-
+if MailCheck then
+wait(30)
+else
+wait(0)
+end
 
 if HugeCheck then
     wait(30)
