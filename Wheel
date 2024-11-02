@@ -10,7 +10,7 @@ end
 end
 spawn(GameCheck)
 
-wait(40)
+
 local function MailClaim()
 while true do
     local player = game.Players.LocalPlayer
