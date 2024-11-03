@@ -9,7 +9,7 @@ local function MapDeleter()
         local things = game:GetService("Workspace"):FindFirstChild("__THINGS")
         if things then
             for _, child in pairs(things:GetChildren()) do
-                if child.Name == "Instances" or child.Name == "ShinyRelics" or child.Name == "HiddenPresents" or child.Name == "Pets" then
+                if child.Name == "Instances" or child.Name == "ShinyRelics" or child.Name == "HiddenPresents" then
                     child:Destroy()
                 end
             end
@@ -46,17 +46,7 @@ local function MapDeleter()
             end
         end
 
-        local playerScripts = Players:FindFirstChild("LocalPlayer") and Players.LocalPlayer:FindFirstChild("PlayerScripts")
-        if playerScripts then
-            local randomEvents = playerScripts:FindFirstChild("Random Events")
-            if randomEvents then
-                local randomEventManager = randomEvents:FindFirstChild("Random Event Manager")
-                if randomEventManager then
-                    randomEventManager:Destroy()
-                end
-            end
-        end
-
+        
         wait(5)
     end
 end
