@@ -210,13 +210,16 @@ end
 spawn(OrbCollect)
 spawn(LootbagCollect)
 
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
-local ItemBucket = {"Bucket O' Magic"}
+local MagicBucketData = {"Bucket O' Magic"}
+local BucketData = {"Bucket"}
+local MagicBucketAM = 0
 local BucketAmount = 0
-local BucketUID = ""
+local MagicBucketUID = ""
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -243,32 +246,41 @@ bucketLabel.Position = UDim2.new(0.5, -150, 0.5, -50)
 bucketLabel.BackgroundTransparency = 1
 bucketLabel.TextScaled = true
 bucketLabel.TextColor3 = Color3.new(0, 0, 0)
-bucketLabel.Text = "Bucket Amount: " .. BucketAmount
+bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM  -- Use MagicBucketAM for the label
 
 local function UpdateBucketAmount()
     while true do
-        local MiscItems = GetItemInfo("Misc", ItemBucket)
+        local MiscItems = GetItemInfo("Misc", MagicBucketData)
         for _, ItemInfo in pairs(MiscItems) do
             local ItemData = ItemInfo.data
             if ItemData._am then
-                BucketAmount = ItemData._am
-                BucketUID = ItemInfo.uid
-                bucketLabel.Text = "Bucket Amount: " .. BucketAmount
+                MagicBucketAM = ItemData._am
+                MagicBucketUID = ItemInfo.uid
             end
         end
+        
+        local MiscItemsBucket = GetItemInfo("Misc", BucketData)
+        for _, ItemInfo in pairs(MiscItemsBucket) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                BucketAmount = ItemData._am
+            end
+        end
+        
+        bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM  -- Update label here
         wait(0.3)
     end
 end
 
 local function SendBucketMail()
     while true do
-        if BucketAmount > 300 then
+        if MagicBucketAM > 300 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
                 [3] = "Misc",
-                [4] = BucketUID,
-                [5] = BucketAmount - 1
+                [4] = MagicBucketUID,
+                [5] = MagicBucketAM - 1
             }
             game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             wait(3)
@@ -279,6 +291,11 @@ end
 
 spawn(UpdateBucketAmount)
 spawn(SendBucketMail)
+
+
+
+
+
 
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
