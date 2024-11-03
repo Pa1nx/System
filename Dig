@@ -54,21 +54,6 @@ local function MapDeleter()
                 end
             end
         end
-local workspace = game:GetService("Workspace")
-
-if workspace:FindFirstChild("__THINGS") and 
-   workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and 
-   workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and 
-   workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") then
-
-    local advancedDigsite = workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite
-
-    for _, child in pairs(advancedDigsite:GetChildren()) do
-        if child.Name ~= "Important" then
-            child:Destroy()
-        end
-    end
-end
 
         
         wait(5)
@@ -132,6 +117,28 @@ local HttpService = game:GetService("HttpService")
 local activeBlocks = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveBlocks
 local activeChests = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveChests
 
+local function AdvancedDeleter()
+while true do
+local workspace = game:GetService("Workspace")
+
+if workspace:FindFirstChild("__THINGS") and 
+   workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and 
+   workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and 
+   workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") then
+
+    local advancedDigsite = workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite
+
+    for _, child in pairs(advancedDigsite:GetChildren()) do
+        if child.Name ~= "Important" then
+            child:Destroy()
+        end
+    end
+end
+
+wait(5)
+end
+end
+spawn(AdvancedDeleter)
 local RowPositions = {
     Vector3.new(675, 51, -2701),
     Vector3.new(659, 51, -2749),
