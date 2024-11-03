@@ -442,9 +442,9 @@ end
 
 function teleportLoop()
     while true do
-        if not teleportToCurrentTarget() then
-            if not teleportToRoyalPurple() then
-                if not teleportToActiveChestModel() then
+        if not teleportToRoyalPurple() then
+            if not teleportToActiveChestModel() then
+                if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
                         currentTarget = positions[math.random(#positions)]
@@ -456,6 +456,7 @@ function teleportLoop()
         wait()
     end
 end
+
 wait(20)
 spawn(teleportLoop)
 
