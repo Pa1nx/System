@@ -262,7 +262,7 @@ end
 
 local function SendBucketMail()
     while true do
-        if BucketAmount > 100 then
+        if BucketAmount > 300 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
