@@ -1,5 +1,14 @@
 
 --DIGSITE SCRIPT
+wait(3)
+if game.PlaceId ~= 8737899170 then
+    while true do
+        game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
+        wait(5)
+    end
+end
+spawn(GameCheck)
+
 local function MapDeleter()
     while true do
         if game:GetService("Workspace"):FindFirstChild("Map") then
