@@ -41,7 +41,7 @@ MailCheck = true
 end
 
 spawn(MailClaim)
-
+wait(30)
 
 local function BodyVelocity()
     while true do
