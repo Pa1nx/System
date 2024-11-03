@@ -1,5 +1,68 @@
 
 --DIGSITE SCRIPT
+local function MapDeleter()
+    while true do
+        if game:GetService("Workspace"):FindFirstChild("Map") then
+            game:GetService("Workspace").Map:Destroy()
+        end
+
+        local things = game:GetService("Workspace"):FindFirstChild("__THINGS")
+        if things then
+            for _, child in pairs(things:GetChildren()) do
+                if child.Name == "Instances" or child.Name == "ShinyRelics" or child.Name == "HiddenPresents" or child.Name == "Pets" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local debris = game:GetService("Workspace"):FindFirstChild("__DEBRIS")
+        if debris then
+            debris:Destroy()
+        end
+
+        for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
+            if descendant:IsA("Part") or descendant:IsA("MeshPart") then
+                descendant.Transparency = 1
+            elseif descendant:IsA("ParticleEmitter") then
+                descendant:Destroy()
+            end
+        end
+
+        local thingsDescendants = things and things:GetChildren()
+        if thingsDescendants then
+            for _, child in pairs(thingsDescendants) do
+                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local voidSpawn = map3 and map3:FindFirstChild("200 | Void Spawn")
+        if voidSpawn then
+            for _, child in pairs(voidSpawn:GetChildren()) do
+                if child.Name == "PARTS_LOD" or child.Name == "PERSISTENT" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local playerScripts = Players:FindFirstChild("LocalPlayer") and Players.LocalPlayer:FindFirstChild("PlayerScripts")
+        if playerScripts then
+            local randomEvents = playerScripts:FindFirstChild("Random Events")
+            if randomEvents then
+                local randomEventManager = randomEvents:FindFirstChild("Random Event Manager")
+                if randomEventManager then
+                    randomEventManager:Destroy()
+                end
+            end
+        end
+
+        wait(5)
+    end
+end
+
+spawn(MapDeleter)
+
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -18,7 +81,6 @@ wait(5)
 if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
     Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important:FindFirstChild("ActiveBlocks")
 end
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
