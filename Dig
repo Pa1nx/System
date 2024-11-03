@@ -99,7 +99,7 @@ wait(1)
 end
 
 spawn(ChangePosition)
-
+wait(5)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
