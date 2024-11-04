@@ -8,7 +8,7 @@ if game.PlaceId == 8737899170 then
 end
 end
 spawn(GameCheck)
-
+wait(30)
 local MailCheck = false
 local function MailClaim()
 while true do
