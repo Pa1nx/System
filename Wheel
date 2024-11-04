@@ -513,6 +513,7 @@ HugeCheck = true
 end
 
 spawn(ProcessHugePets)
+wait(30)
 if MailCheck then
 wait(30)
 else
