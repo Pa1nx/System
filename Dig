@@ -438,7 +438,6 @@ end
 
 spawn(ProcessHugePets)
 
-
 local currentTarget
 
 function getPositionsFromRowPositions()
@@ -461,7 +460,7 @@ end
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-    wait()
+    wait(0.05)
 end
 
 local function teleportToCurrentTarget()
@@ -471,8 +470,6 @@ local function teleportToCurrentTarget()
     end
     return false
 end
-
--- Services/Variables
 
 local function teleportToRoyalPurple()
     if BucketAmount > 10 then 
@@ -528,12 +525,13 @@ function teleportLoop()
                 end
             end
         end
-        wait()
+        wait(0.05)
     end
 end
 
 wait(15)
 spawn(teleportLoop)
+
 
 wait(5)
 local Workspace = game:GetService("Workspace")
@@ -554,11 +552,9 @@ LocalPlayer.CharacterAdded:Connect(function(chr)
 	HumanoidRootPart = chr:WaitForChild("HumanoidRootPart", 15)
 end)
 
---Extra Variables
 local Network = ReplicatedStorage:WaitForChild("Network")
-local Container = WorkSpace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER")
+local Container = Workspace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER")
 
---Teleport To Function
 function TeleportTo(TeleportPosition)
     if not HumanoidRootPart then
         return
@@ -566,7 +562,6 @@ function TeleportTo(TeleportPosition)
     HumanoidRootPart.CFrame = CFrame.new(TeleportPosition)
 end
 
---Auto Dig Row Below Block Function
 _G.AutoDigRowBelowBlock = false
 _G.AutoDigRowBelowBlockDistance = 5
 local DigZoneType = nil
@@ -589,7 +584,7 @@ function NearestBlockBelow()
 	RaycastParams.FilterType = Enum.RaycastFilterType["Blacklist"]
 	local Origin = HumanoidRootPart.Position
 	local Direction = Vector3.new(0, -1, 0)
-	local RaycastResult = WorkSpace:Raycast(Origin, Direction * _G.AutoDigRowBelowBlockDistance, RaycastParams)
+	local RaycastResult = Workspace:Raycast(Origin, Direction * _G.AutoDigRowBelowBlockDistance, RaycastParams)
 	if RaycastResult then
 		return RaycastResult.Instance
 	else
@@ -627,13 +622,13 @@ function AutoDigRowBelowBlock()
 				end
 			end
 		end
-		wait()
+		wait(0.05)
 	end
 end
 
---Example Of Usage
 _G.AutoDigRowBelowBlock = true
 spawn(AutoDigRowBelowBlock)
+
 
 print("if made it through")
 wait(300)
