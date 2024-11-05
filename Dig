@@ -103,8 +103,6 @@ local function MapDeleter()
             end
         end
 
-   
-
         local thingsDescendants = things and things:GetChildren()
         if thingsDescendants then
             for _, child in pairs(thingsDescendants) do
@@ -123,12 +121,27 @@ local function MapDeleter()
             end
         end
 
-        
+        for _, child in pairs(game:GetService("Workspace"):GetChildren()) do
+            if child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" or child.Name == "__DEBRIS" then
+                child:Destroy()
+            end
+        end
+
+        if things then
+            for _, child in pairs(things:GetChildren()) do
+                if child.Name == "Flags" or child.Name == "Hoverboards" or child.Name == "Booths" or child.Name == "Ski Chairs" or child.Name == "CustomEggs" then
+                    child:Destroy()
+                end
+            end
+        end
+
         wait(5)
     end
 end
 
 spawn(MapDeleter)
+
+
 local RowPositions = {
     Vector3.new(675, 51, -2701),
     Vector3.new(659, 51, -2749),
