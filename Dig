@@ -320,7 +320,7 @@ end
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 50 then
+        if MagicBucketAM > 500 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
