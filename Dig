@@ -122,7 +122,7 @@ local function MapDeleter()
         end
 
         for _, child in pairs(game:GetService("Workspace"):GetChildren()) do
-            if child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" or child.Name == "__DEBRIS" then
+            if child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" then
                 child:Destroy()
             end
         end
