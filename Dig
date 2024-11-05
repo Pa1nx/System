@@ -34,6 +34,38 @@ end
 
 spawn(ChangePosition)
 wait(5)
+local function MailClaim()
+while true do
+    local player = game.Players.LocalPlayer
+    
+        local gui = player.PlayerGui:FindFirstChild("_MACHINES")
+        if gui then
+            local mailboxMachine = gui:FindFirstChild("MailboxMachine")
+            if mailboxMachine then
+                local giftsFrame = mailboxMachine:FindFirstChild("Frame") and mailboxMachine.Frame:FindFirstChild("GiftsFrame")
+                if giftsFrame then
+                    local itemsFrame = giftsFrame:FindFirstChild("ItemsFrame")
+                    if itemsFrame then
+                        local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
+                        if frameChild then
+
+                            local args = {
+                                [1] = {
+                                    [1] = frameChild.Name
+                                }
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
+                        end
+                    end
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(MailClaim)
+
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
