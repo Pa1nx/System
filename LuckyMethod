@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
-local InstaPlantData = {"Insta Plant Seed"}
+local InstaPlantData = {"Insta Plant Capsule"}
 local SeedBagData = {"Seed Bag"}
 local DiamondSeedData = {"Diamond"}
 local CurrencyData = {"Diamonds"}
