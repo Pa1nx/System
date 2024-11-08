@@ -217,7 +217,7 @@ getgenv().LoadSettings = {
 }
 loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
 end
-spawn(HugeSceipt)
+spawn(HugeScript)
 
 local Players = game:GetService("Players")
 
