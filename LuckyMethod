@@ -128,6 +128,57 @@ end
 
 spawn(MailClaim)
 
+local function MapDestroy()
+    while true do
+        
+        
+        local map3 = workspace:FindFirstChild("Map")
+        if map3 then
+            for _, child in pairs(map3:GetChildren()) do
+                if child.Name ~= "200 | Void Spawn" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local things = game:GetService("Workspace"):FindFirstChild("__THINGS")
+        if things then
+            for _, child in pairs(things:GetChildren()) do
+                if child.Name == "Instances" or child.Name == "shinyRelics" or child.Name == "HiddenPresents" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local debris = game:GetService("Workspace"):FindFirstChild("__DEBRIS")
+        if debris then
+            debris:Destroy()
+        end
+
+        for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
+            if descendant:IsA("Part") or descendant:IsA("MeshPart") then
+                descendant.Transparency = 1
+            elseif descendant:IsA("ParticleEmitter") then
+                descendant:Destroy()
+            end
+        end
+
+        local thingsDescendants = things and things:GetChildren()
+        if thingsDescendants then
+            for _, child in pairs(thingsDescendants) do
+                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        
+wait(1)
+    end
+end
+
+spawn(MapDestroy)
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
