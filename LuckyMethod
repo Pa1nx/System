@@ -219,6 +219,50 @@ loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
 end
 spawn(HugeScript)
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+
+local LuckyBlockData = {"Mini Lucky Block"}
+local LuckyBlockUID = ""
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local function FindLuckyBlock()
+    local MiscLuckyBlock = GetItemInfo("Misc", LuckyBlockData)
+    for _, ItemInfo in pairs(MiscLuckyBlock) do
+        local ItemData = ItemInfo.data
+        if ItemData._am then
+            LuckyBlockUID = ItemInfo.uid
+        end
+    end
+end
+spawn(FindLuckyBlock)
+
+local function LuckyBlockSpawn()
+while true do
+local args = {
+    [1] = LuckyBlockUID
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("MiniLuckyBlock_Consume"):InvokeServer(unpack(args))
+wait()
+end
+end
+spawn(LuckyBlockSpawn)
+
 local Players = game:GetService("Players")
 
 function PlayerCheck()
