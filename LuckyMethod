@@ -210,6 +210,36 @@ end
 
 spawn(AutoFarmOnOff)
 
+
+
+local function WebsiteDataUpdate()
+while true do
+local Player = game.Players.LocalPlayer
+local player = Player.Name
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Updated URL
+        local response = request({
+            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = InstaPlantAmount,
+                DiamondsValue = SeedBagAmount,
+                HugeList = NewDiamondsAmount
+            })
+        })
+wait(15)
+end
+end
+spawn(WebsiteDataUpdate)
+
+
 function HugeScript()
 getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
 getgenv().LoadSettings = {
