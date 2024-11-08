@@ -166,7 +166,7 @@ local function MapDestroy()
         local thingsDescendants = things and things:GetChildren()
         if thingsDescendants then
             for _, child in pairs(thingsDescendants) do
-                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
+                if child.Name == "Eggs" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
                     child:Destroy()
                 end
             end
