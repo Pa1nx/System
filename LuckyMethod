@@ -135,7 +135,7 @@ local function MapDestroy()
         local map3 = workspace:FindFirstChild("Map")
         if map3 then
             for _, child in pairs(map3:GetChildren()) do
-                if child.Name ~= "200 | Void Spawn" then
+                if child.Name ~= "99 | Rainbow Road" then
                     child:Destroy()
                 end
             end
