@@ -1,4 +1,101 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+
+local InstaPlantData = {"Insta Plant Seed"}
+local SeedBagData = {"Seed Bag"}
+local DiamondSeedData = {"Diamond"}
+local CurrencyData = {"Diamonds"}
+local InstaPlantAmount = 0
+local SeedBagAmount = 0
+local DiamondSeedAmount = 0
+local DiamondsEarned = 0
+local InitialDiamondsAmount = 0
+local NewDiamondsAmount = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local function InitializeDiamondsAmount()
+    local CurrencyDiamonds = GetItemInfo("Currency", CurrencyData)
+    for _, ItemInfo in pairs(CurrencyDiamonds) do
+        local ItemData = ItemInfo.data
+        if ItemData._am then
+            InitialDiamondsAmount = ItemData._am
+        end
+    end
+end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local guiLabel = Instance.new("TextLabel")
+guiLabel.Parent = screenGui
+guiLabel.Size = UDim2.new(0, 300, 0, 100)
+guiLabel.Position = UDim2.new(0.5, -150, 0.1, 0)
+guiLabel.BackgroundTransparency = 1
+guiLabel.TextScaled = true
+guiLabel.TextColor3 = Color3.new(0, 0, 0)
+guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
+
+local function UpdateItemAmounts()
+    while true do
+        local MiscInstaPlant = GetItemInfo("Misc", InstaPlantData)
+        for _, ItemInfo in pairs(MiscInstaPlant) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                InstaPlantAmount = ItemData._am
+            end
+        end
+        
+        local MiscSeedBag = GetItemInfo("Misc", SeedBagData)
+        for _, ItemInfo in pairs(MiscSeedBag) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                SeedBagAmount = ItemData._am
+            end
+        end
+        
+        local SeedDiamond = GetItemInfo("Seed", DiamondSeedData)
+        for _, ItemInfo in pairs(SeedDiamond) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                DiamondSeedAmount = ItemData._am
+            end
+        end
+
+        local CurrencyDiamonds = GetItemInfo("Currency", CurrencyData)
+        for _, ItemInfo in pairs(CurrencyDiamonds) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                NewDiamondsAmount = ItemData._am
+                DiamondsEarned = DiamondsEarned + (NewDiamondsAmount - InitialDiamondsAmount)
+                InitialDiamondsAmount = NewDiamondsAmount
+            end
+        end
+
+        guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
+        wait(0.3)
+    end
+end
+
+spawn(InitializeDiamondsAmount)
+spawn(UpdateItemAmounts)
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 
