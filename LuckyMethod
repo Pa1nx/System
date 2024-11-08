@@ -1,0 +1,158 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+local Network = ReplicatedStorage:WaitForChild("Network")
+
+_G.AutoFarmOnOff = true
+_G.MaxCheckDistance = 150
+local BreakableRemote = Network:WaitForChild("Breakables_PlayerDealDamage")
+
+local TargetMeshIds = {
+    ["rbxassetid://10784552859"] = true,
+    ["rbxassetid://12652624113"] = true,
+    ["rbxassetid://7041620873"] = true
+}
+
+function AutoFarmBreakables()
+    while _G.AutoFarmOnOff do
+        local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
+
+        if Breakables then
+            local Targets = {}
+
+            for _, Breakable in ipairs(Breakables:GetChildren()) do
+                if Breakable:IsA("Model") then
+                    for _, MeshPart in ipairs(Breakable:GetChildren()) do
+                        if MeshPart:IsA("MeshPart") then
+                            local Hitbox = MeshPart:FindFirstChild("Hitbox")
+                            if Hitbox then
+                                local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
+                                
+                                if Distance <= _G.MaxCheckDistance then
+                                    local MeshId = MeshPart.MeshId
+                                    if TargetMeshIds[MeshId] then
+                                        table.insert(Targets, Breakable.Name)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            if #Targets > 0 then
+                for _, TargetName in ipairs(Targets) do
+                    BreakableRemote:FireServer(TargetName)
+                end
+            else
+                local NearestBreakable, NearestDistance = nil, _G.MaxCheckDistance
+                for _, Breakable in ipairs(Breakables:GetChildren()) do
+                    if Breakable:IsA("Model") then
+                        for _, MeshPart in ipairs(Breakable:GetChildren()) do
+                            if MeshPart:IsA("MeshPart") then
+                                local Hitbox = MeshPart:FindFirstChild("Hitbox")
+                                if Hitbox then
+                                    local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
+                                    if Distance < NearestDistance then
+                                        NearestBreakable = Breakable.Name
+                                        NearestDistance = Distance
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                if NearestBreakable then
+                    BreakableRemote:FireServer(NearestBreakable)
+                end
+            end
+        end
+        task.wait()
+    end
+end
+
+function AutoFarmOnOff()
+    task.spawn(AutoFarmBreakables)
+end
+
+spawn(AutoFarmOnOff)
+
+function HugeScript()
+getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
+getgenv().LoadSettings = {
+    Example_Setting = Example_Value
+}
+loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
+end
+spawn(HugeSceipt)
+
+local Players = game:GetService("Players")
+
+function PlayerCheck()
+    while true do
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Name ~= Players.LocalPlayer.Name and player.Name:lower():find("svipbatch") then
+                local PlaceID = game.PlaceId
+                local AllIDs = {}
+                local foundAnything = ""
+                local actualHour = os.date("!*t").hour
+                local last
+
+                local File = pcall(function()
+                    AllIDs = game:GetService("HttpService"):JSONDecode(readfile("NotSameServers.json"))
+                end)
+                
+                if not File then
+                    table.insert(AllIDs, actualHour)
+                    writefile("NotSameServers.json", game:GetService("HttpService"):JSONEncode(AllIDs))
+                end
+
+                function TPReturner()
+                    local Site
+                    if foundAnything == "" then
+                        Site = game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceID .. "/servers/Public?sortOrder=Asc&limit=100"))
+                    else
+                        Site = game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceID .. "/servers/Public?sortOrder=Asc&limit=100&cursor=" .. foundAnything))
+                    end
+
+                    if Site.nextPageCursor then
+                        foundAnything = Site.nextPageCursor
+                    end
+                    
+                    for _, v in pairs(Site.data) do
+                        local ID = tostring(v.id)
+                        local Possible = true
+                        
+                        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+                            for _, Existing in pairs(AllIDs) do
+                                if ID == tostring(Existing) then
+                                    Possible = false
+                                    break
+                                end
+                            end
+
+                            if Possible then
+                                table.insert(AllIDs, ID)
+                                pcall(function()
+                                    writefile("NotSameServers.json", game:GetService("HttpService"):JSONEncode(AllIDs))
+                                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, Players.LocalPlayer)
+                                end)
+                                wait(4)
+                            end
+                        end
+                    end
+                end
+
+                TPReturner()
+                
+
+            end
+        end
+        wait(30)
+    end
+end
+
+spawn(PlayerCheck)
