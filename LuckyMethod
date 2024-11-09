@@ -7,7 +7,6 @@ loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
 end
 spawn(HugeScript)
 wait(5)
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
@@ -16,14 +15,12 @@ local InstaPlantData = {"Insta Plant Capsule"}
 local SeedBagData = {"Seed Bag"}
 local DiamondSeedData = {"Diamond"}
 local CurrencyData = {"Diamonds"}
-local LuckyBlockData = {"Lucky Block"}
 local InstaPlantAmount = 0
 local SeedBagAmount = 0
 local DiamondSeedAmount = 0
 local DiamondsEarned = 0
 local InitialDiamondsAmount = 0
 local NewDiamondsAmount = 0
-local LuckyBlockAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -60,7 +57,7 @@ guiLabel.Position = UDim2.new(0.5, -150, 0.1, 0)
 guiLabel.BackgroundTransparency = 1
 guiLabel.TextScaled = true
 guiLabel.TextColor3 = Color3.new(0, 0, 0)
-guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned .. " | Lucky Blocks: " .. LuckyBlockAmount
+guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
 
 local function UpdateItemAmounts()
     while true do
@@ -98,15 +95,7 @@ local function UpdateItemAmounts()
             end
         end
 
-        local MiscLuckyBlocks = GetItemInfo("Misc", LuckyBlockData)
-        for _, ItemInfo in pairs(MiscLuckyBlocks) do
-            local ItemData = ItemInfo.data
-            if ItemData._am then
-                LuckyBlockAmount = ItemData._am
-            end
-        end
-
-        guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned .. " | Lucky Blocks: " .. LuckyBlockAmount
+        guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
         wait(0.3)
     end
 end
@@ -259,7 +248,7 @@ function AutoFarmOnOff()
 end
 
 spawn(AutoFarmOnOff)
-
+local LuckyBlockAmount = 0
 
 local function WebsiteDataUpdate()
 while true do
