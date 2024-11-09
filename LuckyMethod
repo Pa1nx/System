@@ -1,34 +1,12 @@
 function HugeScript()
-getgenv().Config = {
-    ["Farming"] = {
-        ["AutoEvents"] = {"Mini Lucky Block", "Mini Pinata"},
-        ["AutoOpen"] = {"Gift Bag", "Large Gift Bag", "Mini Chest", "Diamond Gift Bag"},
-        ["AutoPotions"] = {"Diamonds", "Damage", "Walkspeed", "Treasure Hunter"},
-        ["AutoFlags"] = {"Fortune Flag"}
-    },
-    ["Webhook"] = {
-        ["HugeURL"] = "",
-        ["StatsURL"] = "",
-        ["UserID"] = "",
-        ["SendEvery"] = 1
-    },
-    ["Misc"] = {
-        ["AutoDaycare"] = true,
-        ["UltraFPS"] = true,
-        ["AutoBuyAllSlots"] = true,
-        ["EquipEnchants"] = {"Diamond Gift Hunter", "Treasure Hunter"},
-    },
-    ["Elemental"] = {
-        ["AutoBuyCubes"] = {"Ultra Pet Cube"},
-        ["AutoTrainerQuests"] = false,
-        ["AutoFarmChest"] = false,
-    },
-    ["AutoMailUser"] = ""
+getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
+getgenv().LoadSettings = {
+    Example_Setting = Example_Value
 }
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/2bdebaf848a6be382ed338dad329aaf2.lua"))()
+loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
 end
 spawn(HugeScript)
-wait(10)
+wait(5)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -190,14 +168,33 @@ spawn(BodyVelocity)
 
 local function MapDeleter()
     while true do
-        for _, child in ipairs(Workspace:GetChildren()) do
-            if child.Name == "Map" or child.Name == "__DEBRIS" or child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" then
+        local map3 = workspace:FindFirstChild("Map")
+        if map3 then
+            for _, child in pairs(map3:GetChildren()) do
+                if child.Name ~= "99 | Rainbow Road" then
+                    child:Destroy()
+                elseif child.Name == "99 | Rainbow Road" then
+                    for _, subChild in pairs(child:GetChildren()) do
+                        if subChild.Name ~= "INTERACT" then
+                            subChild:Destroy()
+                        else
+                            for _, interactChild in pairs(subChild:GetChildren()) do
+                                if interactChild.Name ~= "BREAK_ZONES" and interactChild.Name ~= "BREAKABLE_SPAWNS" then
+                                    interactChild:Destroy()
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        for _, child in ipairs(workspace:GetChildren()) do
+            if child.Name == "__DEBRIS" or child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" then
                 child:Destroy()
             elseif child.Name == "__THINGS" then
                 for _, subChild in ipairs(child:GetChildren()) do
-                    if subChild.Name == "BalloonGifts" or subChild.Name == "ShinyRelics" or 
-                       subChild.Name == "HiddenPresents" or subChild.Name == "__FAKE_GROUND" or subChild.Name == "Eggs" or 
-                       subChild.Name == "RenderedEggs" or subChild.Name == "__FAKE_INSTANCE_BREAK_ZONES" or subChild.Name == "CustomEggs" then
+                    if subChild.Name == "BalloonGifts" or subChild.Name == "Instances" or subChild.Name == "ShinyRelics" or subChild.Name == "HiddenPresents" or subChild.Name == "__FAKE_GROUND" or subChild.Name == "Eggs" or subChild.Name == "RenderedEggs" or subChild.Name == "__FAKE_INSTANCE_BREAK_ZONES" or subChild.Name == "CustomEggs" then
                         subChild:Destroy()
                     end
                 end
@@ -208,6 +205,7 @@ local function MapDeleter()
 end
 
 spawn(MapDeleter)
+
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
