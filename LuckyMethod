@@ -1,3 +1,13 @@
+function HugeScript()
+getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
+getgenv().LoadSettings = {
+    Example_Setting = Example_Value
+}
+loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
+end
+spawn(HugeScript)
+wait(3)
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
@@ -278,14 +288,7 @@ end
 spawn(WebsiteDataUpdate)
 
 
-function HugeScript()
-getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
-getgenv().LoadSettings = {
-    Example_Setting = Example_Value
-}
-loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
-end
-spawn(HugeScript)
+
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
