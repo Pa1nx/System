@@ -6,7 +6,7 @@ getgenv().LoadSettings = {
 loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
 end
 spawn(HugeScript)
-wait(3)
+wait(10)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
