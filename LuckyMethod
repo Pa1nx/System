@@ -251,37 +251,69 @@ end
 spawn(AutoFarmBreakables)
 
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
-local LuckyBlockAmount = 0
+local ItemsToFind = {
+    ["Mini Chest"] = "Misc",
+    ["Large Gift Bag"] = "Misc",
+    ["Mini Gift Bag"] = "Misc",
+    ["Insta Plant Capsule"] = "Misc",
+    ["Seed Bag"] = "Misc",
+    ["Diamond"] = "Seed",
+    ["Diamonds"] = "Currency",
+    ["Mini Lucky Block"] = "Misc"
+}
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            return Item._am
+        end
+    end
+    return nil
+end
+
+local output = ""
+local function CollectAndPrintAmounts()
+    while true do
+        output = ""
+        for itemName, itemClass in pairs(ItemsToFind) do
+            local itemAmount = GetItemInfo(itemClass, {itemName})
+            if itemAmount then
+                output = output .. itemName .. " : " .. itemAmount .. " | "
+            end
+        end
+        output = output:sub(1, -4)
+        wait(5)
+    end
+end
+
+spawn(CollectAndPrintAmounts)
 
 local function WebsiteDataUpdate()
-while true do
-local Player = game.Players.LocalPlayer
-local player = Player.Name
+    while true do
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
         local Http = game:GetService("HttpService")
-
         local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-        -- Updated URL
         local response = request({
-            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/updateversiontwo',
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json'
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = InstaPlantAmount,
-                DiamondsValue = LuckyBlockAmount,
-                HugeList = NewDiamondsAmount
+                Data = output,
             })
         })
-wait(15)
+        wait(15)
+    end
 end
-end
+
 spawn(WebsiteDataUpdate)
-
-
 
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -396,3 +428,5 @@ function PlayerCheck()
 end
 
 spawn(PlayerCheck)
+
+
