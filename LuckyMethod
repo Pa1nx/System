@@ -341,7 +341,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("MiniL
 wait()
 end
 end
-spawn(LuckyBlockSpawn)
+
 
 local Players = game:GetService("Players")
 
