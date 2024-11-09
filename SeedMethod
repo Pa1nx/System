@@ -147,10 +147,10 @@ spawn(LootbagCollect)
         if seedBagAmount then
             print("Seed Bags: " .. seedBagAmount)
         else
-            print("Seed Bags not found.")
+          seedBagAmount = 0
         end
         wait(0.1)
-    until seedBagAmount and seedBagAmount < 100
+    until seedBagAmount < 100
 
     wait(60)
 
