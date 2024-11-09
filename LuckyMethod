@@ -331,16 +331,7 @@ LuckyBlockAmount = ItemInfo._am
 end
 spawn(FindLuckyBlock)
 
-local function LuckyBlockSpawn()
-while true do
-local args = {
-    [1] = LuckyBlockUID
-}
 
-game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("MiniLuckyBlock_Consume"):InvokeServer(unpack(args))
-wait()
-end
-end
 
 
 local Players = game:GetService("Players")
