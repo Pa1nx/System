@@ -136,10 +136,8 @@ local LocalPlayer = Players.LocalPlayer
 local Network = ReplicatedStorage:WaitForChild("Network")
 
 _G.AutoFarmOnOff = true
-_G.MaxCheckDistance = 150
+_G.AutoFarmDistance = 75
 local BreakableRemote = Network:WaitForChild("Breakables_PlayerDealDamage")
-
-local PriorityMeshId = "rbxassetid://10784552859"
 
 function AutoFarmBreakables()
     while _G.AutoFarmOnOff do
@@ -147,50 +145,30 @@ function AutoFarmBreakables()
         local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
 
         if Breakables then
-            local PriorityTarget = nil
+            local NearestBreakable = nil
+            local NearestHitbox = nil
+            local ActualBreakableDistance = _G.AutoFarmDistance
 
             for _, Breakable in ipairs(Breakables:GetChildren()) do
                 if Breakable:IsA("Model") then
                     for _, MeshPart in ipairs(Breakable:GetChildren()) do
-                        if MeshPart:IsA("MeshPart") then
+                        if MeshPart:IsA("MeshPart") and MeshPart.MeshId == "rbxassetid://10784552859" then
                             local Hitbox = MeshPart:FindFirstChild("Hitbox")
                             if Hitbox then
                                 local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
-                                
-                                if Distance <= _G.MaxCheckDistance and MeshPart.MeshId == PriorityMeshId then
-                                    PriorityTarget = Breakable.Name
-                                    break
+                                if not NearestBreakable or Distance <= ActualBreakableDistance then
+                                    NearestBreakable = Breakable
+                                    NearestHitbox = Hitbox
+                                    ActualBreakableDistance = Distance
                                 end
                             end
                         end
                     end
                 end
-                if PriorityTarget then break end
             end
 
-            if PriorityTarget then
-                BreakableRemote:FireServer(PriorityTarget)
-            else
-                local NearestBreakable, NearestDistance = nil, _G.MaxCheckDistance
-                for _, Breakable in ipairs(Breakables:GetChildren()) do
-                    if Breakable:IsA("Model") then
-                        for _, MeshPart in ipairs(Breakable:GetChildren()) do
-                            if MeshPart:IsA("MeshPart") then
-                                local Hitbox = MeshPart:FindFirstChild("Hitbox")
-                                if Hitbox then
-                                    local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
-                                    if Distance < NearestDistance then
-                                        NearestBreakable = Breakable.Name
-                                        NearestDistance = Distance
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-                if NearestBreakable then
-                    BreakableRemote:FireServer(NearestBreakable)
-                end
+            if NearestBreakable then
+                BreakableRemote:FireServer(NearestBreakable.Name)
             end
         end
         task.wait()
@@ -202,6 +180,7 @@ function AutoFarmOnOff()
 end
 
 spawn(AutoFarmOnOff)
+
 
 
 
