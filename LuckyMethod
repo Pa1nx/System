@@ -6,12 +6,14 @@ local InstaPlantData = {"Insta Plant Capsule"}
 local SeedBagData = {"Seed Bag"}
 local DiamondSeedData = {"Diamond"}
 local CurrencyData = {"Diamonds"}
+local LuckyBlockData = {"Lucky Block"}
 local InstaPlantAmount = 0
 local SeedBagAmount = 0
 local DiamondSeedAmount = 0
 local DiamondsEarned = 0
 local InitialDiamondsAmount = 0
 local NewDiamondsAmount = 0
+local LuckyBlockAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -48,7 +50,7 @@ guiLabel.Position = UDim2.new(0.5, -150, 0.1, 0)
 guiLabel.BackgroundTransparency = 1
 guiLabel.TextScaled = true
 guiLabel.TextColor3 = Color3.new(0, 0, 0)
-guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
+guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned .. " | Lucky Blocks: " .. LuckyBlockAmount
 
 local function UpdateItemAmounts()
     while true do
@@ -86,13 +88,22 @@ local function UpdateItemAmounts()
             end
         end
 
-        guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned
+        local MiscLuckyBlocks = GetItemInfo("Misc", LuckyBlockData)
+        for _, ItemInfo in pairs(MiscLuckyBlocks) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                LuckyBlockAmount = ItemData._am
+            end
+        end
+
+        guiLabel.Text = "Instant Capsules: " .. InstaPlantAmount .. " | Seed Bags: " .. SeedBagAmount .. " | Diamond Seeds: " .. DiamondSeedAmount .. " | Diamonds Earned: " .. DiamondsEarned .. " | Lucky Blocks: " .. LuckyBlockAmount
         wait(0.3)
     end
 end
 
 spawn(InitializeDiamondsAmount)
 spawn(UpdateItemAmounts)
+
 
 
 
@@ -127,6 +138,44 @@ while true do
 end
 
 spawn(MailClaim)
+
+local function BodyVelocity()
+    while true do
+        wait(0.1)
+        local player = game.Players.LocalPlayer
+        local character = player and player.Character
+        local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+            BV.Velocity = Vector3.new(0, 0.001, 0)
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+        end
+    end
+end
+
+spawn(BodyVelocity)
+
+local function MapDeleter()
+    while true do
+        for _, child in ipairs(Workspace:GetChildren()) do
+            if child.Name == "Map" or child.Name == "__DEBRIS" or child.Name == "ALWAYS_RENDERING" or child.Name == "FlyBorder" or child.Name == "Border" then
+                child:Destroy()
+            elseif child.Name == "__THINGS" then
+                for _, subChild in ipairs(child:GetChildren()) do
+                    if subChild.Name == "BalloonGifts" or subChild.Name == "Instances" or subChild.Name == "ShinyRelics" or 
+                       subChild.Name == "HiddenPresents" or subChild.Name == "__FAKE_GROUND" or subChild.Name == "Eggs" or 
+                       subChild.Name == "RenderedEggs" or subChild.Name == "__FAKE_INSTANCE_BREAK_ZONES" or subChild.Name == "CustomEggs" then
+                        subChild:Destroy()
+                    end
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(MapDeleter)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -219,7 +268,7 @@ local player = Player.Name
             Body = Http:JSONEncode({
                 Username = player,
                 VoidTicketsValue = InstaPlantAmount,
-                DiamondsValue = SeedBagAmount,
+                DiamondsValue = LuckyBlockAmount,
                 HugeList = NewDiamondsAmount
             })
         })
@@ -265,6 +314,7 @@ local function FindLuckyBlock()
         local ItemData = ItemInfo.data
         if ItemData._am then
             LuckyBlockUID = ItemInfo.uid
+LuckyBlockAmount = ItemInfo._am
         end
     end
 end
