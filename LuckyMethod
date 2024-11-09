@@ -259,7 +259,7 @@ local function PetFarming()
                     local MeshPart = Breakable:FindFirstChildWhichIsA("MeshPart")
                     if MeshPart and MeshPart.MeshId ~= PriorityMeshId then
                         if not table.find(BreakableTargets, Breakable.Name) then
-                            if #BreakableTargets < 30 then
+                            if #BreakableTargets < 10 then
                                 table.insert(BreakableTargets, Breakable.Name)
                             end
                         end
@@ -279,7 +279,7 @@ local function PetFarming()
             end
         end
 
-        wait(1)
+        wait()
     end
 end
 
@@ -314,6 +314,8 @@ local function StartPetFarming()
         for _, breakableName in ipairs(BreakableTargets) do
             local args = {}
             for i, petName in ipairs(PetFolder) do
+print(petName)
+print(breakableName)
                 table.insert(args, {
                     [petName] = breakableName
                 })
