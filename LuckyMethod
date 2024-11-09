@@ -136,42 +136,61 @@ local LocalPlayer = Players.LocalPlayer
 local Network = ReplicatedStorage:WaitForChild("Network")
 
 _G.AutoFarmOnOff = true
-_G.AutoFarmDistance = 75
+_G.AutoFarmDistance = 120
 local BreakableRemote = Network:WaitForChild("Breakables_PlayerDealDamage")
 
-function AutoFarmBreakables()
+local PriorityMeshId = "rbxassetid://10784552859"
+local ValidMeshIds = {
+    [PriorityMeshId] = true,
+    ["rbxassetid://12652624113"] = true,
+    ["rbxassetid://7041620873"] = true
+}
+
+local function AutoFarmBreakables()
     while _G.AutoFarmOnOff do
-        local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local HumanoidRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
 
-        if Breakables then
-            local NearestBreakable = nil
-            local NearestHitbox = nil
-            local ActualBreakableDistance = _G.AutoFarmDistance
+        if HumanoidRootPart and Breakables then
+            local NearestPriorityBreakable, NearestHitbox, ActualBreakableDistance = nil, nil, _G.AutoFarmDistance
+            local FallbackBreakable, FallbackHitbox, FallbackDistance = nil, nil, math.huge
 
             for _, Breakable in ipairs(Breakables:GetChildren()) do
                 if Breakable:IsA("Model") then
                     for _, MeshPart in ipairs(Breakable:GetChildren()) do
-                        if MeshPart:IsA("MeshPart") and MeshPart.MeshId == "rbxassetid://10784552859" then
-                            local Hitbox = MeshPart:FindFirstChild("Hitbox")
-                            if Hitbox then
-                                local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
-                                if not NearestBreakable or Distance <= ActualBreakableDistance then
-                                    NearestBreakable = Breakable
-                                    NearestHitbox = Hitbox
-                                    ActualBreakableDistance = Distance
-                                end
+                        if MeshPart:IsA("MeshPart") then
+                            local Hitbox = MeshPart:FindFirstChild("Hitbox") or MeshPart
+                            local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
+                            
+                            if MeshPart.MeshId == PriorityMeshId and Distance <= _G.AutoFarmDistance then
+                                NearestPriorityBreakable = Breakable
+                                NearestHitbox = Hitbox
+                                ActualBreakableDistance = Distance
+                                break
+                            elseif ValidMeshIds[MeshPart.MeshId] and Distance <= ActualBreakableDistance then
+                                NearestPriorityBreakable = NearestPriorityBreakable or Breakable
+                                NearestHitbox = NearestHitbox or Hitbox
+                                ActualBreakableDistance = Distance
+                            elseif Distance < FallbackDistance then
+                                FallbackBreakable = Breakable
+                                FallbackHitbox = Hitbox
+                                FallbackDistance = Distance
                             end
                         end
                     end
                 end
+                if NearestPriorityBreakable then break end
             end
-
-            if NearestBreakable then
-                BreakableRemote:FireServer(NearestBreakable.Name)
+            
+            if NearestPriorityBreakable then
+                BreakableRemote:FireServer(NearestPriorityBreakable.Name)
+            elseif NearestHitbox then
+                BreakableRemote:FireServer(NearestPriorityBreakable.Name)
+            elseif FallbackBreakable then
+                BreakableRemote:FireServer(FallbackBreakable.Name)
             end
         end
-        task.wait()
+        wait()
     end
 end
 
@@ -180,9 +199,6 @@ function AutoFarmOnOff()
 end
 
 spawn(AutoFarmOnOff)
-
-
-
 
 
 local function WebsiteDataUpdate()
