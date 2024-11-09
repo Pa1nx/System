@@ -128,7 +128,6 @@ end
 
 spawn(MailClaim)
 
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
@@ -140,11 +139,7 @@ _G.AutoFarmOnOff = true
 _G.MaxCheckDistance = 150
 local BreakableRemote = Network:WaitForChild("Breakables_PlayerDealDamage")
 
-local TargetMeshIds = {
-    ["rbxassetid://10784552859"] = true,
-    ["rbxassetid://12652624113"] = true,
-    ["rbxassetid://7041620873"] = true
-}
+local PriorityMeshId = "rbxassetid://10784552859"
 
 function AutoFarmBreakables()
     while _G.AutoFarmOnOff do
@@ -152,7 +147,7 @@ function AutoFarmBreakables()
         local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
 
         if Breakables then
-            local Targets = {}
+            local PriorityTarget = nil
 
             for _, Breakable in ipairs(Breakables:GetChildren()) do
                 if Breakable:IsA("Model") then
@@ -162,22 +157,19 @@ function AutoFarmBreakables()
                             if Hitbox then
                                 local Distance = (HumanoidRootPart.Position - Hitbox.Position).Magnitude
                                 
-                                if Distance <= _G.MaxCheckDistance then
-                                    local MeshId = MeshPart.MeshId
-                                    if TargetMeshIds[MeshId] then
-                                        table.insert(Targets, Breakable.Name)
-                                    end
+                                if Distance <= _G.MaxCheckDistance and MeshPart.MeshId == PriorityMeshId then
+                                    PriorityTarget = Breakable.Name
+                                    break
                                 end
                             end
                         end
                     end
                 end
+                if PriorityTarget then break end
             end
 
-            if #Targets > 0 then
-                for _, TargetName in ipairs(Targets) do
-                    BreakableRemote:FireServer(TargetName)
-                end
+            if PriorityTarget then
+                BreakableRemote:FireServer(PriorityTarget)
             else
                 local NearestBreakable, NearestDistance = nil, _G.MaxCheckDistance
                 for _, Breakable in ipairs(Breakables:GetChildren()) do
@@ -210,6 +202,7 @@ function AutoFarmOnOff()
 end
 
 spawn(AutoFarmOnOff)
+
 
 
 
