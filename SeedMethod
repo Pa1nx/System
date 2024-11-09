@@ -10,270 +10,273 @@ local function GetItemInfo(ItemsClass, ItemsName)
     return nil
 end
 
-
-    local CurrencyData = {"Diamonds"}
-    local diamondAmount = GetItemInfo("Currency", CurrencyData)
-    if diamondAmount then
-        print("Diamonds: " .. diamondAmount)
-    else
-        print("Diamond amount not found.")
-    end
-
-if diamondAmount < 100000 then 
-
-if game.PlaceId ~= 8737899170 then
-    while true do
-        game.ReplicatedStorage.Network:FindFirstChild("Travel to Main World"):InvokeServer()
-        wait(5)
-game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
-        wait(5)
-    end
-end
-local function seedbag()
-    while true do
-        wait()
-        local args = { [1] = "Seed Bag" }
-        game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-        
-        game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-        
-        game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-        
-        game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-    end
-end
-spawn(seedbag)
-spawn(seedbag)
-spawn(seedbag)
-wait(10)
-if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Instances") and Workspace.__THINGS.Instances:FindFirstChild("FlowerGarden") and Workspace.__THINGS.Instances.FlowerGarden:FindFirstChild("Teleports") then
-                local targetPosition = Workspace.__THINGS.Instances.FlowerGarden.Teleports:FindFirstChild("Enter").Position
-                humanoidRootPart.CFrame = CFrame.new(targetPosition)
-            end
-
-
-for _ = 1, 8 do
-    coroutine.wrap(function()
-        while true do
-            for i = 1, 11 do
-                local args = {
-                    [1] = "FlowerGarden",
-                    [2] = "ClaimPlant",
-                    [3] = i
-                }
-                game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                wait()
-            end
-        end
-    end)()
-
-    coroutine.wrap(function()
-        while true do
-            for i = 1, 11 do
-                local args = {
-                    [1] = "FlowerGarden",
-                    [2] = "InstaGrowSeed",
-                    [3] = i
-                }
-                game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                wait()
-            end
-        end
-    end)()
-
-    coroutine.wrap(function()
-        while true do
-            for i = 1, 11 do
-                local args = {
-                    [1] = "FlowerGarden",
-                    [2] = "PlantSeed",
-                    [3] = i,
-                    [4] = "Diamond"
-                }
-                game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                wait()
-            end
-        end
-    end)()
+local CurrencyData = {"Diamonds"}
+local diamondAmount = GetItemInfo("Currency", CurrencyData)
+if diamondAmount then
+    print("Diamonds: " .. diamondAmount)
+else
+    print("Diamond amount not found.")
 end
 
+if diamondAmount < 100000 then
+    if game.PlaceId ~= 8737899170 then
+        while true do
+            game.ReplicatedStorage.Network:FindFirstChild("Travel to Main World"):InvokeServer()
+            wait(5)
+            game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
+            wait(5)
+        end
+    end
 
+    local function seedbag()
+        while true do
+            wait()
+            local args = { [1] = "Seed Bag" }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+        end
+    end
+
+    spawn(seedbag)
+    spawn(seedbag)
+    spawn(seedbag)
+    wait(10)
+local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Instances") and Workspace.__THINGS.Instances:FindFirstChild("FlowerGarden") and Workspace.__THINGS.Instances.FlowerGarden:FindFirstChild("Teleports") then
+        local targetPosition = Workspace.__THINGS.Instances.FlowerGarden.Teleports:FindFirstChild("Enter").Position
+        humanoidRootPart.CFrame = CFrame.new(targetPosition)
+    end
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local function GetItemAmount()
-    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-    for _, Item in pairs(Inventory["Misc"]) do
-        if Item.id == "Seed Bag" and Item._am then
-            return Item._am
+function OrbCollect()
+    while true do 
+        local Orbs = workspace:FindFirstChild("__THINGS")
+        if Orbs then
+            for _, orb in ipairs(Orbs.Orbs:GetChildren()) do
+                local ohTable1 = { tonumber(orb.Name) }
+                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
+                orb:Destroy()
+            end 
         end
+        task.wait()
     end
-    return nil
 end
 
-repeat
-    local seedBagAmount = GetItemAmount()
-    if seedBagAmount then
-        print("Seed Bags: " .. seedBagAmount)
+
+function LootbagCollect()
+    while true do 
+        local Lootbags = workspace:FindFirstChild("__THINGS") and workspace.__THINGS:FindFirstChild("Lootbags")
+        if Lootbags then
+            for _, bag in ipairs(Lootbags:GetChildren()) do
+                local ohTable1 = { tostring(bag) }
+                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
+                bag:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+spawn(OrbCollect)
+spawn(LootbagCollect)
+
+
+    for _ = 1, 8 do
+        coroutine.wrap(function()
+            while true do
+                for i = 1, 11 do
+                    local args = {
+                        [1] = "FlowerGarden",
+                        [2] = "ClaimPlant",
+                        [3] = i
+                    }
+                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                    wait()
+                end
+            end
+        end)()
+
+        coroutine.wrap(function()
+            while true do
+                for i = 1, 11 do
+                    local args = {
+                        [1] = "FlowerGarden",
+                        [2] = "InstaGrowSeed",
+                        [3] = i
+                    }
+                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+                    wait()
+                end
+            end
+        end)()
+
+        coroutine.wrap(function()
+            while true do
+                for i = 1, 11 do
+                    local args = {
+                        [1] = "FlowerGarden",
+                        [2] = "PlantSeed",
+                        [3] = i,
+                        [4] = "Diamond"
+                    }
+                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+                    wait()
+                end
+            end
+        end)()
+    end
+
+    local function GetItemAmount()
+        local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+        for _, Item in pairs(Inventory["Misc"]) do
+            if Item.id == "Seed Bag" and Item._am then
+                return Item._am
+            end
+        end
+        return nil
+    end
+
+    repeat
+        local seedBagAmount = GetItemAmount()
+        if seedBagAmount then
+            print("Seed Bags: " .. seedBagAmount)
+        else
+            print("Seed Bags not found.")
+        end
+        wait(0.1)
+    until seedBagAmount and seedBagAmount < 100
+
+    wait(60)
+
+    local User = game.Players.LocalPlayer
+    if User.Name == "voidwheel12" then
+        print("hi")
     else
-        print("Seed Bags not found.")
+        script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP"
+        getgenv().Settings = {
+            Sniper = {
+                Active = true,
+                Items = {
+                    SearchTerminal = {
+                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
+                        ["Seed Bag"] = {Class = "Misc", Price = 6500},
+                    },
+                },
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (s)"] = 0,
+                    ["Add Pro Plaza Lobbies"] = true,
+                    ["Constant Terminal Searching"] = true,
+                    ["Terminal Searches per Item"] = 3,
+                    ["Save # Servers"] = 10,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = true,
+                    ["Ping on Huges 'n Titanics"] = true,
+                    ["Global Snipes"] = true,
+                },
+                StopParams = {
+                    ["Limits Reached"] = false,
+                    ["Diamonds Hit: 250k"] = true,
+                    ["60 Minutes"] = false,
+                    ["Switch To Selling"] = true,
+                },
+            },
+            Seller = {
+                Active = false,
+                Items = {},
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (m)"] = 15,
+                    ["Add Pro Plaza Lobbies"] = true,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = false,
+                },
+                StopParams = {
+                    ["Item Runout"] = false,
+                    ["Diamonds Hit: 1b"] = false,
+                    ["60 Minutes"] = false,
+                    ["Switch To Sniping"] = false,
+                },
+                Other = {
+                    ["Auto Accept Mail"] = true,
+                    ["Always Try Adding Listings"] = true,
+                    ["Never Join Friendslist"] = true,
+                },
+            },
+        }
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
     end
-    wait(0.1)
-until seedBagAmount and seedBagAmount < 100
-
-wait(60)
-
-local User = game.Players.LocalPlayer
-if User.Name == "voidwheel12" then
-    print("hi")
 else
- script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP";
-getgenv().Settings = {
-    Sniper = {
-        Active = true,
-        Items = {
-            SearchTerminal = {
-       ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
-
- ["Seed Bag"] = {Class = "Misc", Price = 6500},
-
+script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP"
+        getgenv().Settings = {
+            Sniper = {
+                Active = true,
+                Items = {
+                    SearchTerminal = {
+                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
+                        ["Seed Bag"] = {Class = "Misc", Price = 6500},
+                    },
+                },
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (s)"] = 0,
+                    ["Add Pro Plaza Lobbies"] = true,
+                    ["Constant Terminal Searching"] = true,
+                    ["Terminal Searches per Item"] = 3,
+                    ["Save # Servers"] = 10,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = true,
+                    ["Ping on Huges 'n Titanics"] = true,
+                    ["Global Snipes"] = true,
+                },
+                StopParams = {
+                    ["Limits Reached"] = false,
+                    ["Diamonds Hit: 250k"] = true,
+                    ["60 Minutes"] = false,
+                    ["Switch To Selling"] = true,
+                },
             },
-        },
-        Serverhop = {
-            ["Switch Servers"] = true,
-            ["Teleport Delay (s)"] = 0,
-            ["Add Pro Plaza Lobbies"] = true,
-            ["Constant Terminal Searching"] = true,
-            ["Terminal Searches per Item"] = 3,
-            ["Save # Servers"] = 10,
-        },
-
-Webhook = {
-            ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-            ["Send Embeds"] = true,
-            ["Remove Username"] = true,
-            ["Ping on Huges 'n Titanics"] = true,
-            ["Global Snipes"] = true,
-        },
-        StopParams = {
-            ["Limits Reached"] = false,
-            ["Diamonds Hit: 250k"] = true,
-            ["60 Minutes"] = false,
-            ["Switch To Selling"] = true,
-        },
-    },
-
-    Seller = {
-        Active = false,
-        Items = {
-            --["Huge Abyssal Jellyfish"] = {Class = "Pet", Price = 50000000},
-            --["Large Potion Bundle"] = {Class = "Misc", Price = 5000},
-     
-        },
-        Serverhop = {
-            ["Switch Servers"] = true,
-            ["Teleport Delay (m)"] = 15,
-            ["Add Pro Plaza Lobbies"] = true,
-        },
-        Webhook = {
-            ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-            ["Send Embeds"] = true,
-            ["Remove Username"] = false,
-        },
-        StopParams = {
-            ["Item Runout"] = false,
-            ["Diamonds Hit: 1b"] = false,
-            ["60 Minutes"] = false,
-            ["Switch To Sniping"] = false,
-        },
-        Other = {
-            ["Auto Accept Mail"] = true,
-            ["Always Try Adding Listings"] = true,
-            ["Never Join Friendslist"] = true,
-        },
-    },
-    
-   
-}
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
-
-end
-
-else
-
-local User = game.Players.LocalPlayer
-if User.Name == "voidwheel12" then
-    print("hi")
-else
- script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP";
-getgenv().Settings = {
-    Sniper = {
-        Active = true,
-        Items = {
-            SearchTerminal = {
-       ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
-
- ["Seed Bag"] = {Class = "Misc", Price = 6500},
-
+            Seller = {
+                Active = false,
+                Items = {},
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (m)"] = 15,
+                    ["Add Pro Plaza Lobbies"] = true,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = false,
+                },
+                StopParams = {
+                    ["Item Runout"] = false,
+                    ["Diamonds Hit: 1b"] = false,
+                    ["60 Minutes"] = false,
+                    ["Switch To Sniping"] = false,
+                },
+                Other = {
+                    ["Auto Accept Mail"] = true,
+                    ["Always Try Adding Listings"] = true,
+                    ["Never Join Friendslist"] = true,
+                },
             },
-        },
-        Serverhop = {
-            ["Switch Servers"] = true,
-            ["Teleport Delay (s)"] = 0,
-            ["Add Pro Plaza Lobbies"] = true,
-            ["Constant Terminal Searching"] = true,
-            ["Terminal Searches per Item"] = 3,
-            ["Save # Servers"] = 10,
-        },
-
-Webhook = {
-            ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-            ["Send Embeds"] = true,
-            ["Remove Username"] = true,
-            ["Ping on Huges 'n Titanics"] = true,
-            ["Global Snipes"] = true,
-        },
-        StopParams = {
-            ["Limits Reached"] = false,
-            ["Diamonds Hit: 250k"] = true,
-            ["60 Minutes"] = false,
-            ["Switch To Selling"] = true,
-        },
-    },
-
-    Seller = {
-        Active = false,
-        Items = {
-            --["Huge Abyssal Jellyfish"] = {Class = "Pet", Price = 50000000},
-            --["Large Potion Bundle"] = {Class = "Misc", Price = 5000},
-     
-        },
-        Serverhop = {
-            ["Switch Servers"] = true,
-            ["Teleport Delay (m)"] = 15,
-            ["Add Pro Plaza Lobbies"] = true,
-        },
-        Webhook = {
-            ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-            ["Send Embeds"] = true,
-            ["Remove Username"] = false,
-        },
-        StopParams = {
-            ["Item Runout"] = false,
-            ["Diamonds Hit: 1b"] = false,
-            ["60 Minutes"] = false,
-            ["Switch To Sniping"] = false,
-        },
-        Other = {
-            ["Auto Accept Mail"] = true,
-            ["Always Try Adding Listings"] = true,
-            ["Never Join Friendslist"] = true,
-        },
-    },
-    
+        }
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
    
-}
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
-
-end
 end
