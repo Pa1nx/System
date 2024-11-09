@@ -178,8 +178,6 @@ end
 
 spawn(MapDeleter)
 
-
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
@@ -198,11 +196,15 @@ local ValidMeshIds = {
     ["rbxassetid://7041620873"] = true
 }
 
+local BreakableTargets = {}
+local PetFolder = {}
+
 local function AutoFarmBreakables()
     while _G.AutoFarmOnOff do
         local HumanoidRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
-
+        local Pets = Workspace:WaitForChild("__THINGS"):FindFirstChild("Pets")
+        
         if HumanoidRootPart and Breakables then
             local NearestPriorityBreakable, NearestHitbox, ActualBreakableDistance = nil, nil, _G.AutoFarmDistance
             local FallbackBreakable, FallbackHitbox, FallbackDistance = nil, nil, math.huge
@@ -246,11 +248,86 @@ local function AutoFarmBreakables()
     end
 end
 
-function AutoFarmOnOff()
-    task.spawn(AutoFarmBreakables)
+spawn(AutoFarmBreakables)
+
+local function PetFarming()
+    while true do
+        local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
+        if Breakables then
+            for _, Breakable in ipairs(Breakables:GetChildren()) do
+                if Breakable:IsA("Model") then
+                    local MeshPart = Breakable:FindFirstChildWhichIsA("MeshPart")
+                    if MeshPart and MeshPart.MeshId ~= PriorityMeshId then
+                        if not table.find(BreakableTargets, Breakable.Name) then
+                            if #BreakableTargets < 30 then
+                                table.insert(BreakableTargets, Breakable.Name)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        local Pets = Workspace:WaitForChild("__THINGS"):FindFirstChild("Pets")
+        if Pets then
+            for _, Pet in ipairs(Pets:GetChildren()) do
+                if Pet:IsA("Model") and string.match(Pet.Name, "%a") == nil then
+                    if not table.find(PetFolder, Pet.Name) then
+                        table.insert(PetFolder, Pet.Name)
+                    end
+                end
+            end
+        end
+
+        wait(1)
+    end
 end
 
-spawn(AutoFarmOnOff)
+spawn(PetFarming)
+
+local function CheckList()
+    while true do
+        local Breakables = Workspace:WaitForChild("__THINGS"):FindFirstChild("Breakables")
+        if Breakables then
+            for i = #BreakableTargets, 1, -1 do
+                local targetName = BreakableTargets[i]
+                local targetExists = false
+                for _, Breakable in ipairs(Breakables:GetChildren()) do
+                    if Breakable.Name == targetName then
+                        targetExists = true
+                        break
+                    end
+                end
+                if not targetExists then
+                    table.remove(BreakableTargets, i)
+                end
+            end
+        end
+        wait()
+    end
+end
+
+spawn(CheckList)
+
+local function StartPetFarming()
+    while true do
+        for _, breakableName in ipairs(BreakableTargets) do
+            local args = {}
+            for i, petName in ipairs(PetFolder) do
+                table.insert(args, {
+                    [petName] = breakableName
+                })
+            end
+            game:GetService("ReplicatedStorage").Network.Breakables_JoinPetBulk:FireServer(unpack(args))
+        end
+        wait()
+    end
+end
+
+spawn(StartPetFarming)
+
+
+
 local LuckyBlockAmount = 0
 
 local function WebsiteDataUpdate()
