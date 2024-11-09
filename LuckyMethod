@@ -165,7 +165,7 @@ local function MapDeleter()
             elseif child.Name == "__THINGS" then
                 for _, subChild in ipairs(child:GetChildren()) do
                     if subChild.Name == "BalloonGifts" or subChild.Name == "Instances" or subChild.Name == "ShinyRelics" or 
-                       subChild.Name == "HiddenPresents" or subChild.Name == "__FAKE_GROUND" or subChild.Name == "Eggs" or 
+                       subChild.Name == "HiddenPresents" or subChild.Name == "Eggs" or 
                        subChild.Name == "RenderedEggs" or subChild.Name == "__FAKE_INSTANCE_BREAK_ZONES" or subChild.Name == "CustomEggs" then
                         subChild:Destroy()
                     end
