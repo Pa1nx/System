@@ -1,9 +1,31 @@
 function HugeScript()
-getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
-getgenv().LoadSettings = {
-    Example_Setting = Example_Value
+getgenv().Config = {
+    ["Farming"] = {
+        ["AutoEvents"] = {"Mini Lucky Block", "Mini Pinata"},
+        ["AutoOpen"] = {"Gift Bag", "Large Gift Bag", "Mini Chest", "Diamond Gift Bag"},
+        ["AutoPotions"] = {"Diamonds", "Damage", "Walkspeed", "Treasure Hunter"},
+        ["AutoFlags"] = {"Fortune Flag"}
+    },
+    ["Webhook"] = {
+        ["HugeURL"] = "",
+        ["StatsURL"] = "",
+        ["UserID"] = "",
+        ["SendEvery"] = 1
+    },
+    ["Misc"] = {
+        ["AutoDaycare"] = true,
+        ["UltraFPS"] = true,
+        ["AutoBuyAllSlots"] = true,
+        ["EquipEnchants"] = {"Diamond Gift Hunter", "Treasure Hunter"},
+    },
+    ["Elemental"] = {
+        ["AutoBuyCubes"] = {"Ultra Pet Cube"},
+        ["AutoTrainerQuests"] = false,
+        ["AutoFarmChest"] = false,
+    },
+    ["AutoMailUser"] = ""
 }
-loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/2bdebaf848a6be382ed338dad329aaf2.lua"))()
 end
 spawn(HugeScript)
 wait(10)
