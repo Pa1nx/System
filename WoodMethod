@@ -133,7 +133,7 @@ local function DeleteTrees()
                                     end
                                     if keepTree then
                                         treeCount = treeCount + 1
-                                        if treeCount > 10 then
+                                        if treeCount > 20 then
                                             model:Destroy()
                                         end
                                     else
