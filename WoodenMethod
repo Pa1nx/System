@@ -109,6 +109,8 @@ end
 spawn(TreeTracker)
 
 local function DeleteTrees()
+    local playerName = game.Players.LocalPlayer.Name
+    
     while true do
         if workspace:FindFirstChild("__THINGS") then
             local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
@@ -125,19 +127,23 @@ local function DeleteTrees()
                                 local leaves = model:FindFirstChild("Leaves1")
                                 if leaves then
                                     local keepTree = false
+                                    
                                     for _, targetTree in ipairs(TargetTrees) do
                                         if leaves.BrickColor == treeColors[targetTree] then
                                             keepTree = true
                                             break
                                         end
                                     end
-                                    if keepTree then
-                                        treeCount = treeCount + 1
-                                        if treeCount > 20 then
+
+                                    if playerName == "svipbatch1" then
+                                        if keepTree then
+                                            treeCount = treeCount + 1
+                                            if treeCount > 20 then
+                                                model:Destroy()
+                                            end
+                                        else
                                             model:Destroy()
                                         end
-                                    else
-                                        model:Destroy()
                                     end
                                 end
                             end
@@ -149,7 +155,9 @@ local function DeleteTrees()
         wait(2)
     end
 end
+
 spawn(DeleteTrees)
+
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ItemLootbox = {"Wooden Gift"}
