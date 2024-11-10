@@ -150,6 +150,74 @@ local function DeleteTrees()
     end
 end
 spawn(DeleteTrees)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ItemLootbox = {"Wooden Gift"}
+local woodengiftamount = 0
+local woodengiftuid = "hi"
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+    if Inventory[ItemsClass] then
+        for UID, Item in pairs(Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    uid = UID,
+                    data = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+    end
+    return Table
+end
+
+local function PrintWoodenGiftAmount()
+    while true do
+        local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+        for _, ItemInfo in pairs(LootboxItems) do
+            local ItemData = ItemInfo.data
+            if ItemData and ItemData._am then
+              woodengiftamount = ItemData._am 
+woodengiftuid = ItemInfo.uid
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(PrintWoodenGiftAmount)
+
+local function WebsiteDataUpdate()
+while true do
+local Player = game.Players.LocalPlayer
+local player = Player.Name
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Updated URL
+        local response = request({
+            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = woodengiftamount,
+                DiamondsValue = "0",
+                HugeList = "0"
+            })
+        })
+wait(15)
+end
+end
+spawn(WebsiteDataUpdate)
+
+
 wait(180)
 local PlaceID = game.PlaceId
 local AllIDs = {}
