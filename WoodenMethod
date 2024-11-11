@@ -401,7 +401,7 @@ local function TreesFunction()
                     if woodcutting and woodcutting:FindFirstChild("Important") then
                         local treesContainer = woodcutting.Important:FindFirstChild("Trees")
 
-                        local found = false
+                     
 
                         if Oak == true then
                             for _, model in ipairs(treesContainer:GetChildren()) do
