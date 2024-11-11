@@ -195,6 +195,8 @@ local function LeaveArea()
                 end
             end
         end
+
+
         wait(1)
     end
 end
@@ -618,22 +620,8 @@ break
                     end
                 end
             end
-            wait()
-        end
-    end
-end
 
-spawn(TreesFunction)
-
-
-
-
-
-local function TreeBackUp()
-    while true do
-        wait(0.1)
-        if checking == false then
-            if found == false then
+if found == false then
                 if workspace:FindFirstChild("__THINGS") then
                     local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
                     if instanceContainer and instanceContainer:FindFirstChild("Active") then
@@ -868,12 +856,15 @@ end
                     end
                 end
             end
+
+            wait()
         end
-        wait()
     end
 end
 
-spawn(TreeBackUp)
+spawn(TreesFunction)
+
+
 
 
 
