@@ -357,7 +357,7 @@ local function TreeBackUp()
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Tr. Flu. Yellow") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -377,7 +377,7 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Black") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -395,9 +395,9 @@ end
 
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
-                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea Green") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea green") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -417,7 +417,7 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Camo") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -437,7 +437,7 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Dark indigo") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -457,7 +457,7 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Deep orange") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
                                             local AttributeValue = model.Trunk:GetAttribute("UID")
                                             if AttributeValue then
                                                 local args = { "Woodcutting", "ChopTree", AttributeValue }
