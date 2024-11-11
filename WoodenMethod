@@ -234,7 +234,22 @@ end
 spawn(TreeTracker)
 
 local found = false
-
+local function TreeDeletionCheck(Model)
+    wait(1)  -- Wait for 1 second
+    if workspace:FindFirstChild("__THINGS") then
+        local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+        if instanceContainer and instanceContainer:FindFirstChild("Active") then
+            local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+            if woodcutting and woodcutting:FindFirstChild("Important") then
+                local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+wait(15)
+                if treesContainer and treesContainer:FindFirstChild(Model.Name) then
+                    Model:Destroy()  -- Destroy the model if it still exists
+                end
+            end
+        end
+    end
+end
 
 local function TreesFunction()
     while true do
@@ -266,6 +281,7 @@ local function TreesFunction()
                                         local args = { "Woodcutting", "ChopTree", AttributeValue }
                                         ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                     end
+                                    TreeDeletionCheck(model) 
                                     break
                                 end
                             end
@@ -274,13 +290,13 @@ local function TreesFunction()
                 end
             end
             
-            
             wait()
         end
     end
 end
 
 spawn(TreesFunction)
+
 
 
 local function TreeBackUp()
@@ -310,6 +326,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
@@ -327,6 +344,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
@@ -344,6 +362,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
@@ -361,6 +380,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
@@ -378,6 +398,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
@@ -395,6 +416,7 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
+ TreeDeletionCheck(model) 
                                         end
                                         break
                                     end
