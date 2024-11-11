@@ -16,6 +16,17 @@ ReplicatedStorage = game:GetService("ReplicatedStorage")
 local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
 local checking = false
 local DesiredPosition = 470
+
+local function ChangePosition()
+    while true do
+        DesiredPosition = math.random(460, 470)
+        wait(0.1)
+    end
+end
+
+spawn(ChangePosition)
+
+
 local enterTeleport
 local humanoidRootPart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
