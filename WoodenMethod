@@ -1,3 +1,6 @@
+
+
+
 local Player = game.Players.LocalPlayer
 local function GameCheck()
 if game.PlaceId == 8737899170 then
@@ -388,7 +391,7 @@ found = false
 end
 end
 spawn(FoundReset)
-
+local XValueChange = 10
 
 local function TreesFunction()
     while true do
@@ -409,8 +412,9 @@ local function TreesFunction()
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Tr. Flu. Yellow") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
 
+                                    
                                         local closestChild
                                         local closestDistance = math.huge
                                         for _, child in ipairs(model:GetChildren()) do
@@ -448,8 +452,7 @@ local function TreesFunction()
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Black") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
-
+                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
                                         local closestChild
                                         local closestDistance = math.huge
                                         for _, child in ipairs(model:GetChildren()) do
@@ -526,8 +529,7 @@ local function TreesFunction()
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Camo") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
-
+                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
                                         local closestChild
                                         local closestDistance = math.huge
                                         for _, child in ipairs(model:GetChildren()) do
@@ -565,8 +567,7 @@ local function TreesFunction()
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Dark indigo") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
-
+                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
                                         local closestChild
                                         local closestDistance = math.huge
                                         for _, child in ipairs(model:GetChildren()) do
@@ -604,8 +605,7 @@ local function TreesFunction()
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Deep orange") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
-
+                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
                                         local closestChild
                                         local closestDistance = math.huge
                                         for _, child in ipairs(model:GetChildren()) do
@@ -652,8 +652,7 @@ local function TreesFunction()
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Tr. Flu. Yellow") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                            
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
                                             local closestChild
 local closestDistance = math.huge
 
@@ -689,8 +688,8 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Black") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                            local closestChild
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
+local closestChild
 local closestDistance = math.huge
 
 for _, child in ipairs(model:GetChildren()) do
@@ -725,8 +724,8 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea green") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                            local closestChild
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
+local closestChild
 local closestDistance = math.huge
 
 for _, child in ipairs(model:GetChildren()) do
@@ -761,8 +760,8 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Camo") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                         local closestChild
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
+local closestChild
 local closestDistance = math.huge
 
 for _, child in ipairs(model:GetChildren()) do
@@ -797,8 +796,8 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Dark indigo") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                            local closestChild
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
+local closestChild
 local closestDistance = math.huge
 
 for _, child in ipairs(model:GetChildren()) do
@@ -833,8 +832,8 @@ end
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Deep orange") then
                                         if TreeTargetFound ~= true then
-                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
-                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z + XValueChange)
+
                                             local closestChild
 local closestDistance = math.huge
 
