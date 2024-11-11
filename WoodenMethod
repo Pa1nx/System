@@ -468,7 +468,7 @@ break
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Dark indigo") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(-3, -3, 0)
                                         local AttributeValue = model.Trunk:GetAttribute("UID")
                                         if AttributeValue then
                                             local args = { "Woodcutting", "ChopTree", AttributeValue }
@@ -489,7 +489,7 @@ break
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Deep orange") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(3, 0, 0)
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame + Vector3.new(-3, -3, 0)
                                         local AttributeValue = model.Trunk:GetAttribute("UID")
                                         if AttributeValue then
                                             local args = { "Woodcutting", "ChopTree", AttributeValue }
