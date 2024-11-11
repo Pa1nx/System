@@ -245,9 +245,9 @@ local function DeletionTree()
                             local modelName = model.Name
                             local number = tonumber(modelName) -- Try to convert the name to a number
                             if number then
-                                if number < 15 then
+                                if number < 10 then
                                     model.Name = tostring(number + 1) -- Increment the number by 1
-                                elseif number >= 15 then
+                                elseif number >= 10 then
                                     model:Destroy() -- Destroy the model if the number is greater or equal to 15
                                 end
                             end
@@ -562,7 +562,7 @@ wait(15)
 end
 end
 spawn(WebsiteDataUpdate)
-wait(250)
+wait(400)
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
