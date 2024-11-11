@@ -43,6 +43,18 @@ end
 spawn(OrbCollect)
 spawn(LootbagCollect)
 
+local function CollectGift()
+while true do
+wait(1)
+local args = {
+    [1] = "WoodcuttingQuests"
+}
+
+game:GetService("ReplicatedStorage").Network:FindFirstChild("NPC Quests: Redeem"):InvokeServer(unpack(args))
+end
+end
+spawn(CollectGift)
+
 if workspace:FindFirstChild("__THINGS") then
     local instances = workspace.__THINGS:FindFirstChild("Instances")
     if instances then
