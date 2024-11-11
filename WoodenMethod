@@ -191,8 +191,19 @@ end
 spawn(LeaveArea)
 
 
-local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
-local OakStatus, BirchStatus, ElmStatus, EvergreenStatus, FantasyStatus, WillowStatus
+local Oak = false
+local Birch = false
+local Elm = false
+local Evergreen = false
+local Fantasy = false
+local Willow = false
+
+local OakStatus = false
+local BirchStatus = false
+local ElmStatus = false
+local EvergreenStatus = false
+local FantasyStatus = false
+local WillowStatus = false
 
 local Player = game.Players.LocalPlayer
 local Quest1TargetTree, Quest1Progress = nil, 0
@@ -263,12 +274,22 @@ spawn(TreeTracker)
 spawn(function()
     while true do
         wait(0.5)
-        
-        local treeStatus = {Oak = false, Birch = false, Elm = false, Evergreen = false, Fantasy = false, Willow = false}
+
+        local OakTreeStatus = false
+        local BirchTreeStatus = false
+        local ElmTreeStatus = false
+        local EvergreenTreeStatus = false
+        local FantasyTreeStatus = false
+        local WillowTreeStatus = false
 
         local function updateTreeStatus(tree, progress)
             if progress ~= "Completed" then
-                treeStatus[tree] = true
+                if tree == "Oak" then OakTreeStatus = true end
+                if tree == "Birch" then BirchTreeStatus = true end
+                if tree == "Elm" then ElmTreeStatus = true end
+                if tree == "Evergreen" then EvergreenTreeStatus = true end
+                if tree == "Fantasy" then FantasyTreeStatus = true end
+                if tree == "Willow" then WillowTreeStatus = true end
             end
         end
 
@@ -276,14 +297,16 @@ spawn(function()
         updateTreeStatus(Quest2TargetTree, Quest2Progress)
         updateTreeStatus(Quest3TargetTree, Quest3Progress)
 
-        Oak, Birch, Elm, Evergreen, Fantasy, Willow = 
-            treeStatus.Oak, treeStatus.Birch, treeStatus.Elm, 
-            treeStatus.Evergreen, treeStatus.Fantasy, treeStatus.Willow
+        Oak = OakTreeStatus
+        Birch = BirchTreeStatus
+        Elm = ElmTreeStatus
+        Evergreen = EvergreenTreeStatus
+        Fantasy = FantasyTreeStatus
+        Willow = WillowTreeStatus
 
         wait(1)
     end
 end)
-
 
 
 
