@@ -366,7 +366,7 @@ spawn(ChangeNameToNumber)
 local found = false
 local function TreesFunction()
     while true do
-        wait()
+        wait(0.00001)
         if checking == false then
             found = false
 
@@ -519,7 +519,7 @@ spawn(TreesFunction)
 
 local function TreeBackUp()
     while true do
-        wait()
+        wait(0.001)
         if checking == false then
             if found == false then
                 if workspace:FindFirstChild("__THINGS") then
