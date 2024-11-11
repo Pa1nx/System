@@ -366,7 +366,7 @@ spawn(ChangeNameToNumber)
 local found = false
 local function TreesFunction()
     while true do
-        wait(0.00000001)
+        wait()
         if checking == false then
             found = false
 
@@ -378,7 +378,6 @@ local function TreesFunction()
                         local treesContainer = woodcutting.Important:FindFirstChild("Trees")
 
                         if Oak == true then
-print("what the fuck")
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
@@ -520,7 +519,7 @@ spawn(TreesFunction)
 
 local function TreeBackUp()
     while true do
-        wait(0.0001)
+        wait()
         if checking == false then
             if found == false then
                 if workspace:FindFirstChild("__THINGS") then
