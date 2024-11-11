@@ -691,7 +691,7 @@ end
 end
 
 
-spawn(TreeFunction)
+spawn(TreesFunction)
 
 
 
