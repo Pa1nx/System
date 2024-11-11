@@ -190,13 +190,32 @@ end
 
 spawn(LeaveArea)
 
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local questLabels = {}
+
+local function createLabel(questIndex)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.3, 0, 0.05, 0)
+    label.Position = UDim2.new(0.35, 0, 0.2 + (questIndex - 1) * 0.06, 0)
+    label.TextColor3 = Color3.new(0, 0, 0)
+    label.Font = Enum.Font.SourceSans
+    label.TextScaled = true
+    label.Parent = screenGui
+    questLabels[questIndex] = label
+end
+
+for i = 1, 3 do
+    createLabel(i)
+end
+
 local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
 
 local function TreeTracker()
     while true do
         wait(0.01)
-        
-        -- Reset tracking tables for each tree type
+
         local treeStatus = {
             Oak = false,
             Birch = false,
@@ -207,7 +226,7 @@ local function TreeTracker()
         }
 
         if itemsFrame then
-            for _, child in ipairs(itemsFrame) do
+            for i, child in ipairs(itemsFrame) do
                 if child.Name == "Quest1" or child.Name == "Quest2" or child.Name == "Quest3" then
                     local descText = child.Desc.Text
                     local current, total = descText:match("(%d+)/(%d+)")
@@ -217,8 +236,10 @@ local function TreeTracker()
                     for _, tree in ipairs(TreeNames) do
                         if titleText:find(tree) then
                             if current < total then
-                                -- Set tree type to true if any quest is incomplete
                                 treeStatus[tree] = true
+                                questLabels[i].Text = "Quest " .. i .. ": " .. tree .. " | " .. current .. " / " .. total
+                            else
+                                questLabels[i].Text = "Quest " .. i .. ": " .. tree .. " | Complete"
                             end
                         end
                     end
@@ -226,16 +247,16 @@ local function TreeTracker()
             end
         end
 
-        -- Update each tree's status based on tracking table
         Oak, Birch, Elm, Evergreen, Fantasy, Willow = 
             treeStatus.Oak, treeStatus.Birch, treeStatus.Elm, 
             treeStatus.Evergreen, treeStatus.Fantasy, treeStatus.Willow
 
-        wait(1)
+        wait(0.1)
     end
 end
 
 spawn(TreeTracker)
+
 
 local function DeletionTree()
     while true do
