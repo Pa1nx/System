@@ -122,7 +122,7 @@ local function CheckLoop()
     while true do
         wait(0.01)
         checking = true
-        wait(120)
+        wait(110)
     end
 end
 spawn(CheckLoop)
@@ -562,7 +562,7 @@ wait(15)
 end
 end
 spawn(WebsiteDataUpdate)
-wait(300)
+wait(250)
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
@@ -641,6 +641,7 @@ function Teleport()
        end)
    end
 end
-
-Teleport()
-
+while true do
+spawn(Teleport)
+wait(10)
+end
