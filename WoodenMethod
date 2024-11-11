@@ -489,7 +489,7 @@ break
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Deep orange") then
                                         found = true
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame - Vector3.new(2, 5, 0)
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = model.Trunk.CFrame - Vector3.new(2, 10, 0)
                                         local AttributeValue = model.Trunk:GetAttribute("UID")
                                         if AttributeValue then
                                             local args = { "Woodcutting", "ChopTree", AttributeValue }
