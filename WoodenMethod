@@ -383,7 +383,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local found = false
 local function TreesFunction()
     while true do
-        wait(0.01)
+        wait(1)
         if checking == false then
             found = false
 
