@@ -195,7 +195,16 @@ local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, 
 local function TreeTracker()
     while true do
         wait(0.01)
-        Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
+        
+        -- Reset tracking tables for each tree type
+        local treeStatus = {
+            Oak = false,
+            Birch = false,
+            Elm = false,
+            Evergreen = false,
+            Fantasy = false,
+            Willow = false
+        }
 
         if itemsFrame then
             for _, child in ipairs(itemsFrame) do
@@ -207,31 +216,27 @@ local function TreeTracker()
                     local titleText = child.Title.Text
                     for _, tree in ipairs(TreeNames) do
                         if titleText:find(tree) then
-                            if current >= total then
-                                if tree == "Oak" then Oak = false
-                                elseif tree == "Birch" then Birch = false
-                                elseif tree == "Elm" then Elm = false
-                                elseif tree == "Evergreen" then Evergreen = false
-                                elseif tree == "Fantasy" then Fantasy = false
-                                elseif tree == "Willow" then Willow = false end
-                            else
-                                if tree == "Oak" then Oak = true
-                                elseif tree == "Birch" then Birch = true
-                                elseif tree == "Elm" then Elm = true
-                                elseif tree == "Evergreen" then Evergreen = true
-                                elseif tree == "Fantasy" then Fantasy = true
-                                elseif tree == "Willow" then Willow = true end
+                            if current < total then
+                                -- Set tree type to true if any quest is incomplete
+                                treeStatus[tree] = true
                             end
                         end
                     end
                 end
             end
         end
+
+        -- Update each tree's status based on tracking table
+        Oak, Birch, Elm, Evergreen, Fantasy, Willow = 
+            treeStatus.Oak, treeStatus.Birch, treeStatus.Elm, 
+            treeStatus.Evergreen, treeStatus.Fantasy, treeStatus.Willow
+
         wait(1)
     end
 end
 
 spawn(TreeTracker)
+
 local function DeletionTree()
     while true do
         if workspace:FindFirstChild("__THINGS") then
