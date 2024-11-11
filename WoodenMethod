@@ -639,7 +639,7 @@ local function TreesFunction()
     end
 end
 
-
+spawn(TreesFunction)
 
 
 
