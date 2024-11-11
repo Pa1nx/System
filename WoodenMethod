@@ -54,6 +54,31 @@ end
 spawn(OrbCollect)
 spawn(LootbagCollect)
 
+local function SeedBag()
+    while true do
+          local args = {
+                [1] = "Mini Chest"
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+        
+            local args = {
+                [1] = "Large Gift Bag"
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+            local args = {
+                [1] = "Mini Gift Bag"
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+        wait(0.1)
+    end
+end
+
+
+
+    spawn(SeedBag)
+
+
+
 local function CollectGift()
 while true do
 wait(1)
