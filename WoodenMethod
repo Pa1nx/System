@@ -120,9 +120,9 @@ if enterTeleport and humanoidRootPart then
     repeat
         local args = { "Nebula Forest" }
         game:GetService("ReplicatedStorage").Network.Teleports_RequestTeleport:InvokeServer(unpack(args))
-        wait(10)
+        wait(3)
     until (humanoidRootPart.Position - enterTeleport.Position).Magnitude <= 200
-
+wait(1)
     humanoidRootPart.CFrame = enterTeleport.CFrame
 else
     warn("Could not locate enterTeleport or humanoidRootPart")
@@ -133,7 +133,7 @@ local function CheckLoop()
     while true do
         wait(0.01)
         checking = true
-        wait(90)
+        wait(60)
     end
 end
 spawn(CheckLoop)
@@ -155,7 +155,7 @@ local function LeaveArea()
                                     humanoidRootPart.CFrame = CFrame.new(leaveTeleport.Position)
                                 end
                                 
-                                wait(5)
+                                wait(5
                                 
                                 local enterTeleport = teleports:FindFirstChild("Enter")
                                 if enterTeleport then
@@ -164,7 +164,7 @@ local function LeaveArea()
                                     end
                                 end
                                 
-                                wait(8)
+                                wait(5)
 
                                 local npcQuests = Player.PlayerGui:FindFirstChild("_MACHINES") 
                                     and Player.PlayerGui._MACHINES:FindFirstChild("NPCQuests")
