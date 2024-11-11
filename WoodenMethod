@@ -346,7 +346,12 @@ local function TreesFunction()
         wait(0.00000001)
         if checking == false then
             found = false
-
+print(Oak)
+print(Birch)
+print(Elm)
+print(Evergreen)
+print(Fantasy)
+print(Willow)
             if workspace:FindFirstChild("__THINGS") then
                 local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
                 if instanceContainer and instanceContainer:FindFirstChild("Active") then
