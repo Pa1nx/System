@@ -368,38 +368,6 @@ spawn(TreeBackUp)
 
 
 
-wait(10)
-
-local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
-local Player = game.Players.LocalPlayer
-local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
-
-local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
-local Player = game.Players.LocalPlayer
-local humanoidRootPart = Player.Character and Player.Character:WaitForChild("HumanoidRootPart")
-
-local function Menu()
-    local targetPosition = Vector3.new(6425.730, 463.9, -22290)
-    local npcQuests = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES:FindFirstChild("NPCQuests")
-
-    while true do
-        repeat
-            if humanoidRootPart then
-                if (humanoidRootPart.Position - targetPosition).Magnitude <= 500 then
-                    humanoidRootPart.CFrame = CFrame.new(targetPosition)
-                end
-            end
-            wait(1)
-        until npcQuests and npcQuests.Enabled
-
-        wait(10)
-        if npcQuests then
-            npcQuests.Enabled = false
-        end
-        wait(10)
-    end
-end
-spawn(Menu)
 
 
 
