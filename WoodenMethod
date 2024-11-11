@@ -155,7 +155,7 @@ local function LeaveArea()
                                     humanoidRootPart.CFrame = CFrame.new(leaveTeleport.Position)
                                 end
                                 
-                                wait(5
+                                wait(5)
                                 
                                 local enterTeleport = teleports:FindFirstChild("Enter")
                                 if enterTeleport then
