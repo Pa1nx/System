@@ -259,7 +259,8 @@ script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP"
                 Items = {
                     SearchTerminal = {
                         ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
-                        ["Seed Bag"] = {Class = "Misc", Price = 6000},
+                        ["Seed Bag"] = {Class = "Misc", Price = 5000},
+["Diamond"] = {Class = "Seed", Price = 5000},
                     },
                 },
                 Serverhop = {
