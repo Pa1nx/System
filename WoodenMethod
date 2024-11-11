@@ -393,6 +393,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
@@ -413,6 +414,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
@@ -433,6 +435,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
@@ -453,6 +456,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
@@ -473,6 +477,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
@@ -493,6 +498,7 @@ print("what the fuck")
                                         if not model.Name:match("%d") and model.Name ~= "StartTimer" then
                                             model.Name = "StartTimer"
                                         end
+break
                                     end
                                 end
                             end
