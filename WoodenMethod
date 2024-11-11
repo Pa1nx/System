@@ -190,9 +190,19 @@ end
 
 spawn(LeaveArea)
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
+local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
+local OakStatus, BirchStatus, ElmStatus, EvergreenStatus, FantasyStatus, WillowStatus
+
+local Player = game.Players.LocalPlayer
+local Quest1TargetTree, Quest1Progress = nil, 0
+local Quest2TargetTree, Quest2Progress = nil, 0
+local Quest3TargetTree, Quest3Progress = nil, 0
+
+local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
+local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES.NPCQuests.Frame.ItemsFrame:GetChildren()
+
+local screenGui = Instance.new("ScreenGui", Player.PlayerGui)
 local questLabels = {}
 
 local function createLabel(questIndex)
@@ -210,23 +220,12 @@ for i = 1, 3 do
     createLabel(i)
 end
 
-local Oak, Birch, Elm, Evergreen, Fantasy, Willow = false, false, false, false, false, false
-
 local function TreeTracker()
     while true do
         wait(0.01)
 
-        local treeStatus = {
-            Oak = false,
-            Birch = false,
-            Elm = false,
-            Evergreen = false,
-            Fantasy = false,
-            Willow = false
-        }
-
         if itemsFrame then
-            for i, child in ipairs(itemsFrame) do
+            for _, child in ipairs(itemsFrame) do
                 if child.Name == "Quest1" or child.Name == "Quest2" or child.Name == "Quest3" then
                     local descText = child.Desc.Text
                     local current, total = descText:match("(%d+)/(%d+)")
@@ -235,11 +234,15 @@ local function TreeTracker()
                     local titleText = child.Title.Text
                     for _, tree in ipairs(TreeNames) do
                         if titleText:find(tree) then
-                            if current < total then
-                                treeStatus[tree] = true
-                                questLabels[i].Text = "Quest " .. i .. ": " .. tree .. " | " .. current .. " / " .. total
-                            else
-                                questLabels[i].Text = "Quest " .. i .. ": " .. tree .. " | Complete"
+                            if child.Name == "Quest1" then
+                                Quest1TargetTree = tree
+                                Quest1Progress = (current == total) and "Completed" or current .. " / " .. total
+                            elseif child.Name == "Quest2" then
+                                Quest2TargetTree = tree
+                                Quest2Progress = (current == total) and "Completed" or current .. " / " .. total
+                            elseif child.Name == "Quest3" then
+                                Quest3TargetTree = tree
+                                Quest3Progress = (current == total) and "Completed" or current .. " / " .. total
                             end
                         end
                     end
@@ -247,15 +250,41 @@ local function TreeTracker()
             end
         end
 
-        Oak, Birch, Elm, Evergreen, Fantasy, Willow = 
-            treeStatus.Oak, treeStatus.Birch, treeStatus.Elm, 
-            treeStatus.Evergreen, treeStatus.Fantasy, treeStatus.Willow
+        questLabels[1].Text = "Quest 1: " .. (Quest1TargetTree or "None") .. " | " .. Quest1Progress
+        questLabels[2].Text = "Quest 2: " .. (Quest2TargetTree or "None") .. " | " .. Quest2Progress
+        questLabels[3].Text = "Quest 3: " .. (Quest3TargetTree or "None") .. " | " .. Quest3Progress
 
-        wait(0.1)
+        wait(1)
     end
 end
 
 spawn(TreeTracker)
+
+spawn(function()
+    while true do
+        wait(0.5)
+        
+        local treeStatus = {Oak = false, Birch = false, Elm = false, Evergreen = false, Fantasy = false, Willow = false}
+
+        local function updateTreeStatus(tree, progress)
+            if progress ~= "Completed" then
+                treeStatus[tree] = true
+            end
+        end
+
+        updateTreeStatus(Quest1TargetTree, Quest1Progress)
+        updateTreeStatus(Quest2TargetTree, Quest2Progress)
+        updateTreeStatus(Quest3TargetTree, Quest3Progress)
+
+        Oak, Birch, Elm, Evergreen, Fantasy, Willow = 
+            treeStatus.Oak, treeStatus.Birch, treeStatus.Elm, 
+            treeStatus.Evergreen, treeStatus.Fantasy, treeStatus.Willow
+
+        wait(1)
+    end
+end)
+
+
 
 
 local function DeletionTree()
