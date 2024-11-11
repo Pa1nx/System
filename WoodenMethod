@@ -395,7 +395,7 @@ local XValueChange = 10
 
 local function TreesFunction()
     while true do
-        wait()
+        wait(1)
         if checking == false then
             if workspace:FindFirstChild("__THINGS") then
                 local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
