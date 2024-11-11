@@ -232,41 +232,78 @@ local function TreeTracker()
 end
 
 spawn(TreeTracker)
-
-local found = false
-local function TreeDeletionCheck(Model)
-    spawn(function()
-        wait(1)
+local function DeletionTree()
+    while true do
         if workspace:FindFirstChild("__THINGS") then
             local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
             if instanceContainer and instanceContainer:FindFirstChild("Active") then
                 local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
                 if woodcutting and woodcutting:FindFirstChild("Important") then
                     local treesContainer = woodcutting.Important:FindFirstChild("Trees")
-                    wait(15)
-                    if treesContainer and treesContainer:FindFirstChild(Model.Name) then
-                        Model:Destroy()
+                    for _, model in ipairs(treesContainer:GetChildren()) do
+                        if model:IsA("Model") then
+                            local modelName = model.Name
+                            local number = tonumber(modelName) -- Try to convert the name to a number
+                            if number then
+                                if number < 15 then
+                                    model.Name = tostring(number + 1) -- Increment the number by 1
+                                elseif number >= 15 then
+                                    model:Destroy() -- Destroy the model if the number is greater or equal to 15
+                                end
+                            end
+                        end
                     end
                 end
             end
         end
-    end)
+        wait(1)
+    end
 end
+spawn(DeletionTree)
 
+local function ChangeNameToNumber()
+    while true do
+        if workspace:FindFirstChild("__THINGS") then
+            local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+            if instanceContainer and instanceContainer:FindFirstChild("Active") then
+                local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+                if woodcutting and woodcutting:FindFirstChild("Important") then
+                    local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+                    for _, model in ipairs(treesContainer:GetChildren()) do
+                        if model:IsA("Model") then
+                            if model.Name == "StartTimer" then
+                                model.Name = "1" 
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait(0.1)
+    end
+end
+spawn(ChangeNameToNumber)
+
+
+
+local found = false
 local function TreesFunction()
     while true do
         wait(0.00000001)
         if checking == false then
             found = false
+
             if workspace:FindFirstChild("__THINGS") then
                 local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
                 if instanceContainer and instanceContainer:FindFirstChild("Active") then
                     local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
                     if woodcutting and woodcutting:FindFirstChild("Important") then
                         local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+                        
                         for _, model in ipairs(treesContainer:GetChildren()) do
                             if model:IsA("Model") then
                                 local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
+                                
                                 if (Oak == true and TargetBrickColor == BrickColor.new("Tr. Flu. Yellow"))
                                 or (Birch == true and TargetBrickColor == BrickColor.new("Black"))
                                 or (Elm == true and TargetBrickColor == BrickColor.new("Sea Green"))
@@ -280,20 +317,25 @@ local function TreesFunction()
                                         local args = { "Woodcutting", "ChopTree", AttributeValue }
                                         ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                     end
-                                    spawn(TreeDeletionCheck(model)) 
-                                    break
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
+
                                 end
                             end
                         end
                     end
                 end
             end
+            
+            
             wait()
         end
     end
 end
 
 spawn(TreesFunction)
+
 
 local function TreeBackUp()
     while true do
@@ -310,6 +352,7 @@ local function TreeBackUp()
                             local closestDistance = math.huge
                             local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
                             local TreeTargetFound = false
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Tr. Flu. Yellow") then
@@ -321,12 +364,15 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
                                         end
                                         break
                                     end
                                 end
                             end
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Black") then
@@ -338,12 +384,15 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
                                         end
                                         break
                                     end
                                 end
                             end
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea Green") then
@@ -355,12 +404,15 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
                                         end
                                         break
                                     end
                                 end
                             end
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Camo") then
@@ -372,12 +424,15 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
                                         end
                                         break
                                     end
                                 end
                             end
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Dark indigo") then
@@ -389,12 +444,15 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
                                         end
                                         break
                                     end
                                 end
                             end
+
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") and model:FindFirstChild("Trunk") then
                                     if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Deep orange") then
@@ -406,12 +464,16 @@ local function TreeBackUp()
                                                 ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                                             end
                                             TreeTargetFound = true
-                                            spawn(TreeDeletionCheck(model)) 
+if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+    model.Name = "StartTimer"
+end
+
                                         end
                                         break
                                     end
                                 end
                             end
+
                         end
                     end
                 end
@@ -422,6 +484,7 @@ local function TreeBackUp()
 end
 
 spawn(TreeBackUp)
+
 
 
 
