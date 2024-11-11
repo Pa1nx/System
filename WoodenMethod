@@ -355,6 +355,7 @@ local function TreesFunction()
                         local treesContainer = woodcutting.Important:FindFirstChild("Trees")
 
                         if Oak == true then
+print("what the fuck")
                             for _, model in ipairs(treesContainer:GetChildren()) do
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
