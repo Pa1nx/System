@@ -306,7 +306,7 @@ local function TreesFunction()
                                 
                                 if (Oak == true and TargetBrickColor == BrickColor.new("Tr. Flu. Yellow"))
                                 or (Birch == true and TargetBrickColor == BrickColor.new("Black"))
-                                or (Elm == true and TargetBrickColor == BrickColor.new("Sea Green"))
+                                or (Elm == true and TargetBrickColor == BrickColor.new("Sea green"))
                                 or (Evergreen == true and TargetBrickColor == BrickColor.new("Camo"))
                                 or (Fantasy == true and TargetBrickColor == BrickColor.new("Dark indigo"))
                                 or (Willow == true and TargetBrickColor == BrickColor.new("Deep orange")) then
