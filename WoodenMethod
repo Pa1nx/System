@@ -381,11 +381,18 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 
 local found = false
+local function FoundReset()
+while true do
+wait(5)
+found = false
+end
+end
+spawn(FoundReset)
 local function TreesFunction()
     while true do
-        wait(1)
+        wait()
         if checking == false then
-            found = false
+          
 
             if workspace:FindFirstChild("__THINGS") then
                 local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
@@ -417,8 +424,12 @@ end
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
     if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
+    
     end
 end
 
@@ -456,8 +467,11 @@ end
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
     if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+        for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -493,8 +507,11 @@ end
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
     if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+        for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -529,9 +546,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+  for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -567,8 +586,11 @@ end
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
     if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+        for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -603,9 +625,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -655,8 +679,11 @@ end
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
     if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+        for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -690,9 +717,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -726,9 +755,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -762,9 +793,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -798,9 +831,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
@@ -835,9 +870,11 @@ end
 
 if closestChild then
     local AttributeValue = closestChild:GetAttribute("UID")
-    if AttributeValue then
-        local args = { "Woodcutting", "ChopTree", AttributeValue }
+    for i = 1, 5 do
+     local args = { "Woodcutting", "ChopTree", AttributeValue }
         game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+end
+
     end
 end
 
