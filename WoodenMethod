@@ -1,4 +1,14 @@
 local Player = game.Players.LocalPlayer
+local function GameCheck()
+if game.PlaceId == 8737899170 then
+    while true do
+        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+        wait(5)
+    end
+end
+end
+spawn(GameCheck)
+
 local TreeNames = {"Oak", "Birch", "Elm", "Fantasy", "Evergreen", "Willow"}
 local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES") and Player.PlayerGui._MACHINES.NPCQuests.Frame.ItemsFrame:GetChildren()
 local TargetTrees = {}
@@ -10,6 +20,7 @@ local enterTeleport
 local humanoidRootPart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 
 function OrbCollect()
     while true do 
