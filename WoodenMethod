@@ -91,6 +91,85 @@ end
 
     spawn(SeedBag)
 
+local function BodyVelocity()
+    while true do
+        wait(0.1)
+        local player = game.Players.LocalPlayer
+        local character = player and player.Character
+        local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+            BV.Velocity = Vector3.new(0, 0.001, 0)
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+        end
+    end
+end
+
+spawn(BodyVelocity)
+
+local function MapDestroy()
+    while true do
+        local map3 = workspace:FindFirstChild("Map3")
+        if map3 then
+            for _, child in pairs(map3:GetChildren()) do
+                if child.Name ~= "233 | Nebula Forest" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local things = workspace:FindFirstChild("__THINGS")
+        if things then
+            for _, child in pairs(things:GetChildren()) do
+                if child.Name == "shinyRelics" or child.Name == "HiddenPresents" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local debris = workspace:FindFirstChild("__DEBRIS")
+        if debris then
+            debris:Destroy()
+        end
+
+        if workspace:FindFirstChild("__THINGS") then
+            local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+            if instanceContainer and instanceContainer:FindFirstChild("Active") then
+                local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+                if woodcutting then
+                    for _, child in pairs(woodcutting:GetChildren()) do
+                        if child.Name ~= "Important" then
+                            child:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+
+        local thingsDescendants = things and things:GetChildren()
+        if thingsDescendants then
+            for _, child in pairs(thingsDescendants) do
+                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local voidSpawn = map3 and map3:FindFirstChild("200 | Void Spawn")
+        if voidSpawn then
+            for _, child in pairs(voidSpawn:GetChildren()) do
+                if child.Name == "PARTS_LOD" or child.Name == "PERSISTENT" then
+                    child:Destroy()
+                end
+            end
+        end
+        
+        wait(1)
+    end
+end
+
+spawn(MapDestroy)
 
 
 local function CollectGift()
@@ -104,6 +183,22 @@ game:GetService("ReplicatedStorage").Network:FindFirstChild("NPC Quests: Redeem"
 end
 end
 spawn(CollectGift)
+local leaveTeleport = nil
+local enterTeleport = nil
+local humanoidRootPart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+
+if workspace:FindFirstChild("__THINGS") then
+    local instances = workspace.__THINGS:FindFirstChild("Instances")
+    if instances then
+        local woodcutting = instances:FindFirstChild("Woodcutting")
+        if woodcutting then
+            local teleports = woodcutting:FindFirstChild("Teleports")
+            if teleports then
+                leaveTeleport = teleports:FindFirstChild("Leave")
+            end
+        end
+    end
+end
 
 if workspace:FindFirstChild("__THINGS") then
     local instances = workspace.__THINGS:FindFirstChild("Instances")
@@ -118,25 +213,29 @@ if workspace:FindFirstChild("__THINGS") then
     end
 end
 
-
 if enterTeleport and humanoidRootPart then
     repeat
         local args = { "Nebula Forest" }
         game:GetService("ReplicatedStorage").Network.Teleports_RequestTeleport:InvokeServer(unpack(args))
-        wait(3)
+        wait(8)
     until (humanoidRootPart.Position - enterTeleport.Position).Magnitude <= 200
-wait(1)
-    humanoidRootPart.CFrame = enterTeleport.CFrame
-else
-    warn("Could not locate enterTeleport or humanoidRootPart")
+    wait(5)
+
+    repeat
+        humanoidRootPart.CFrame = enterTeleport.CFrame
+        wait(8)
+    until (humanoidRootPart.Position - leaveTeleport.Position).Magnitude <= 200
+    wait(5)
 end
+
+    
 
 
 local function CheckLoop()
     while true do
         wait(0.01)
         checking = true
-        wait(60)
+        wait(80)
     end
 end
 spawn(CheckLoop)
