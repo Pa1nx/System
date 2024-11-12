@@ -190,7 +190,13 @@ local function LeaveArea()
                                     end
                                     wait(1)
                                 until npcQuests and npcQuests.Enabled
-                                
+                                local args = {
+    [1] = "Woodcutting",
+    [2] = "ClaimAxe"
+}
+
+game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+wait(1)
                                 checking = false
                             end
                         end
@@ -206,12 +212,6 @@ end
 
 spawn(LeaveArea)
 
-local args = {
-    [1] = "Woodcutting",
-    [2] = "ClaimAxe"
-}
-
-game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
 
 local Oak = false
 local Birch = false
@@ -776,7 +776,7 @@ end
 
 local function ClosestTree()
 while true do
-
+ if checking == false then
 if workspace:FindFirstChild("__THINGS") then
     local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
     if instanceContainer and instanceContainer:FindFirstChild("Active") then
@@ -922,7 +922,7 @@ if workspace:FindFirstChild("__THINGS") then
         end
     end
 end
-
+end
 
 wait()
 end
