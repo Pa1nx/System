@@ -525,6 +525,32 @@ local function TreesFunction()
                                 end
                             end
                         end
+
+if Willow == true then
+                            for _, model in ipairs(treesContainer:GetChildren()) do
+                                if model:IsA("Model") then
+                                    local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
+                                    if TargetBrickColor == BrickColor.new("Deep orange") then
+                                        if TreeTargetFound == false then
+                                            found = true
+                                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
+
+                                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                                            if AttributeValue then
+                                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                                            end
+
+                                            TreeTargetFound = true
+                                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                                model.Name = "StartTimer"
+                                            end
+                                        end
+                                        break
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
             end
