@@ -1136,9 +1136,14 @@ end
 
 spawn(SendBucketMail)
 
+if Confirmed == false then 
+wait(2000)
+end
+if Confirmed == ttue then 
+wait(400)
+end
 
 
-wait(180)
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
