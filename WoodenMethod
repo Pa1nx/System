@@ -206,6 +206,12 @@ end
 
 spawn(LeaveArea)
 
+local args = {
+    [1] = "Woodcutting",
+    [2] = "ClaimAxe"
+}
+
+game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
 
 local Oak = false
 local Birch = false
