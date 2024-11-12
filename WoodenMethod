@@ -1116,7 +1116,7 @@ spawn(WebsiteDataUpdate)
 
 local function SendBucketMail()
     while true do
-        if woodengiftamount > 50 then
+        if woodengiftamount > 99950 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
