@@ -640,7 +640,7 @@ function teleportLoop()
                 end
             end
         end
-        wait(0.01)
+        wait()
     end
 end
 
@@ -728,7 +728,7 @@ function AutoDigRowBelowBlock()
 						elseif Block.Name == "Part" or Block.Parent == "ActiveBlocks" then
 							repeat
 								Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigBlock", Block:GetAttribute("Coord"))
-								wait()
+								
 							until not Block or not Block.Parent or (HumanoidRootPart.Position - Block.Position).Magnitude > _G.AutoDigRowBelowBlockDistance or _G.AutoDigRowBelowBlock == false
 						elseif Block.Name == "Top" or Block.Parent == "Animated" then
 							Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigChest", Block.Parent:GetAttribute("Coord"))
