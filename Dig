@@ -737,12 +737,12 @@ function AutoDigRowBelowBlock()
 				end
 			end
 		end
-		wait()
+		wait(0.001)
 	end
 end
 
 _G.AutoDigRowBelowBlock = true
-coroutine.wrap(AutoDigRowBelowBlock)()
+spawn(AutoDigRowBelowBlock)
 
 
 print("if made it through")
