@@ -401,7 +401,7 @@ local function TreesFunction()
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Tr. Flu. Yellow") then
-                                        if not TreeTargetFound then
+                                        if TreeTargetFound == false then
                                             found = true
                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
 
@@ -427,7 +427,7 @@ local function TreesFunction()
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Black") then
-                                        if not TreeTargetFound then
+                                        if TreeTargetFound == false then
                                             found = true
                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
 
@@ -453,7 +453,7 @@ local function TreesFunction()
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Sea green") then
-                                        if not TreeTargetFound then
+                                        if TreeTargetFound == false then
                                             found = true
                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
 
@@ -479,7 +479,7 @@ local function TreesFunction()
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Camo") then
-                                        if not TreeTargetFound then
+                                        if TreeTargetFound == false then
                                             found = true
                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
 
@@ -505,7 +505,7 @@ local function TreesFunction()
                                 if model:IsA("Model") then
                                     local TargetBrickColor = model:FindFirstChild("Leaves1").BrickColor
                                     if TargetBrickColor == BrickColor.new("Dark indigo") then
-                                        if not TreeTargetFound then
+                                        if TreeTargetFound == false then
                                             found = true
                                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z)
 
