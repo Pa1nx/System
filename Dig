@@ -333,6 +333,7 @@ local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
 local MagicBucketData = {"Bucket O' Magic"}
+local DiamondShovel = {"Diamond Shovel"}
 local BucketData = {"Bucket"}
 local ItemTable = {"Diamonds"}
 local MagicBucketAM = 0
@@ -340,6 +341,7 @@ local BucketAmount = 0
 local MagicBucketUID = ""
 local DiamondsID = 0
 local DiamondsAmount = 0
+local DiamondShovelAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -384,6 +386,14 @@ local function UpdateBucketAmount()
             local ItemData = ItemInfo.data
             if ItemData._am then
                 BucketAmount = ItemData._am
+            end
+        end
+
+local MiscDiamondShovel = GetItemInfo("Misc", DiamondShovel)
+        for _, ItemInfo in pairs(MiscDiamondShovel) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                DiamondShovelAmount = ItemData._am
             end
         end
 
@@ -456,7 +466,7 @@ local player = Player.Name
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = BucketAmount,
+                VoidTicketsValue = DiamondShovelAmount,
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount
             })
