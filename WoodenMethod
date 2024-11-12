@@ -377,10 +377,60 @@ local function ChangeNameToNumber()
     end
 end
 spawn(ChangeNameToNumber)
-
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local amountText = game.Players.LocalPlayer.PlayerGui.MainLeft.Left.Currency.Woodcutting:FindFirstChild("Woodcutting Tokens").Amount.Text
+local number = 0
+
+if amountText:find("m") then
+    number = tonumber(amountText:sub(1, -2)) * 1e6
+elseif amountText:find("k") then
+    number = tonumber(amountText:sub(1, -2)) * 1e3
+else
+    number = tonumber(amountText)
+end
+
+local Confirmed = false
+if number >= 300000 then
+    Confirmed = true
+end
+
+
+
+
+
+local function Axepurchase()
+while true do
+
+local args = {
+    [1] = "Sturdy Axe"
+}
+
+game:GetService("ReplicatedStorage").Network.WoodcuttingMerchant_PurchaseAxe:InvokeServer(unpack(args))
+
+local args = {
+    [1] = "Advanced Axe"
+}
+
+game:GetService("ReplicatedStorage").Network.WoodcuttingMerchant_PurchaseAxe:InvokeServer(unpack(args))
+
+local args = {
+    [1] = "Stone Axe"
+}
+
+game:GetService("ReplicatedStorage").Network.WoodcuttingMerchant_PurchaseAxe:InvokeServer(unpack(args))
+
+local args = {
+    [1] = "Iron Axe"
+}
+
+game:GetService("ReplicatedStorage").Network.WoodcuttingMerchant_PurchaseAxe:InvokeServer(unpack(args))
+wait(5)
+end
+end
+spawn(Axepurchase)
 
 local TreeTargetFound = false
 local function TreesFunction()
@@ -717,7 +767,166 @@ end
 end
 
 
-spawn(TreesFunction)
+
+local function ClosestTree()
+while true do
+
+if workspace:FindFirstChild("__THINGS") then
+    local instanceContainer = workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER")
+    if instanceContainer and instanceContainer:FindFirstChild("Active") then
+        local woodcutting = instanceContainer.Active:FindFirstChild("Woodcutting")
+        if woodcutting and woodcutting:FindFirstChild("Important") then
+            local treesContainer = woodcutting.Important:FindFirstChild("Trees")
+            local closestTree
+            local closestDistance = math.huge
+            local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            local TreeTargetFound = false
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Tr. Flu. Yellow") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Black") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Sea green") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Camo") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Dark indigo") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+
+            for _, model in ipairs(treesContainer:GetChildren()) do
+                if model:IsA("Model") and model:FindFirstChild("Trunk") then
+                    if model:FindFirstChild("Leaves1").BrickColor == BrickColor.new("Deep orange") then
+                        if TreeTargetFound ~= true then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(model.Trunk.CFrame.X, DesiredPosition, model.Trunk.CFrame.Z) 
+                            local AttributeValue = model.Trunk:GetAttribute("UID")
+
+                            if AttributeValue then
+                                local args = { "Woodcutting", "ChopTree", AttributeValue }
+                                game.ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+                            end
+
+                            TreeTargetFound = true
+                            if not model.Name:match("%d") and model.Name ~= "StartTimer" then
+                                model.Name = "StartTimer"
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+wait()
+end
+end
+
+if Confirmed == true then
+    spawn(TreesFunction)
+else
+    spawn(ClosestTree)
+end
 
 
 
