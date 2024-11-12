@@ -1133,7 +1133,7 @@ local function SendBucketMail()
     end
 end
 
-spawn(UpdateBucketAmount)
+
 spawn(SendBucketMail)
 
 
