@@ -552,16 +552,37 @@ end
 spawn(ProcessHugePets)
 
 local currentTarget
+local positions = {}
+
+local function ResetPositions()
+    while true do
+        positions = {}
+        wait(0.1)
+    end
+end
+spawn(ResetPositions)
 
 function getPositionsFromRowPositions()
-    local positions = {}
     if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
                 for _, pos in pairs(RowPositions) do
                     if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
-                        table.insert(positions, child)
+                        -- Check if the position is already in the 'positions' table
+                        local alreadyExists = false
+                        for _, existingChild in ipairs(positions) do
+                            local ex, ey, ez = math.floor(existingChild.Position.X + 0.5), math.floor(existingChild.Position.Y + 0.5), math.floor(existingChild.Position.Z + 0.5)
+                            if x == ex and z == ez then
+                                alreadyExists = true
+                                break
+                            end
+                        end
+
+                        -- If it doesn't exist, add the child to 'positions'
+                        if not alreadyExists then
+                            table.insert(positions, child)
+                        end
                         break
                     end
                 end
@@ -570,6 +591,7 @@ function getPositionsFromRowPositions()
     end
     return positions
 end
+
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
