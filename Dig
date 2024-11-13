@@ -574,7 +574,6 @@ end
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-    wait()
 end
 
 local function teleportToCurrentTarget()
