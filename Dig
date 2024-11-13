@@ -1,10 +1,10 @@
 local function GameCheck()
-if game.PlaceId == 8737899170 then
-    while true do
-        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
-        wait(5)
+    if game.PlaceId == 8737899170 then
+        while true do
+            game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+            wait(5)
+        end
     end
-end
 end
 spawn(GameCheck)
 
@@ -37,20 +37,19 @@ local function PrintWoodenGiftAmount()
         for _, ItemInfo in pairs(LootboxItems) do
             local ItemData = ItemInfo.data
             if ItemData and ItemData._am then
-              woodengiftamount = ItemData._am 
-woodengiftuid = ItemInfo.uid
+                woodengiftamount = ItemData._am 
+                woodengiftuid = ItemInfo.uid
             end
         end
         wait(1)
     end
 end
-
 spawn(PrintWoodenGiftAmount)
 
 local function WebsiteDataUpdate()
-while true do
-local Player = game.Players.LocalPlayer
-local player = Player.Name
+    while true do
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -69,8 +68,8 @@ local player = Player.Name
                 HugeList = "0"
             })
         })
-wait(15)
-end
+        wait(15)
+    end
 end
 spawn(WebsiteDataUpdate)
 
@@ -86,16 +85,11 @@ local function SendBucketMail()
             }
             game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
             wait(3)
-
-
         end
         wait(0.3)
     end
 end
-
-
 spawn(SendBucketMail)
-
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
@@ -176,8 +170,8 @@ function ProcessHugePets()
         wait(3)
     end
 end
-
 spawn(ProcessHugePets)
+
 
 
 getgenv().Config = {
