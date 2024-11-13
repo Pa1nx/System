@@ -666,11 +666,11 @@ end
     end
 end
 
-wait(15)
+wait(5)
 spawn(teleportLoop)
 
 
-wait(5)
+
 local Workspace = game:GetService("Workspace")
 
 Workspace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active"):WaitForChild("AdvancedDigsite"):WaitForChild("Important"):WaitForChild("ActiveBlocks")
