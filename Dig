@@ -573,7 +573,7 @@ end
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-    wait(0.05)
+    wait()
 end
 
 local function teleportToCurrentTarget()
@@ -628,7 +628,9 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
+if BucketAmount < 50 then
             if not teleportToActiveChestModel() then
+end
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
@@ -638,7 +640,7 @@ function teleportLoop()
                 end
             end
         end
-        wait(0.05)
+        wait()
     end
 end
 
@@ -735,7 +737,7 @@ function AutoDigRowBelowBlock()
 				end
 			end
 		end
-		wait(0.05)
+		wait()
 	end
 end
 
