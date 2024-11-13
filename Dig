@@ -714,11 +714,7 @@ function AutoDigRowBelowBlock()
 			if DigZoneType == "Digsite" or DigZoneType == "AdvancedDigsite" then
 				local Block = NearestBlockBelow()
 				if HumanoidRootPart.Position.Y >= 60 then
-					if DigZoneType == "Digsite" then
-						TeleportTo(Vector3.new(-77, 58, -2525))
-					elseif DigZoneType == "AdvancedDigsite" then
-						TeleportTo(Vector3.new(587, 58, -2757))
-					end
+					-- Do nothing here (no teleportation logic)
 				end
 				if Block then
 					if Block.Name == "TunnelTop" or Block.Parent == "Important" then
