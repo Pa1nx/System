@@ -629,7 +629,9 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
+if BucketAmount < 50 then
             if not teleportToActiveChestModel() then
+end
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
