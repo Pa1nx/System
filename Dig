@@ -629,9 +629,17 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-if BucketAmount < 50 then
-            if not teleportToActiveChestModel() then
-end
+            if BucketAmount < 50 then
+                if not teleportToActiveChestModel() then
+                    if not teleportToCurrentTarget() then
+                        local positions = getPositionsFromRowPositions()
+                        if #positions > 0 then
+                            currentTarget = positions[math.random(#positions)]
+                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+                        end
+                    end
+                end
+            else
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
@@ -644,6 +652,7 @@ end
         wait()
     end
 end
+
 
 wait(5)
 spawn(teleportLoop) 
