@@ -665,7 +665,7 @@ end
 
 wait(5)
 spawn(teleportLoop) 
-spawn(teleportLoop) 
+
 local function RemoteRun()
     while true do
         if currentTarget and currentTarget:GetAttribute("Coord") then
