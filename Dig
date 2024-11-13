@@ -551,8 +551,11 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
-
 local currentTarget
+local chestActive = false
+
+
+
 
 function getPositionsFromRowPositions()
     local positions = {}
@@ -574,10 +577,12 @@ end
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
+chestActive = false
 end
 
 local function teleportToCurrentTarget()
     if currentTarget and currentTarget.Parent == activeBlocks then
+chestActive = false
         teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
         return true
     end
@@ -588,6 +593,7 @@ local function teleportToRoyalPurple()
     if BucketAmount > 10 then 
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+chestActive = false
                 currentTarget = child
                 teleportToPosition(child.Position + Vector3.new(0, 5, 0))
                 return true
@@ -602,6 +608,7 @@ end
 local function teleportToActiveChestModel()
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
+chestActive = true
             currentTarget = child
             teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
 
@@ -656,98 +663,37 @@ end
 wait(5)
 spawn(teleportLoop) 
 
-local Workspace = game:GetService("Workspace")
+local function RemoteRun()
+    while true do
+        if currentTarget then
+            print(currentTarget:GetAttribute("Coord"))
 
-Workspace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active"):WaitForChild("AdvancedDigsite"):WaitForChild("Important"):WaitForChild("ActiveBlocks")
+            if chestActive == true then
+                local args = {
+                    [1] = "AdvancedDigsite",
+                    [2] = "DigChest",
+                    [3] = currentTarget:GetAttribute("Coord")
+                }
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local WorkSpace = game:GetService("Workspace")
-local Players = game:GetService("Players")
+                game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+            elseif chestActive == false then
+                local args = {
+                    [1] = "AdvancedDigsite",
+                    [2] = "DigBlock",
+                    [3] = currentTarget:GetAttribute("Coord")
+                }
 
---Variables
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character
-local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+                game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+            end
+        else
+            print("currentTarget is nil or doesn't have 'Coord' attribute")
+        end
 
-LocalPlayer.CharacterAdded:Connect(function(chr)
-	Character = chr
-	HumanoidRootPart = chr:WaitForChild("HumanoidRootPart", 15)
-end)
-
-local Network = ReplicatedStorage:WaitForChild("Network")
-local Container = Workspace:WaitForChild("__THINGS"):WaitForChild("__INSTANCE_CONTAINER")
-
-function TeleportTo(TeleportPosition)
-    if not HumanoidRootPart then
-        return
+        wait()
     end
-    HumanoidRootPart.CFrame = CFrame.new(TeleportPosition)
 end
 
-_G.AutoDigRowBelowBlock = false
-_G.AutoDigRowBelowBlockDistance = 5
-local DigZoneType = nil
-
-function ZoneFinder()
-	if Container then
-		if Container.Active:FindFirstChild("Digsite") then
-			DigZoneType = "Digsite"
-		elseif Container.Active:FindFirstChild("AdvancedDigsite") then
-			DigZoneType = "AdvancedDigsite"
-		elseif Container and (not Container.Active:FindFirstChild("Digsite") or not Container.Active:FindFirstChild("AdvancedDigsite")) then
-			DigZoneType = nil
-		end
-	end
-end
-
-function NearestBlockBelow()
-	local RaycastParams = RaycastParams.new()
-	RaycastParams.FilterDescendantsInstances = {Character}
-	RaycastParams.FilterType = Enum.RaycastFilterType["Blacklist"]
-	local Origin = HumanoidRootPart.Position
-	local Direction = Vector3.new(0, -1, 0)
-	local RaycastResult = Workspace:Raycast(Origin, Direction * _G.AutoDigRowBelowBlockDistance, RaycastParams)
-	if RaycastResult then
-		return RaycastResult.Instance
-	else
-		return nil
-	end
-end
-
-function AutoDigRowBelowBlock()
-	while _G.AutoDigRowBelowBlock do
-		if Container then
-			ZoneFinder()
-			if DigZoneType == "Digsite" or DigZoneType == "AdvancedDigsite" then
-				local Block = NearestBlockBelow()
-				if HumanoidRootPart.Position.Y >= 60 then
-					-- Do nothing here (no teleportation logic)
-				end
-				if Block then
-					if Block.Name == "TunnelTop" or Block.Parent == "Important" then
-						for Value = 1, 5 do
-							Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigBlock", Vector3.one)
-							wait()
-						end
-					elseif Block.Name == "Part" or Block.Parent == "ActiveBlocks" then
-						repeat
-							Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigBlock", Block:GetAttribute("Coord"))
-							wait()
-						until not Block or not Block.Parent or (HumanoidRootPart.Position - Block.Position).Magnitude > _G.AutoDigRowBelowBlockDistance or _G.AutoDigRowBelowBlock == false
-					elseif Block.Name == "Top" or Block.Parent == "Animated" then
-						Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer(DigZoneType, "DigChest", Block.Parent:GetAttribute("Coord"))
-					end
-				end
-			end
-		end
-		wait()
-	end
-end
-
-_G.AutoDigRowBelowBlock = true
-spawn(AutoDigRowBelowBlock)
-
-
+spawn(RemoteRun) 
 
 print("if made it through")
 wait(300)
