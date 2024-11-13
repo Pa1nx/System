@@ -553,7 +553,6 @@ end
 spawn(ProcessHugePets)
 
 local currentTarget
-local recentPositions = {} -- Store recently used positions
 
 function getPositionsFromRowPositions()
     local positions = {}
@@ -562,7 +561,7 @@ function getPositionsFromRowPositions()
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
                 for _, pos in pairs(RowPositions) do
-                    if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") and not recentPositions[child] then
+                    if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
                         table.insert(positions, child)
                         break
                     end
@@ -591,7 +590,6 @@ local function teleportToRoyalPurple()
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
                 currentTarget = child
-                recentPositions[child] = true
                 teleportToPosition(child.Position + Vector3.new(0, 5, 0))
                 return true
             end
@@ -606,7 +604,6 @@ local function teleportToActiveChestModel()
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
             currentTarget = child
-            recentPositions[child] = true
             teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
 
             local startTime = tick()
@@ -616,7 +613,7 @@ local function teleportToActiveChestModel()
                 if not currentTarget or not currentTarget.Parent then
                     return true
                 end
-                wait()
+                wait(0.01)
             end
 
             if currentTarget and currentTarget.Parent then
@@ -632,30 +629,24 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-            if BucketAmount < 50 then
-                if not teleportToActiveChestModel() then
+if BucketAmount < 50 then
+            if not teleportToActiveChestModel() then
 end
-                    if not teleportToCurrentTarget() then
-                        local positions = getPositionsFromRowPositions()
-                        if #positions > 0 then
-                            currentTarget = positions[math.random(#positions)]
-                            recentPositions[currentTarget] = true
-                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
-                        end
+                if not teleportToCurrentTarget() then
+                    local positions = getPositionsFromRowPositions()
+                    if #positions > 0 then
+                        currentTarget = positions[math.random(#positions)]
+                        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
                     end
                 end
             end
-        
-
-        recentPositions = {} -- Clear recent positions each loop
+        end
         wait()
     end
 end
 
 wait(5)
-spawn(teleportLoop)
-
-
+spawn(teleportLoop) 
 
 local Workspace = game:GetService("Workspace")
 
