@@ -273,6 +273,7 @@ local RowPositions = {
 }
 
 
+
 local CounterValue = 0
 
 local screenGui = Instance.new("ScreenGui")
@@ -568,17 +569,24 @@ function getPositionsFromRowPositions()
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
+                local isInRow = false
                 for _, pos in pairs(RowPositions) do
                     if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
                         table.insert(positions, child)
-                        break
+                        isInRow = true
                     end
+                end
+                
+                
+                if not isInRow then
+                    child:Destroy()
                 end
             end
         end
     end
     return positions
 end
+
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
