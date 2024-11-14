@@ -252,7 +252,7 @@ spawn(LootbagCollect)
         loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
     end
 else
-script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP"
+script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
         getgenv().Settings = {
             Sniper = {
                 Active = true,
