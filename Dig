@@ -705,6 +705,17 @@ spawn(RemoteRun)
 
 print("if made it through")
 wait(300)
+repeat
+    wait(0.1)
+    local royalPurpleFound = false
+    for _, child in ipairs(activeBlocks:GetChildren()) do
+        if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+            royalPurpleFound = true
+            break  -- Stop the loop if we find any Royal purple part
+        end
+    end
+until not royalPurpleFound  -- Repeat until no Royal purple parts are found
+
 
  local PlaceID = game.PlaceId
 local AllIDs = {}
