@@ -707,7 +707,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(300)
+wait(500)
 repeat
     wait(0.1)
     local royalPurpleFound = false
