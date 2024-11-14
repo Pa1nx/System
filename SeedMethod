@@ -191,7 +191,7 @@ spawn(LootbagCollect)
     if User.Name == "voidwheel12" then
         print("hi")
     else
-        script_key = "aGSYaHntietZdVDhpQbUxfFtyihBtWWP"
+        script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
         getgenv().Settings = {
             Sniper = {
                 Active = true,
