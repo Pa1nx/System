@@ -555,8 +555,6 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
-
-
 local currentTarget
 local chestActive = false
 local PurpleActive = false
@@ -576,8 +574,6 @@ function getPositionsFromRowPositions()
                         isInRow = true
                     end
                 end
-                
-                
                 if not isInRow then
                     child:Destroy()
                 end
@@ -586,7 +582,6 @@ function getPositionsFromRowPositions()
     end
     return positions
 end
-
 
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
@@ -656,46 +651,8 @@ function teleportLoop()
                     if not teleportToCurrentTarget() then
                         local positions = getPositionsFromRowPositions()
                         if #positions > 0 then
-                            local closestRows = {}
-                            local characterPosition = humanoidRootPart.Position
-                            for _, pos in ipairs(RowPositions) do
-                                local closestDistance = math.huge
-                                for _, part in ipairs(positions) do
-                                    local distance = (part.Position - characterPosition).Magnitude
-                                    if distance < closestDistance then
-                                        closestDistance = distance
-                                        table.insert(closestRows, {pos, closestDistance})
-                                    end
-                                end
-                            end
-                            table.sort(closestRows, function(a, b) return a[2] < b[2] end)
-                            local closest8Rows = {}
-                            for i = 1, math.min(8, #closestRows) do
-                                table.insert(closest8Rows, closestRows[i][1])
-                            end
-                            local targetRow = closest8Rows[math.random(#closest8Rows)]
-                            local rowParts = {}
-                            for _, part in ipairs(positions) do
-                                local x, _, z = math.floor(part.Position.X + 0.5), math.floor(part.Position.Y + 0.5), math.floor(part.Position.Z + 0.5)
-                                if x == targetRow.X and z == targetRow.Z then
-                                    if not rowParts[targetRow] then
-                                        rowParts[targetRow] = {}
-                                    end
-                                    table.insert(rowParts[targetRow], part)
-                                end
-                            end
-                            local topmostPart = nil
-                            local highestY = -math.huge
-                            for _, part in ipairs(rowParts[targetRow]) do
-                                if part.Position.Y > highestY then
-                                    topmostPart = part
-                                    highestY = part.Position.Y
-                                end
-                            end
-                            if topmostPart then
-                                currentTarget = topmostPart
-                                teleportToPosition(topmostPart.Position + Vector3.new(0, 5, 0))
-                            end
+                            currentTarget = positions[math.random(#positions)]
+                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
                         end
                     end
                 end
@@ -703,46 +660,8 @@ function teleportLoop()
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
-                        local closestRows = {}
-                        local characterPosition = humanoidRootPart.Position
-                        for _, pos in ipairs(RowPositions) do
-                            local closestDistance = math.huge
-                            for _, part in ipairs(positions) do
-                                local distance = (part.Position - characterPosition).Magnitude
-                                if distance < closestDistance then
-                                    closestDistance = distance
-                                    table.insert(closestRows, {pos, closestDistance})
-                                end
-                            end
-                        end
-                        table.sort(closestRows, function(a, b) return a[2] < b[2] end)
-                        local closest8Rows = {}
-                        for i = 1, math.min(8, #closestRows) do
-                            table.insert(closest8Rows, closestRows[i][1])
-                        end
-                        local targetRow = closest8Rows[math.random(#closest8Rows)]
-                        local rowParts = {}
-                        for _, part in ipairs(positions) do
-                            local x, _, z = math.floor(part.Position.X + 0.5), math.floor(part.Position.Y + 0.5), math.floor(part.Position.Z + 0.5)
-                            if x == targetRow.X and z == targetRow.Z then
-                                if not rowParts[targetRow] then
-                                    rowParts[targetRow] = {}
-                                end
-                                table.insert(rowParts[targetRow], part)
-                            end
-                        end
-                        local topmostPart = nil
-                        local highestY = -math.huge
-                        for _, part in ipairs(rowParts[targetRow]) do
-                            if part.Position.Y > highestY then
-                                topmostPart = part
-                                highestY = part.Position.Y
-                            end
-                        end
-                        if topmostPart then
-                            currentTarget = topmostPart
-                            teleportToPosition(topmostPart.Position + Vector3.new(0, 5, 0))
-                        end
+                        currentTarget = positions[math.random(#positions)]
+                        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
                     end
                 end
             end
@@ -751,9 +670,9 @@ function teleportLoop()
     end
 end
 
-wait(5)
-spawn(teleportLoop)
 
+wait(5)
+spawn(teleportLoop) 
 
 local function RemoteRun()
     while true do
@@ -881,3 +800,4 @@ function Teleport()
 end
 
 Teleport()
+
