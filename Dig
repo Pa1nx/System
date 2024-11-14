@@ -642,7 +642,7 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-            if BucketAmount < 30 then
+            if BucketAmount < 50 then
                 if not teleportToActiveChestModel() then
                     if not teleportToCurrentTarget() then
                         local positions = getPositionsFromRowPositions()
@@ -674,8 +674,7 @@ local function RemoteRun()
     while true do
         if currentTarget and currentTarget:GetAttribute("Coord") then
             local coord = currentTarget:GetAttribute("Coord")
-            print(coord)
-
+          
             if chestActive == true then
                 coroutine.wrap(function()
                     game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigChest", coord)
