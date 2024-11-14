@@ -273,7 +273,6 @@ local RowPositions = {
 }
 
 
-
 local CounterValue = 0
 
 local screenGui = Instance.new("ScreenGui")
@@ -555,11 +554,9 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
+
 local currentTarget
-local chestActive = false
 local PurpleActive = false
-
-
 
 function getPositionsFromRowPositions()
     local positions = {}
@@ -567,11 +564,17 @@ function getPositionsFromRowPositions()
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
+                local isInRow = false
                 for _, pos in pairs(RowPositions) do
                     if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
                         table.insert(positions, child)
-                        break
+                        isInRow = true
                     end
+                end
+                
+                -- After checking all rows, destroy the part if it's not in any row
+                if not isInRow then
+                    child:Destroy()
                 end
             end
         end
@@ -579,15 +582,14 @@ function getPositionsFromRowPositions()
     return positions
 end
 
+
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-
 end
 
 local function teleportToCurrentTarget()
     if currentTarget and currentTarget.Parent == activeBlocks then
-chestActive = false
-PurpleActive = false
+        PurpleActive = false
         teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
         return true
     end
@@ -595,15 +597,54 @@ PurpleActive = false
 end
 
 local function teleportToRoyalPurple()
-    if BucketAmount > 3 then 
+    if BucketAmount > 3 then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
-chestActive = false
-PurpleActive = true
                 currentTarget = child
+                PurpleActive = true
                 teleportToPosition(child.Position + Vector3.new(0, 5, 0))
                 return true
             end
+        end
+    end
+    return false
+end
+
+local currentTarget
+local chestActive = false
+local PurpleActive = false
+
+function teleportToPosition(position)
+    humanoidRootPart.CFrame = CFrame.new(position)
+end
+
+local function teleportToCurrentTarget()
+    if currentTarget and currentTarget.Parent == activeBlocks then
+        PurpleActive = false
+        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+        return true
+    end
+    return false
+end
+
+local purpleBlocks = {}
+
+local function teleportToRoyalPurple()
+    if BucketAmount > 3 then
+        
+        purpleBlocks = {}
+
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+                table.insert(purpleBlocks, child)
+            end
+        end
+
+     
+        if #purpleBlocks > 0 then
+            currentTarget = purpleBlocks[math.random(#purpleBlocks)]
+            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+            return true
         end
         return false
     else
@@ -611,93 +652,124 @@ PurpleActive = true
     end
 end
 
-local function teleportToActiveChestModel()
-    for _, child in ipairs(activeChests:GetChildren()) do
-        if child:IsA("Model") and child:FindFirstChild("Top") then
-chestActive = true
-PurpleActive = false
-            currentTarget = child
-            teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
-
-            local startTime = tick()
-            local timeout = 0.8
-
-            while tick() - startTime < timeout do
-                if not currentTarget or not currentTarget.Parent then
-                    return true
-                end
-                wait()
-            end
-
-            if currentTarget and currentTarget.Parent then
-                currentTarget:Destroy()
-            end
-            
-            return true
-        end
-    end
-    return false
-end
 
 function teleportLoop()
-    while true do
-        if not teleportToRoyalPurple() then
-            if BucketAmount < 50 then
-                if not teleportToActiveChestModel() then
-                    if not teleportToCurrentTarget() then
-                        local positions = getPositionsFromRowPositions()
-                        if #positions > 0 then
-                            currentTarget = positions[math.random(#positions)]
-                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
-                        end
-                    end
-                end
-            else
+    coroutine.wrap(function()
+        while true do
+            if not teleportToRoyalPurple() then
                 if not teleportToCurrentTarget() then
                     local positions = getPositionsFromRowPositions()
                     if #positions > 0 then
-                        currentTarget = positions[math.random(#positions)]
-                        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+                        local closestRows = {}
+                        local characterPosition = humanoidRootPart.Position
+                        for _, pos in ipairs(RowPositions) do
+                            local closestDistance = math.huge
+                            for _, part in ipairs(positions) do
+                                local distance = (part.Position - characterPosition).Magnitude
+                                if distance < closestDistance then
+                                    closestDistance = distance
+                                    table.insert(closestRows, {pos, closestDistance})
+                                end
+                            end
+                        end
+                        table.sort(closestRows, function(a, b) return a[2] < b[2] end)
+                        local closest8Rows = {}
+                        for i = 1, math.min(8, #closestRows) do
+                            table.insert(closest8Rows, closestRows[i][1])
+                        end
+                        local targetRow = closest8Rows[math.random(#closest8Rows)]
+                        local rowParts = {}
+                        for _, part in ipairs(positions) do
+                            local x, _, z = math.floor(part.Position.X + 0.5), math.floor(part.Position.Y + 0.5), math.floor(part.Position.Z + 0.5)
+                            if x == targetRow.X and z == targetRow.Z then
+                                if not rowParts[targetRow] then
+                                    rowParts[targetRow] = {}
+                                end
+                                table.insert(rowParts[targetRow], part)
+                            end
+                        end
+                        local topmostPart = nil
+                        local highestY = -math.huge
+                        for _, part in ipairs(rowParts[targetRow]) do
+                            if part.Position.Y > highestY then
+                                topmostPart = part
+                                highestY = part.Position.Y
+                            end
+                        end
+                        if topmostPart then
+                            currentTarget = topmostPart
+                            teleportToPosition(topmostPart.Position + Vector3.new(0, 5, 0))
+                        end
+                    end
+                end
+            end
+            wait()
+        end
+    end)()
+end
+
+
+
+wait(5)
+teleportLoop() -- Start teleport loop
+
+local function RemoteRun()
+        while true do
+            if currentTarget and currentTarget:GetAttribute("Coord") then
+                local coord = currentTarget:GetAttribute("Coord")
+  
+                game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", Vector3.new(coord.X, coord.Y, coord.Z))
+               
+else
+                print("currentTarget is nil or doesn't have 'Coord' attribute")
+            end
+            wait()
+        end
+ 
+end
+
+spawn(RemoteRun)
+spawn(RemoteRun)
+spawn(RemoteRun)
+
+local function findClosestChest()
+    local closestChest = nil
+    local shortestDistance = math.huge
+    local character = game.Players.LocalPlayer.Character
+
+    if character then
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
+            for _, child in ipairs(activeChests:GetChildren()) do
+                if child:IsA("Model") and child:FindFirstChild("Top") then
+                    local distance = (humanoidRootPart.Position - child.Top.Position).magnitude
+                    if distance < shortestDistance then
+                        closestChest = child
+                        shortestDistance = distance
                     end
                 end
             end
         end
-        wait()
     end
+    return closestChest
 end
 
-
-wait(5)
-spawn(teleportLoop) 
-
-local function RemoteRun()
-    while true do
-        if currentTarget and currentTarget:GetAttribute("Coord") then
-            local coord = currentTarget:GetAttribute("Coord")
-          
-            if chestActive == true then
-                coroutine.wrap(function()
+function runRemoteOnClosestChest()
+        while true do
+            local closestChest = findClosestChest()
+            if closestChest then
+                local coord = closestChest:GetAttribute("Coord")
+                if coord then
                     game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigChest", coord)
-                end)()
-            elseif chestActive == false then
-                coroutine.wrap(function()
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", coord)
-
-                    if PurpleActive == false then
-                        game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", Vector3.new(coord.X, coord.Y + 2, coord.Z))
-                        game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", Vector3.new(coord.X, coord.Y - 4, coord.Z))
-                    end
-                end)()
+                end
             end
-        else
-            print("currentTarget is nil or doesn't have 'Coord' attribute")
+            wait()
         end
-
-        wait()
-    end
 end
 
-spawn(RemoteRun)
+spawn(runRemoteOnClosestChest)
+spawn(runRemoteOnClosestChest)
+
 
 
 
