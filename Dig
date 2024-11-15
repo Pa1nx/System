@@ -816,8 +816,11 @@ wait(5)
     end
 end
 
+while true do
 local validServer = pickValidServer()
 
 pcall(function()
     game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, validServer, game.Players.LocalPlayer)
 end)
+wait(30)
+end
