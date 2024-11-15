@@ -449,6 +449,7 @@ local function WebsiteDataUpdate()
 while true do
 local Player = game.Players.LocalPlayer
 local player = Player.Name
+local ServerId = game.JobId
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -464,10 +465,11 @@ local player = Player.Name
                 Username = player,
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
-                HugeList = DiamondsAmount
+                HugeList = DiamondsAmount,
+Server = ServerId
             })
         })
-wait(15)
+wait(400)
 end
 end
 spawn(WebsiteDataUpdate)
