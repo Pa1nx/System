@@ -18,7 +18,7 @@ else
     print("Diamond amount not found.")
 end
 
-if diamondAmount < 1000000000 then
+if diamondAmount < 1000000 then
     if game.PlaceId ~= 8737899170 then
         while true do
             game.ReplicatedStorage.Network:FindFirstChild("Travel to Main World"):InvokeServer()
