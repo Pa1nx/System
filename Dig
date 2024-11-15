@@ -456,7 +456,7 @@ local ServerId = game.JobId
 
         -- Updated URL
         local response = request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
+            Url = 'https://f466dc15-f411-4c74-bf04-d3f867a14582-00-1d2ant5ogh6op.picard.replit.dev/update',
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json'
