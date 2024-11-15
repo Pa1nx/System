@@ -471,32 +471,28 @@ local function WebsiteDataUpdate()
             })
         })
 
-     
-local HttpService = game:GetService("HttpService")
-local request = (syn and syn.request) or request or (http and http.request) or http_request
+        local HttpService = game:GetService("HttpService")
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
+            Method = 'GET',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            }
+        })
 
-local response = request({
-    Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
-    Method = 'GET',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    }
-})
-
-
-if response and response.Body then
-    local data = HttpService:JSONDecode(response.Body)
-    if data and data.uniqueServers then
-        Servers = data.uniqueServers
-    end
-
-    
+        if response and response.Body then
+            local data = HttpService:JSONDecode(response.Body)
+            if data and data.uniqueServers then
+                Servers = data.uniqueServers
+            end
+        end
 
         wait(15)
     end
 end
 
 spawn(WebsiteDataUpdate)
+
 
 
 
