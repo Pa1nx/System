@@ -669,7 +669,7 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-            if BucketAmount < 100 then
+            if BucketAmount < 50 then
                 if not teleportToActiveChestModel() then
                     if not teleportToCurrentTarget() then
                         local positions = getPositionsFromRowPositions()
@@ -730,7 +730,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(500)
+wait(350)
 repeat
     wait(0.1)
     local royalPurpleFound = false
