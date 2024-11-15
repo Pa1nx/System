@@ -639,33 +639,49 @@ PurpleActive = true
     end
 end
 
-local function teleportToActiveChestModel()
+local function teleportToClosestActiveChestModel()
+    local closestChild = nil
+    local closestDistance = math.huge
+    local characterPosition = character.HumanoidRootPart.Position
+
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
-chestActive = true
-PurpleActive = false
-            currentTarget = child
-            teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
+            local topPosition = child.Top.Position
+            local distance = (topPosition - characterPosition).Magnitude
 
-            local startTime = tick()
-            local timeout = 0.8
-
-            while tick() - startTime < timeout do
-                if not currentTarget or not currentTarget.Parent then
-                    return true
-                end
-                wait()
+            if distance < closestDistance then
+                closestChild = child
+                closestDistance = distance
             end
-
-            if currentTarget and currentTarget.Parent then
-                currentTarget:Destroy()
-            end
-            
-            return true
         end
     end
+
+    if closestChild then
+        chestActive = true
+        PurpleActive = false
+        currentTarget = closestChild
+        teleportToPosition(closestChild.Top.Position + Vector3.new(0, 3, 0))
+
+        local startTime = tick()
+        local timeout = 0.8
+
+        while tick() - startTime < timeout do
+            if not currentTarget or not currentTarget.Parent then
+                return true
+            end
+            wait()
+        end
+
+        if currentTarget and currentTarget.Parent then
+            currentTarget:Destroy()
+        end
+
+        return true
+    end
+
     return false
 end
+
 
 function teleportLoop()
     while true do
