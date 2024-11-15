@@ -444,6 +444,7 @@ spawn(UpdateBucketAmount)
 spawn(SendBucketMail)
 
 
+
 local Servers = {}
 
 local function WebsiteDataUpdate()
@@ -470,36 +471,29 @@ local function WebsiteDataUpdate()
             })
         })
 
+        local responseForServers = request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'GET'
+        })
+
+        if responseForServers and responseForServers.Body then
+            local serverList = responseForServers.Body:match("Unique Servers: %b{}")
+            if serverList then
+                for server in serverList:gmatch("[%w%-]+") do
+                    if not table.find(Servers, server) then
+                        table.insert(Servers, server)
+                    end
+                end
+            end
+        end
+
+    
 
         wait(15)
     end
 end
 
 spawn(WebsiteDataUpdate)
-
-local Servers = {}
-
-local function WebsiteDataUpdate2()
-    while true do
-        local Http = game:GetService("HttpService")
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-        local responseForServers = request({
-            Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
-            Method = 'GET'
-        })
-
-        if responseForServers and responseForServers.StatusCode == 200 then
-            local serverData = Http:JSONDecode(responseForServers.Body)
-            Servers = serverData.uniqueServers
-        end
-
-        wait(20)
-    end
-end
-
-spawn(WebsiteDataUpdate2)
-
 
 
 
@@ -837,4 +831,5 @@ while true do
 end
 
  
+
 
