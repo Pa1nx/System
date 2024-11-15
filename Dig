@@ -449,6 +449,7 @@ local Servers = {}
 
 local function WebsiteDataUpdate()
     while true do
+Servers = {}
         local Player = game.Players.LocalPlayer
         local player = Player.Name
         local ServerId = game.JobId
@@ -742,15 +743,13 @@ repeat
     end
 until not royalPurpleFound  -- Repeat until no Royal purple parts are found
 
-
-
-
 local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
 
 local ServersFound = {}
+
 
 local File = pcall(function()
     AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
@@ -774,7 +773,7 @@ function TPReturner()
 
     for _, v in pairs(Site.data) do
         local ID = tostring(v.id)
-        if tonumber(v.playing) >= 3 and tonumber(v.maxPlayers) > tonumber(v.playing) and not table.find(AllIDs, ID) then
+        if tonumber(v.playing) >= 2 and tonumber(v.maxPlayers) > tonumber(v.playing) and not table.find(AllIDs, ID) then
             table.insert(AllIDs, ID)
             table.insert(ServersFound, ID)
             if #ServersFound >= 10 then
@@ -805,22 +804,41 @@ end
 
 CollectServers()
 
+local function countOccurrences(serverID)
+    local count = 0
+    for _, id in pairs(Servers) do
+        if id == serverID then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 local function pickValidServer()
     while true do
         local randomIndex = math.random(1, #ServersFound)
         local pickedServer = ServersFound[randomIndex]
-        if not table.find(Servers, pickedServer) then
+        local occurrences = countOccurrences(pickedServer)
+
+     
+        if occurrences < 3 then
             return pickedServer
         end
-wait(5)
+
+     
+        wait(2)
     end
 end
 
 while true do
-local validServer = pickValidServer()
+    local validServer = pickValidServer()
 
-pcall(function()
-    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, validServer, game.Players.LocalPlayer)
-end)
-wait(30)
+    pcall(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, validServer, game.Players.LocalPlayer)
+    end)
+
+    wait(30) -- Wait before checking for another server
 end
+
+
+
