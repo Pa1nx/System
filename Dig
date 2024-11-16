@@ -445,16 +445,20 @@ spawn(SendBucketMail)
 
 
 
+
+local Servers = {}
+
 local function WebsiteDataUpdate()
-while true do
-local Player = game.Players.LocalPlayer
-local player = Player.Name
+    while true do
+Servers = {}
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local ServerId = game.JobId
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-        -- Updated URL
-        local response = request({
+        request({
             Url = 'https://bots-juzzoualive.replit.app/update',
             Method = 'POST',
             Headers = {
@@ -465,14 +469,31 @@ local player = Player.Name
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-Server = "111"
+                Server = ServerId
             })
         })
-wait(15)
-end
-end
-spawn(WebsiteDataUpdate)
 
+        local HttpService = game:GetService("HttpService")
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
+            Method = 'GET',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            }
+        })
+
+        if response and response.Body then
+            local data = HttpService:JSONDecode(response.Body)
+            if data and data.uniqueServers then
+                Servers = data.uniqueServers
+            end
+        end
+
+        wait(15)
+    end
+end
+
+spawn(WebsiteDataUpdate)
 
 
 
