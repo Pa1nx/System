@@ -171,7 +171,14 @@ spawn(grow)
 spawn(diamondss)
 spawn(diamondss)
    
-        
+        local function huge()
+getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
+    getgenv().LoadSettings = {
+        Example_Setting = "Example_Value"
+    }
+    loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
+end
+spawn(huge)
 
     repeat
         local seedBagAmount = GetItemAmount()
