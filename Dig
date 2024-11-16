@@ -687,12 +687,7 @@ local function RemoteRun()
             elseif chestActive == false then
                 coroutine.wrap(function()
                     game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", coord)
-
-                    if PurpleActive == false then
-                        game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", Vector3.new(coord.X, coord.Y + 2, coord.Z))
-                        game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", Vector3.new(coord.X, coord.Y - 4, coord.Z))
-                    end
-                end)()
+end)()
             end
         else
             print("currentTarget is nil or doesn't have 'Coord' attribute")
