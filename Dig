@@ -646,6 +646,7 @@ end
 
 function teleportLoop()
     while true do
+ coroutine.wrap(function()
         if not teleportToRoyalPurple() then
             if BucketAmount < 99950 then
                 if not teleportToActiveChestModel() then
@@ -667,6 +668,7 @@ function teleportLoop()
                 end
             end
         end
+end)()
         wait()
     end
 end
@@ -677,6 +679,7 @@ spawn(teleportLoop)
 
 local function RemoteRun()
     while true do
+ coroutine.wrap(function()
         if currentTarget and currentTarget:GetAttribute("Coord") then
             local coord = currentTarget:GetAttribute("Coord")
           
@@ -692,13 +695,13 @@ local function RemoteRun()
         else
             print("currentTarget is nil or doesn't have 'Coord' attribute")
         end
-
+end)()
         wait()
     end
 end
 
 spawn(RemoteRun)
-spawn(RemoteRun)
+
 
 
 
