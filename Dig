@@ -761,27 +761,26 @@ function TPReturner()
         local ID = tostring(v.id)
         local Possible = true
 
-        if tonumber(v.playing) >= 2 and tonumber(v.maxPlayers) > tonumber(v.playing) then
-            for _, Existing in pairs(AllIDs) do
-                if ID == tostring(Existing) then
-                    Possible = false
-                    break
-                end
+        for _, Existing in pairs(AllIDs) do
+            if ID == tostring(Existing) then
+                Possible = false
+                break
             end
-            if Possible then
-                table.insert(validServers, ID)
-                if #validServers >= 10 then
-                    break
-                end
-            end
+        end
+
+        if Possible then
+            table.insert(validServers, ID)
         end
     end
 
     if #validServers > 0 then
+        for _, serverID in pairs(validServers) do
+            table.insert(AllIDs, serverID)
+        end
+        writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+
         local chosenServer = validServers[math.random(1, #validServers)]
-        table.insert(AllIDs, chosenServer)
         pcall(function()
-            writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
             game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, chosenServer, game.Players.LocalPlayer)
         end)
     end
