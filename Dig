@@ -465,7 +465,7 @@ local player = Player.Name
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-Server = "11111"
+Server = "111"
             })
         })
 wait(15)
@@ -556,7 +556,6 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
-
 local currentTarget
 local chestActive = false
 local PurpleActive = false
@@ -648,7 +647,7 @@ end
 function teleportLoop()
     while true do
         if not teleportToRoyalPurple() then
-            if BucketAmount < 100 then
+            if BucketAmount < 99950 then
                 if not teleportToActiveChestModel() then
                     if not teleportToCurrentTarget() then
                         local positions = getPositionsFromRowPositions()
@@ -709,7 +708,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(300)
+wait(500)
 repeat
     wait(0.1)
     local royalPurpleFound = false
@@ -720,6 +719,7 @@ repeat
         end
     end
 until not royalPurpleFound  -- Repeat until no Royal purple parts are found
+
 
  local PlaceID = game.PlaceId
 local AllIDs = {}
