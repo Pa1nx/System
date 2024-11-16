@@ -823,6 +823,5 @@ function Teleport()
 end
 while true do
 Teleport()
-wait(15)
-
+wait(30)
 end
