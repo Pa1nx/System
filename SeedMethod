@@ -34,8 +34,7 @@ if diamondAmount < 1000000 then
             local args = { [1] = "Seed Bag" }
             game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
             game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
+
         end
     end
 
@@ -121,7 +120,7 @@ spawn(LootbagCollect)
 
 
    
-        coroutine.wrap(function()
+        local function plant()
             while true do
                 for i = 1, 11 do
                     local args = {
@@ -132,356 +131,47 @@ spawn(LootbagCollect)
                     game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
                     wait()
                 end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-    
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-   
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-        coroutine.wrap(function()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end)()
-
-
-    local function GetItemAmount()
-        local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-        for _, Item in pairs(Inventory["Misc"]) do
-            if Item.id == "Seed Bag" and Item._am then
-                return Item._am
             end
         end
-        return nil
-    end
+spawn(plant)
+spawn(plant)
+spawn(plant)
+
+     local function grow()
+            while true do
+                for i = 1, 11 do
+                    local args = {
+                        [1] = "FlowerGarden",
+                        [2] = "InstaGrowSeed",
+                        [3] = i
+                    }
+                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+                    wait()
+                end
+            end
+        end
+spawn(grow)
+spawn(grow)
+spawn(grow)
+   local function diamondss()
+            while true do
+                for i = 1, 11 do
+                    local args = {
+                        [1] = "FlowerGarden",
+                        [2] = "PlantSeed",
+                        [3] = i,
+                        [4] = "Diamond"
+                    }
+                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+                    wait()
+                end
+            end
+        end
+    spawn(diamondss)
+spawn(diamondss)
+spawn(diamondss)
+   
+        
 
     repeat
         local seedBagAmount = GetItemAmount()
