@@ -738,61 +738,54 @@ local actualHour = os.date("!*t").hour
 local File = pcall(function()
     AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
 end)
-
 if not File then
     table.insert(AllIDs, actualHour)
     writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
 end
 
-function TPReturner()
+function CollectServerIDs()
     local Site
     if foundAnything == "" then
         Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
     else
         Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
     end
-
+    local IDs = {}
     if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
         foundAnything = Site.nextPageCursor
     end
-
-    local validServers = {}
-    for _, v in pairs(Site.data) do
-        local ID = tostring(v.id)
-        local Possible = true
-
-        for _, Existing in pairs(AllIDs) do
-            if ID == tostring(Existing) then
-                Possible = false
+    for i, v in pairs(Site.data) do
+        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+            table.insert(IDs, tostring(v.id))
+            if #IDs >= 20 then
                 break
             end
         end
+    end
+    return IDs
+end
 
-        if Possible then
-            table.insert(validServers, ID)
+function JoinRandomServer()
+    local collectedIDs = {}
+    while #collectedIDs < 20 do
+        local newIDs = CollectServerIDs()
+        for _, id in ipairs(newIDs) do
+            if #collectedIDs < 20 then
+                table.insert(collectedIDs, id)
+            else
+                break
+            end
+        end
+        if foundAnything == "" or #newIDs == 0 then
+            break
         end
     end
-
-    if #validServers > 0 then
-        for _, serverID in pairs(validServers) do
-            table.insert(AllIDs, serverID)
-        end
-        writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-
-        local chosenServer = validServers[math.random(1, #validServers)]
+    if #collectedIDs > 0 then
+        local randomID = collectedIDs[math.random(1, #collectedIDs)]
         pcall(function()
-            game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, chosenServer, game.Players.LocalPlayer)
+            game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, randomID, game.Players.LocalPlayer)
         end)
     end
 end
 
-function Teleport()
-    while true do
-        pcall(function()
-            TPReturner()
-        end)
-        wait(30)
-    end
-end
-
-Teleport()
+JoinRandomServer()
