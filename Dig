@@ -2,8 +2,6 @@
 
 
 
-
-
 --DIGSITE SCRIPT
 wait(3)
 if game.PlaceId ~= 8737899170 then
@@ -447,19 +445,17 @@ spawn(SendBucketMail)
 
 
 
-local Servers = {}
-
 local function WebsiteDataUpdate()
-    while true do
-        local Player = game.Players.LocalPlayer
-        local player = Player.Name
-        local ServerId = game.JobId
+while true do
+local Player = game.Players.LocalPlayer
+local player = Player.Name
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-        request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
+        -- Updated URL
+        local response = request({
+            Url = 'https://f466dc15-f411-4c74-bf04-d3f867a14582-00-1d2ant5ogh6op.picard.replit.dev/update',
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json'
@@ -469,34 +465,13 @@ local function WebsiteDataUpdate()
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-                Server = ServerId
+Server = "11111"
             })
         })
-
-        local responseForServers = request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
-            Method = 'GET'
-        })
-
-        if responseForServers and responseForServers.Body then
-            local serverList = responseForServers.Body:match("Unique Servers: %b{}")
-            if serverList then
-                for server in serverList:gmatch("[%w%-]+") do
-                    if not table.find(Servers, server) then
-                        table.insert(Servers, server)
-                    end
-                end
-            end
-        end
-
-    
-
-        wait(15)
-    end
+wait(15)
 end
-
+end
 spawn(WebsiteDataUpdate)
-
 
 
 
@@ -581,6 +556,40 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
+local function WebsiteDataUpdate()
+    while true do
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local ServerId = game.JobId
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = BucketAmount,
+                DiamondsValue = MagicBucketAM,
+                HugeList = DiamondsAmount,
+                Server = ServerId
+            })
+        })
+
+        
+
+    
+
+        wait(15)
+    end
+end
+
+spawn(WebsiteDataUpdate)
+
 local currentTarget
 local chestActive = false
 local PurpleActive = false
@@ -733,7 +742,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(500)
+wait(300)
 repeat
     wait(0.1)
     local royalPurpleFound = false
@@ -745,15 +754,12 @@ repeat
     end
 until not royalPurpleFound  -- Repeat until no Royal purple parts are found
 
-
-
-
-
-local PlaceID = game.PlaceId
+ local PlaceID = game.PlaceId
 local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
 local Deleted = false
+
 local last
 
 local File = pcall(function()
@@ -763,7 +769,6 @@ if not File then
    table.insert(AllIDs, actualHour)
    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
 end
-
 function TPReturner()
    local Site;
    if foundAnything == "" then
@@ -803,11 +808,12 @@ function TPReturner()
                end
                num = num + 1
            end
-           if Possible == true and not table.find(Servers, ID) then
+           if Possible == true then
                table.insert(AllIDs, ID)
                wait()
                pcall(function()
                    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                   wait()
                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
                end)
                wait(4)
@@ -826,11 +832,16 @@ function Teleport()
        end)
    end
 end
-
 while true do
-   Teleport()
-   wait(15)
+Teleport()
+wait(15)
+
 end
 
- 
+
+
+
+
+
+
 
