@@ -481,12 +481,7 @@ Servers = {}
             }
         })
 
-        if response and response.Body then
-            local data = HttpService:JSONDecode(response.Body)
-            if data and data.uniqueServers then
-                Servers = data.uniqueServers
-            end
-        end
+        
 
         wait(15)
     end
