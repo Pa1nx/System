@@ -559,11 +559,9 @@ spawn(ProcessHugePets)
 local currentTarget
 local chestActive = false
 local PurpleActive = false
-
-
-
 function getPositionsFromRowPositions()
     local positions = {}
+
     if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
@@ -584,15 +582,28 @@ function getPositionsFromRowPositions()
     return positions
 end
 
+local function getFarthestPartFromRow(rowParts)
+    local farthestPart = nil
+    local maxY = -math.huge
+
+    for _, part in ipairs(rowParts) do
+        if part.Position.Y > maxY then
+            maxY = part.Position.Y
+            farthestPart = part
+        end
+    end
+
+    return farthestPart
+end
+
 local function teleportToPosition(position)
     humanoidRootPart.CFrame = CFrame.new(position)
-
 end
 
 local function teleportToCurrentTarget()
     if currentTarget and currentTarget.Parent == activeBlocks then
-chestActive = false
-PurpleActive = false
+        chestActive = false
+        PurpleActive = false
         teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
         return true
     end
@@ -600,11 +611,11 @@ PurpleActive = false
 end
 
 local function teleportToRoyalPurple()
-    if BucketAmount > 3 then 
+    if BucketAmount > 3 then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
-chestActive = false
-PurpleActive = true
+                chestActive = false
+                PurpleActive = true
                 currentTarget = child
                 teleportToPosition(child.Position + Vector3.new(0, 5, 0))
                 return true
@@ -619,8 +630,8 @@ end
 local function teleportToActiveChestModel()
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
-chestActive = true
-PurpleActive = false
+            chestActive = true
+            PurpleActive = false
             currentTarget = child
             teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
 
@@ -644,38 +655,49 @@ PurpleActive = false
     return false
 end
 
+local function teleportToRowPosition()
+    local positions = getPositionsFromRowPositions()
+    if #positions > 0 then
+        local farthestPart = getFarthestPartFromRow(positions)
+        if farthestPart then
+            currentTarget = farthestPart
+            teleportToPosition(farthestPart.Position + Vector3.new(0, 5, 0))
+            return true
+        end
+    end
+    return false
+end
+
 function teleportLoop()
     while true do
- coroutine.wrap(function()
-        if not teleportToRoyalPurple() then
-            if BucketAmount < 50 then
-                if not teleportToActiveChestModel() then
+        coroutine.wrap(function()
+            if not teleportToRoyalPurple() then
+                if BucketAmount < 50 then
+                    if not teleportToActiveChestModel() then
+                        if not teleportToCurrentTarget() then
+                            if not teleportToRowPosition() then
+                                -- No action needed
+                            end
+                        end
+                    end
+                else
                     if not teleportToCurrentTarget() then
-                        local positions = getPositionsFromRowPositions()
-                        if #positions > 0 then
-                            currentTarget = positions[math.random(#positions)]
-                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
+                        if not teleportToRowPosition() then
+                            -- No action needed
                         end
                     end
                 end
-            else
-                if not teleportToCurrentTarget() then
-                    local positions = getPositionsFromRowPositions()
-                    if #positions > 0 then
-                        currentTarget = positions[math.random(#positions)]
-                        teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
-                    end
-                end
             end
-        end
-end)()
+        end)()
         wait()
     end
 end
 
-
 wait(5)
-spawn(teleportLoop) 
+spawn(teleportLoop)
+
+
+
 
 local function RemoteRun()
     while true do
