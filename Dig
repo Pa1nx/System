@@ -758,7 +758,7 @@ function TPReturner()
        foundAnything = Site.nextPageCursor
    end
    local num = 0
-   local serverIDs = {} -- Table to hold 5 different server IDs
+   local serverIDs = {} -- Table to hold 10 different server IDs
    local extranum = 0
 
    for i, v in pairs(Site.data) do
@@ -794,7 +794,7 @@ function TPReturner()
            if Possible == true then
                table.insert(AllIDs, ID)
                table.insert(serverIDs, ID) -- Add server ID to the list of servers
-               if #serverIDs >= 5 then -- Only collect up to 5 IDs
+               if #serverIDs >= 10 then -- Only collect up to 10 IDs
                    break
                end
                wait()
@@ -802,7 +802,7 @@ function TPReturner()
        end
    end
 
-   -- If we have 5 server IDs, randomly select one to teleport to
+   -- If we have 10 server IDs, randomly select one to teleport to
    if #serverIDs > 0 then
        local randomIndex = math.random(1, #serverIDs)
        local selectedServerID = serverIDs[randomIndex] -- Get a random server ID
@@ -830,4 +830,3 @@ while true do
     Teleport()
     wait(15) -- Wait for 15 seconds before checking again
 end
-
