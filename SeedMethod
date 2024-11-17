@@ -135,7 +135,7 @@ spawn(LootbagCollect)
         end
 spawn(plant)
 spawn(plant)
-spawn(plant)
+
 
      local function grow()
             while true do
@@ -152,7 +152,7 @@ spawn(plant)
         end
 spawn(grow)
 spawn(grow)
-spawn(grow)
+
    local function diamondss()
             while true do
                 for i = 1, 11 do
@@ -169,7 +169,7 @@ spawn(grow)
         end
     spawn(diamondss)
 spawn(diamondss)
-spawn(diamondss)
+
    
         local function huge()
 getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
