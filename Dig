@@ -677,7 +677,7 @@ function teleportLoop()
                 end
             end
         end)()
-        wait(0.01)
+        wait()
     end
 end
 
