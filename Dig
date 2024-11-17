@@ -559,22 +559,16 @@ spawn(ProcessHugePets)
 local currentTarget
 local chestActive = false
 local PurpleActive = false
-function getPositionsFromRowPositions()
+function getPositionsFromRandomRow()
     local positions = {}
-
     if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+        local randomRow = RowPositions[math.random(1, #RowPositions)]
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") then
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
-                local isInRow = false
-                for _, pos in pairs(RowPositions) do
-                    if x == pos.X and z == pos.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
-                        table.insert(positions, child)
-                        isInRow = true
-                    end
-                end
-                if not isInRow then
-                    child:Destroy()
+                if x == randomRow.X and z == randomRow.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
+                    table.insert(positions, child)
+              
                 end
             end
         end
@@ -582,18 +576,18 @@ function getPositionsFromRowPositions()
     return positions
 end
 
-local function getLowestPartFromRow(rowParts)
-    local lowestPart = nil
-    local minY = math.huge
+function findFurthestBlock(positions)
+    local furthestBlock = nil
+    local lowestY = math.huge
 
-    for _, part in ipairs(rowParts) do
-        if part.Position.Y < minY then
-            minY = part.Position.Y
-            lowestPart = part
+    for _, block in ipairs(positions) do
+        if block.Position.Y < lowestY then
+            lowestY = block.Position.Y
+            furthestBlock = block
         end
     end
 
-    return lowestPart
+    return furthestBlock
 end
 
 local function teleportToPosition(position)
@@ -648,20 +642,7 @@ local function teleportToActiveChestModel()
             if currentTarget and currentTarget.Parent then
                 currentTarget:Destroy()
             end
-            
-            return true
-        end
-    end
-    return false
-end
 
-local function teleportToRowPosition()
-    local positions = getPositionsFromRowPositions()
-    if #positions > 0 then
-        local lowestPart = getLowestPartFromRow(positions)
-        if lowestPart then
-            currentTarget = lowestPart
-            teleportToPosition(lowestPart.Position + Vector3.new(0, 5, 0))
             return true
         end
     end
@@ -675,27 +656,30 @@ function teleportLoop()
                 if BucketAmount < 50 then
                     if not teleportToActiveChestModel() then
                         if not teleportToCurrentTarget() then
-                            if not teleportToRowPosition() then
-                                -- No action needed
+                            local positions = getPositionsFromRandomRow()
+                            if #positions > 0 then
+                                currentTarget = findFurthestBlock(positions)
+                                teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
                             end
                         end
                     end
                 else
                     if not teleportToCurrentTarget() then
-                        if not teleportToRowPosition() then
-                            -- No action needed
+                        local positions = getPositionsFromRandomRow()
+                        if #positions > 0 then
+                            currentTarget = findFurthestBlock(positions)
+                            teleportToPosition(currentTarget.Position + Vector3.new(0, 5, 0))
                         end
                     end
                 end
             end
         end)()
-        wait()
+        wait(0.01)
     end
 end
 
 wait(5)
 spawn(teleportLoop)
-
 
 
 
