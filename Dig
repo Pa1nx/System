@@ -556,6 +556,9 @@ function ProcessHugePets()
 end
 
 spawn(ProcessHugePets)
+
+
+
 local currentTarget
 local chestActive = false
 local PurpleActive = false
