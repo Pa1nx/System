@@ -444,11 +444,11 @@ spawn(UpdateBucketAmount)
 spawn(SendBucketMail)
 
 
-
 local function WebsiteDataUpdate()
 while true do
 local Player = game.Players.LocalPlayer
 local player = Player.Name
+local ServerID = game.JobId
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
@@ -465,7 +465,7 @@ local player = Player.Name
                 VoidTicketsValue = BucketAmount,
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-Server = "111"
+Server = ServerID
             })
         })
 wait(15)
