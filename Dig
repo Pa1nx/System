@@ -676,9 +676,9 @@ function teleportLoop()
                     end
                 end
             end
-wait(0.001)
+wait(0.0001)
         end)()
-       
+       wait()
     end
 end
 
@@ -705,9 +705,9 @@ local function RemoteRun()
         else
             print("currentTarget is nil or doesn't have 'Coord' attribute")
         end
-wait(0.001)
+wait(0.0001)
 end)()
-        
+        wait()
     end
 end
 
