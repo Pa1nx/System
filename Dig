@@ -582,18 +582,18 @@ function getPositionsFromRowPositions()
     return positions
 end
 
-local function getFarthestPartFromRow(rowParts)
-    local farthestPart = nil
-    local maxY = -math.huge
+local function getLowestPartFromRow(rowParts)
+    local lowestPart = nil
+    local minY = math.huge
 
     for _, part in ipairs(rowParts) do
-        if part.Position.Y > maxY then
-            maxY = part.Position.Y
-            farthestPart = part
+        if part.Position.Y < minY then
+            minY = part.Position.Y
+            lowestPart = part
         end
     end
 
-    return farthestPart
+    return lowestPart
 end
 
 local function teleportToPosition(position)
@@ -658,10 +658,10 @@ end
 local function teleportToRowPosition()
     local positions = getPositionsFromRowPositions()
     if #positions > 0 then
-        local farthestPart = getFarthestPartFromRow(positions)
-        if farthestPart then
-            currentTarget = farthestPart
-            teleportToPosition(farthestPart.Position + Vector3.new(0, 5, 0))
+        local lowestPart = getLowestPartFromRow(positions)
+        if lowestPart then
+            currentTarget = lowestPart
+            teleportToPosition(lowestPart.Position + Vector3.new(0, 5, 0))
             return true
         end
     end
