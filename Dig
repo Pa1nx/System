@@ -622,34 +622,51 @@ local function teleportToRoyalPurple()
         return false
     end
 end
-
 local function teleportToActiveChestModel()
+    local closestChest = nil
+    local closestDistance = math.huge  -- Start with the largest possible distance
+
+    -- Find the closest chest
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
-            chestActive = true
-            PurpleActive = false
-            currentTarget = child
-            teleportToPosition(child.Top.Position + Vector3.new(0, 3, 0))
-
-            local startTime = tick()
-            local timeout = 0.8
-
-            while tick() - startTime < timeout do
-                if not currentTarget or not currentTarget.Parent then
-                    return true
-                end
-                wait()
+            local chestPosition = child.Top.Position
+            local distance = (chestPosition - player.Character.PrimaryPart.Position).Magnitude
+            
+            if distance < closestDistance then
+                closestDistance = distance
+                closestChest = child
             end
-
-            if currentTarget and currentTarget.Parent then
-                currentTarget:Destroy()
-            end
-
-            return true
         end
     end
+
+    if closestChest then
+        chestActive = true
+        PurpleActive = false
+        currentTarget = closestChest
+        teleportToPosition(closestChest.Top.Position + Vector3.new(0, 3, 0))
+
+        local startTime = tick()
+        local timeout = 0.8
+
+        while tick() - startTime < timeout do
+            if not currentTarget or not currentTarget.Parent then
+                return true
+            end
+            wait()
+        end
+
+        if currentTarget and currentTarget.Parent then
+            currentTarget:Destroy()
+        end
+
+        return true
+    end
+    
     return false
 end
+
+
+
 
 function teleportLoop()
     while true do
