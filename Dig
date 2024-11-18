@@ -845,7 +845,7 @@ function TPReturner()
            if Possible == true then
                table.insert(AllIDs, ID)
                table.insert(serverIDs, ID) -- Add server ID to the list of servers
-               if #serverIDs >= 15 then -- Only collect up to 7 IDs
+               if #serverIDs >= 25 then -- Only collect up to 7 IDs
                    break
                end
                wait()
