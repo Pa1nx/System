@@ -52,12 +52,12 @@ local function script()
 getgenv().Config = {
     ["EquipEnchants"] = {"Coins","Strong Pets", "Tap Power"},
     ["KickWhenReachGoal"] = {
-        ["Rank"] = 5,
+        ["Rank"] = 12,
         ["Rebirth"] = 9,
         ["Area"] = 220
     },
     ["StopAt"] = {
-        ["Rank"] = 10, 
+        ["Rank"] = 20, 
         ["Area"] = 220
     },
     
