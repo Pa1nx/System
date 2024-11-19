@@ -682,7 +682,7 @@ function teleportLoop()
     while true do
         coroutine.wrap(function()
             if not teleportToRoyalPurple() then
-                if BucketAmount < 50 then
+                if BucketAmount < 30 then
                     if not teleportToActiveChestModel() then
                         if not teleportToCurrentTarget() then
                             local positions = getPositionsFromRandomRow()
