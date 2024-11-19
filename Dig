@@ -1,3 +1,14 @@
+local Player = game.Players.LocalPlayer
+local function GameCheck()
+if game.PlaceId == 8737899170 then
+    while true do
+        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+        wait(5)
+    end
+end
+end
+spawn(GameCheck)
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ItemLootbox = {"Wooden Gift"}
 local woodengiftamount = 0
