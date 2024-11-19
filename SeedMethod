@@ -279,7 +279,7 @@ script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
                     ["Save # Servers"] = 10,
                 },
                 Webhook = {
-                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["URL"] = "https://discord.com/api/webhooks/1308313532512866334/luhedrkH2BQTQjQt7h__Jxnooylls7N96YtH7H_fTerCMB2jU0PRToQpPjXV7XEk8xrZ",
                     ["Send Embeds"] = true,
                     ["Remove Username"] = true,
                     ["Ping on Huges 'n Titanics"] = true,
