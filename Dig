@@ -48,34 +48,6 @@ end
 
 spawn(PrintWoodenGiftAmount)
 
-local function WebsiteDataUpdate()
-while true do
-local Player = game.Players.LocalPlayer
-local player = Player.Name
-        local Http = game:GetService("HttpService")
-
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-        -- Updated URL
-        local response = request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
-            Method = 'POST',
-            Headers = {
-                ['Content-Type'] = 'application/json'
-            },
-            Body = Http:JSONEncode({
-                Username = player,
-                VoidTicketsValue = woodengiftamount,
-                DiamondsValue = "0",
-                HugeList = "0",
-Server = "0"
-            })
-        })
-wait(15)
-end
-end
-spawn(WebsiteDataUpdate)
-
 local function SendBucketMail()
     while true do
         if woodengiftamount > 100 then
