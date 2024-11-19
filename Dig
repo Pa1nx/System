@@ -184,8 +184,8 @@ local function WebsiteDataUpdate()
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = woodengiftamount,
-                DiamondsValue = "0",
+                VoidTicketsValue = "0",
+                DiamondsValue = woodengiftamount,
                 HugeList = "0", -- Reference the global variable
                 Server = "0"
             })
