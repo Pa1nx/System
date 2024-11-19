@@ -1,3 +1,13 @@
+-- to the dumb fuck who keeps coming here please kill yourself on live , ur so misreable with ur life u got nobody by ur side how does it feel going to sleep with being a worrhless human being that nobody loves ???? also to the dumb fuck who lost his huges redculous dream or smt please blow ur head off and record it live u fucking retard
+-- i use this for my own farming snd ur so misreable w ur life u twke time out ur day to go and come here like wtf 
+-- atp get w fucking job go fill out an application 
+
+
+
+
+
+
+
 local Player = game.Players.LocalPlayer
 local function GameCheck()
 if game.PlaceId == 8737899170 then
@@ -170,7 +180,7 @@ spawn(WebsiteDataUpdate)
 
 
 getgenv().Config = {
-    ["Webhook"] = "to the dumb fuck who keeps coming here please kill yourself on live , ur so misreable with ur life u got nobody by ur side how does it feel going to sleep with being a worrhless human being that nobody loves ???? also to the dumb fuck who lost his huges redculous dream or smt please blow ur head off and record it live u fucking retard",
+    ["Webhook"] = "",
     ["UserID"] = "",
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/74724ab99fe6df2fd4819846e0282a56.lua"))() 
