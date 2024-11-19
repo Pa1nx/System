@@ -1,3 +1,70 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ItemLootbox = {"Wooden Gift"}
+local woodengiftamount = 0
+local woodengiftuid = "hi"
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+
+    if Inventory[ItemsClass] then
+        for UID, Item in pairs(Inventory[ItemsClass]) do
+            if table.find(ItemsName, Item.id) then
+                local ItemInfo = {
+                    uid = UID,
+                    data = Item
+                }
+                table.insert(Table, ItemInfo)
+            end
+        end
+    end
+    return Table
+end
+
+local function PrintWoodenGiftAmount()
+    while true do
+        local LootboxItems = GetItemInfo("Lootbox", ItemLootbox)
+        for _, ItemInfo in pairs(LootboxItems) do
+            local ItemData = ItemInfo.data
+            if ItemData and ItemData._am then
+              woodengiftamount = ItemData._am 
+woodengiftuid = ItemInfo.uid
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(PrintWoodenGiftAmount)
+
+local function WebsiteDataUpdate()
+while true do
+local Player = game.Players.LocalPlayer
+local player = Player.Name
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Updated URL
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = woodengiftamount,
+                DiamondsValue = "0",
+                HugeList = "0",
+Server = "0"
+            })
+        })
+wait(15)
+end
+end
+spawn(WebsiteDataUpdate)
+
 
 getgenv().Config = {
     ["Webhook"] = "https://discord.com/api/webhooks/1308201586002231458/Sa8moFVpoGf5-P_Bws7jAwrZFuQOyaKW_yGQAUEIEVzIiSDcp7N-Ekc2aFu_jXzU0g99",
