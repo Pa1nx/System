@@ -31,12 +31,16 @@ if diamondAmount < 1000000 then
     local function seedbag()
         while true do
             wait()
-            local args = { [1] = "Seed Bag" }
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("GiftBag_Open"):InvokeServer(unpack(args))
-
+            local args5 = {
+            [1] = "Seed Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
+            local args5 = {
+            [1] = "Seed Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
+           
+            
         end
     end
 
