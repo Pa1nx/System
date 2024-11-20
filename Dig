@@ -1,6 +1,6 @@
--- to the dumb fuck who keeps coming here please kill yourself on live , ur so misreable with ur life u got nobody by ur side how does it feel going to sleep with being a worrhless human being that nobody loves ???? also to the dumb fuck who lost his huges redculous dream or smt please blow ur head off and record it live u fucking retard
--- i use this for my own farming snd ur so misreable w ur life u twke time out ur day to go and come here like wtf 
--- atp get w fucking job go fill out an application 
+-- to the niggas stalking my shir
+-- my nugga this is my code nobody else is using this leave me alone
+-- yall just coming here to bother , leave my code do smt else w yo life holy fuck
 
 
 
@@ -10,9 +10,6 @@
 
 
 
-
-
---DIGSITE SCRIPT
 wait(3)
 if game.PlaceId ~= 8737899170 then
     while true do
@@ -22,7 +19,10 @@ if game.PlaceId ~= 8737899170 then
 end
 spawn(GameCheck)
 
-
+local function DayCare()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
+end
+spawn(DayCare)
 
 local function ChangePosition()
     while true do
@@ -224,10 +224,7 @@ end
 
 spawn(MapDeleter)
 
-local function DayCare()
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
-end
-spawn(DayCare)
+
 
 local RowPositions = {
     Vector3.new(675, 51, -2701),
