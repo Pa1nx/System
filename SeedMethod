@@ -198,7 +198,7 @@ spawn(huge)
         wait(0.1)
     until seedBagAmount < 100
 
-    wait(60)
+    wait(300)
 
     local User = game.Players.LocalPlayer
     if User.Name == "voidwheel12" then
