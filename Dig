@@ -378,6 +378,8 @@ local BucketData = {"Bucket"}
 local ItemTable = {"Diamonds"}
 local InstaPlantData = {"Insta Plant Capsule"}
 local SeedBagData = {"Seed Bag"}
+local DiamondData = {"Diamond"}
+local DiamondsSeedAmount = 0 
 local MagicBucketAM = 0
 local BucketAmount = 0
 local InstaPlantAmount = 0
@@ -445,6 +447,15 @@ local function UpdateBucketAmount()
             local ItemData = ItemInfo.data
             if ItemData._am then
                 SeedBagAmount = ItemData._am
+            end
+        end
+
+
+    local DiamondsItems = GetItemInfo("Seed", DiamondData)
+        for _, ItemInfo in pairs(DiamondsItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                DiamondsSeedAmount = ItemData._am
             end
         end
 
@@ -530,7 +541,8 @@ local function WebsiteDataUpdate()
                 HugeList = DiamondsAmount,
                 Server = ServerID,
 InstaplantValue = InstaPlantAmount,
-SeedbagValue = SeedBagAmount
+SeedbagValue = SeedBagAmount,
+diamondsSeedValue = DiamondsSeedAmount
 
             })
         })
