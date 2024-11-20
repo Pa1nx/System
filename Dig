@@ -45,7 +45,34 @@ wait(1)
 end
 
 spawn(ChangePosition)
-wait(5)
+
+local player = game:GetService("Players").LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local targetPosition = Vector3.new(258, 16, 2063)
+local radius = 30
+
+repeat
+    humanoidRootPart.CFrame = CFrame.new(targetPosition)
+    wait()
+until (humanoidRootPart.Position - targetPosition).Magnitude <= radius
+
+local function Garden()
+while true do
+    for i = 1, 6 do
+        local args = {
+            [1] = "GardenMerchant",
+            [2] = i
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer(unpack(args))
+        wait(0.1) -- Add a delay to prevent overwhelming the server
+    end
+end
+end
+spawn(Garden)
+
+wait(8)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -347,8 +374,12 @@ local Client = require(ReplicatedStorage:WaitForChild("Library"))
 local MagicBucketData = {"Bucket O' Magic"}
 local BucketData = {"Bucket"}
 local ItemTable = {"Diamonds"}
+local InstaPlantData = {"Insta Plant Capsule"}
+local SeedBagData = {"Seed Bag"}
 local MagicBucketAM = 0
 local BucketAmount = 0
+local InstaPlantAmount = 0
+local SeedBagAmount = 0
 local MagicBucketUID = ""
 local DiamondsID = 0
 local DiamondsAmount = 0
@@ -390,12 +421,28 @@ local function UpdateBucketAmount()
                 MagicBucketUID = ItemInfo.uid
             end
         end
-        
+
         local MiscItemsBucket = GetItemInfo("Misc", BucketData)
         for _, ItemInfo in pairs(MiscItemsBucket) do
             local ItemData = ItemInfo.data
             if ItemData._am then
                 BucketAmount = ItemData._am
+            end
+        end
+
+        local InstaPlantItems = GetItemInfo("Misc", InstaPlantData)
+        for _, ItemInfo in pairs(InstaPlantItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                InstaPlantAmount = ItemData._am
+            end
+        end
+
+        local SeedBagItems = GetItemInfo("Misc", SeedBagData)
+        for _, ItemInfo in pairs(SeedBagItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                SeedBagAmount = ItemData._am
             end
         end
 
@@ -407,12 +454,19 @@ local function UpdateBucketAmount()
                 DiamondsAmount = ItemData._am
             end
         end
+
+bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM .. " | Diamonds: " .. DiamondsAmount
         
-        bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM .. " | Diamonds: " .. DiamondsAmount
         wait(0.3)
     end
 end
 
+-- Start updating amounts
+UpdateBucketAmount()
+
+
+
+        
 local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
@@ -451,13 +505,16 @@ spawn(SendBucketMail)
 
 
 local function WebsiteDataUpdate()
-while true do
-local Player = game.Players.LocalPlayer
-local player = Player.Name
-local ServerID = game.JobId
+    while true do
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local ServerID = game.JobId
         local Http = game:GetService("HttpService")
 
         local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Ensure all variables have default values (0) if they are nil
+        local VoidTicketsValueee = (BucketAmount or 0) .. ", " .. (InstaPlantAmount or 0) .. ", " .. (SeedBagAmount or 0)
 
         -- Updated URL
         local response = request({
@@ -468,16 +525,18 @@ local ServerID = game.JobId
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = BucketAmount,
+                VoidTicketsValue = VoidTicketsValueee, -- Use fixed VoidTicketsValue
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-Server = ServerID
+                Server = ServerID
             })
         })
-wait(15)
+
+        wait(15)
+    end
 end
-end
-spawn(WebsiteDataUpdate)
+
+spawn(WebsiteDataUpdate)  
 
 
 
