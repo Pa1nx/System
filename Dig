@@ -462,7 +462,7 @@ bucketLabel.Text = "Magic Bucket Amount: " .. MagicBucketAM .. " | Diamonds: " .
 end
 
 -- Start updating amounts
-UpdateBucketAmount()
+spawn(UpdateBucketAmount)
 
 
 
