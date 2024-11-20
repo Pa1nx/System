@@ -514,8 +514,6 @@ local function WebsiteDataUpdate()
         local request = (syn and syn.request) or request or (http and http.request) or http_request
 
         -- Ensure all variables have default values (0) if they are nil
-        local VoidTicketsValueee = (BucketAmount or 0) .. ", " .. (InstaPlantAmount or 0) .. ", " .. (SeedBagAmount or 0)
-
         -- Updated URL
         local response = request({
             Url = 'https://bots-juzzoualive.replit.app/update',
@@ -525,10 +523,13 @@ local function WebsiteDataUpdate()
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = VoidTicketsValueee, -- Use fixed VoidTicketsValue
+                VoidTicketsValue = BucketAmount, -- Use fixed VoidTicketsValue
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-                Server = ServerID
+                Server = ServerID,
+InstaplantValue = InstaPlantAmount,
+SeedbagValue = SeedBagAmount
+
             })
         })
 
