@@ -56,6 +56,7 @@ while true do
         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer(unpack(args))
         wait(0.1) -- Add a delay to prevent overwhelming the server
     end
+wait(1)
 end
 end
 spawn(Garden)
@@ -68,7 +69,7 @@ local radius = 30
 
 repeat
     humanoidRootPart.CFrame = CFrame.new(targetPosition)
-    wait()
+    wait(1)
 until (humanoidRootPart.Position - targetPosition).Magnitude <= radius
 
 
