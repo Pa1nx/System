@@ -47,16 +47,36 @@ end
 spawn(ChangePosition)
 local function Garden()
 while true do
-    for i = 1, 6 do
-        local args = {
-            [1] = "GardenMerchant",
-            [2] = i
-        }
+local player = game.Players.LocalPlayer
+local gui = player.PlayerGui:FindFirstChild("_MACHINES")
 
-        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer(unpack(args))
-        wait(0.1) -- Add a delay to prevent overwhelming the server
+if gui and gui:FindFirstChild("Merchant") then
+    local merchantFrame = gui.Merchant:FindFirstChild("Frame")
+    if merchantFrame and merchantFrame:FindFirstChild("ItemsFrame") then
+        local itemsFrame = merchantFrame.ItemsFrame:FindFirstChild("Items")
+        if itemsFrame then
+            for _, child in ipairs(itemsFrame:GetChildren()) do
+                if child:IsA("Frame") and child:FindFirstChild("ITEM") and child.ITEM:FindFirstChild("ItemSlot") and child.ITEM.ItemSlot:FindFirstChild("Icon") then
+                    local image = child.ITEM.ItemSlot.Icon.Image
+                    if image ~= "rbxassetid://15554895803" and 
+                       image ~= "rbxassetid://15554896103" and 
+                       image ~= "rbxassetid://15554895953" then
+                        if child:FindFirstChild("Locked") and not child.Locked.Visible then
+                            local args = {
+                                [1] = "GardenMerchant",
+                                [2] = tonumber(child.Name)
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer(unpack(args))
+                        
+                        end
+                    end
+                end
+            end
+        end
     end
-wait(0.001)
+end
+
+wait()
 end
 end
 spawn(Garden)
@@ -74,7 +94,7 @@ until (humanoidRootPart.Position - targetPosition).Magnitude <= radius
 
 
 
-wait(11)
+wait(5)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
