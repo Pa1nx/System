@@ -391,7 +391,7 @@ local DiamondsAmount = 0
 
 local InstaUID = ""
 local DiamondSeedUID = ""
-loxal SeedBagUID = ""
+local SeedBagUID = ""
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
