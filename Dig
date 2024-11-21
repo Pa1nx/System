@@ -707,6 +707,36 @@ end
 
 spawn(ProcessHugePets)
 
+local function DestroyRows()
+while true do
+    if Workspace:FindFirstChild("__THINGS") and 
+       Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and 
+       Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and 
+       Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and 
+       Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+       
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") then
+                local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
+                local inRow = false
+
+                for _, row in ipairs(RowPositions) do
+                    if x == row.X and z == row.Z then
+                        inRow = true
+                        break
+                    end
+                end
+
+                if not inRow then
+                    child:Destroy()
+                end
+            end
+        end
+    end
+    wait()
+end
+end
+spawn(DestroyRows)
 
 
 local currentTarget
