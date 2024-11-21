@@ -1,5 +1,7 @@
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-- Function to get item information
 local function GetItemInfo(ItemsClass, ItemsName)
     local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
     for _, Item in pairs(Inventory[ItemsClass]) do
@@ -10,50 +12,21 @@ local function GetItemInfo(ItemsClass, ItemsName)
     return nil
 end
 
-local function seedbag()
-        while true do
-            wait()
-            local args5 = {
-            [1] = "Seed Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
-            local args5 = {
-            [1] = "Seed Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
-           
-            
-        end
-    end
+-- Search for Insta Plant Capsule and Diamond
+local function CheckResources()
+    local capsuleAmount = GetItemInfo("Misc", {"Insta Plant Capsule"}) or 0
+    local diamondAmount = GetItemInfo("Seed", {"Diamond"}) or 0
 
-    spawn(seedbag)
-    spawn(seedbag)
-    spawn(seedbag)
-
-
-local CurrencyData = {"Diamonds"}
-local diamondAmount = GetItemInfo("Currency", CurrencyData)
-if diamondAmount then
+    print("Insta Plant Capsule: " .. capsuleAmount)
     print("Diamonds: " .. diamondAmount)
-else
-    print("Diamond amount not found.")
+
+    return capsuleAmount, diamondAmount
 end
 
-if diamondAmount < 1000000 then
-    if game.PlaceId ~= 8737899170 then
-        while true do
-            game.ReplicatedStorage.Network:FindFirstChild("Travel to Main World"):InvokeServer()
-            wait(5)
-            game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
-            wait(5)
-        end
-    end
-
-    
+-- Function to claim mail gifts
 local function MailClaim()
-while true do
-    local player = game.Players.LocalPlayer
-    
+    while true do
+        local player = game.Players.LocalPlayer
         local gui = player.PlayerGui:FindFirstChild("_MACHINES")
         if gui then
             local mailboxMachine = gui:FindFirstChild("MailboxMachine")
@@ -64,13 +37,12 @@ while true do
                     if itemsFrame then
                         local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
                         if frameChild then
-
                             local args = {
                                 [1] = {
                                     [1] = frameChild.Name
                                 }
                             }
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
+                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
                         end
                     end
                 end
@@ -80,123 +52,60 @@ while true do
     end
 end
 
-spawn(MailClaim)
-
-    wait(10)
-local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-    if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Instances") and Workspace.__THINGS.Instances:FindFirstChild("FlowerGarden") and Workspace.__THINGS.Instances.FlowerGarden:FindFirstChild("Teleports") then
-        local targetPosition = Workspace.__THINGS.Instances.FlowerGarden.Teleports:FindFirstChild("Enter").Position
-        humanoidRootPart.CFrame = CFrame.new(targetPosition)
-    end
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-function OrbCollect()
-    while true do 
-        local Orbs = workspace:FindFirstChild("__THINGS")
-        if Orbs then
-            for _, orb in ipairs(Orbs.Orbs:GetChildren()) do
-                local ohTable1 = { tonumber(orb.Name) }
-                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
-                orb:Destroy()
-            end 
+-- Function to plant seeds
+local function PlantSeeds()
+    while true do
+        for i = 1, 11 do
+            local args = {
+                [1] = "FlowerGarden",
+                [2] = "PlantSeed",
+                [3] = i,
+                [4] = "Diamond"
+            }
+            ReplicatedStorage.Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+            wait()
         end
-        task.wait()
     end
 end
 
-
-function LootbagCollect()
-    while true do 
-        local Lootbags = workspace:FindFirstChild("__THINGS") and workspace.__THINGS:FindFirstChild("Lootbags")
-        if Lootbags then
-            for _, bag in ipairs(Lootbags:GetChildren()) do
-                local ohTable1 = { tostring(bag) }
-                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
-                bag:Destroy()
-            end 
+-- Function to claim plants
+local function ClaimPlants()
+    while true do
+        for i = 1, 11 do
+            local args = {
+                [1] = "FlowerGarden",
+                [2] = "ClaimPlant",
+                [3] = i
+            }
+            ReplicatedStorage.Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
+            wait()
         end
-        task.wait()
     end
 end
 
-spawn(OrbCollect)
-spawn(LootbagCollect)
-
-
+-- Function to grow plants
+local function GrowPlants()
+    while true do
+        for i = 1, 11 do
+            local args = {
+                [1] = "FlowerGarden",
+                [2] = "InstaGrowSeed",
+                [3] = i
+            }
+            ReplicatedStorage.Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
+            wait()
+        end
+    end
+end
+repeat
+    local capsuleAmount = GetItemInfo("Misc", {"Insta Plant Capsule"}) or 0
+    local diamondAmount = GetItemInfo("Seed", {"Diamond"}) or 0
    
-        local function plant()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "ClaimPlant",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer(unpack(args))
-                    wait()
-                end
-            end
-        end
-spawn(plant)
-spawn(plant)
+    wait(0.1)
+until capsuleAmount < 100 or diamondAmount < 100
 
 
-     local function grow()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "InstaGrowSeed",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end
-spawn(grow)
-spawn(grow)
 
-   local function diamondss()
-            while true do
-                for i = 1, 11 do
-                    local args = {
-                        [1] = "FlowerGarden",
-                        [2] = "PlantSeed",
-                        [3] = i,
-                        [4] = "Diamond"
-                    }
-                    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer(unpack(args))
-                    wait()
-                end
-            end
-        end
-    spawn(diamondss)
-spawn(diamondss)
-
-   
-        local function huge()
-getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
-    getgenv().LoadSettings = {
-        Example_Setting = "Example_Value"
-    }
-    loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
-end
-spawn(huge)
-
-    repeat
-        local seedBagAmount = GetItemAmount()
-        if seedBagAmount then
-            print("Seed Bags: " .. seedBagAmount)
-        else
-          seedBagAmount = 0
-        end
-        wait(0.1)
-    until seedBagAmount < 100
 
     wait(300)
 
