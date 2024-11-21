@@ -803,7 +803,7 @@ function teleportLoop()
     while true do
         coroutine.wrap(function()
             if not teleportToRoyalPurple() then
-                if BucketAmount < 9999 then
+                if BucketAmount < 30 then
                     if not teleportToActiveChestModel() then
                         if not teleportToCurrentTarget() then
                             local positions = getPositionsFromRandomRow()
@@ -864,7 +864,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(350)
+wait(330)
 repeat
     wait(0.1)
     local royalPurpleFound = false
