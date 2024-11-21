@@ -56,7 +56,7 @@ while true do
         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer(unpack(args))
         wait(0.1) -- Add a delay to prevent overwhelming the server
     end
-wait(1)
+wait(0.001)
 end
 end
 spawn(Garden)
