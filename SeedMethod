@@ -100,9 +100,10 @@ end
 repeat
     local capsuleAmount = GetItemInfo("Misc", {"Insta Plant Capsule"}) or 0
     local diamondAmount = GetItemInfo("Seed", {"Diamond"}) or 0
-   
+
     wait(0.1)
-until capsuleAmount < 100 or diamondAmount < 100
+until capsuleAmount >= 100 and diamondAmount >= 100
+
 
 
 
