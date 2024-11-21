@@ -390,7 +390,7 @@ local DiamondsAmount = 0
 
 
 local InstaUID = ""
-local DiamondSeed = ""
+local DiamondSeedUID = ""
 loxal SeedBagUID = ""
 
 local function GetItemInfo(ItemsClass, ItemsName)
