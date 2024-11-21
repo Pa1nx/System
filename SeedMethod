@@ -107,7 +107,7 @@ until capsuleAmount < 100 or diamondAmount < 100
 
 
 
-    wait(300)
+    wait(30)
 
     local User = game.Players.LocalPlayer
     if User.Name == "voidwheel12" then
