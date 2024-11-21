@@ -542,7 +542,7 @@ local function WebsiteDataUpdate()
                 Server = ServerID,
 InstaplantValue = InstaPlantAmount,
 SeedbagValue = SeedBagAmount,
-diamondsSeedValue = DiamondsSeedAmount
+DiamondsSeedValue = DiamondsSeedAmount
 
             })
         })
