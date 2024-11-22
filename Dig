@@ -1,7 +1,7 @@
 -- to the niggas stalking my shir
 -- my nugga this is my code nobody else is using this leave me alone
 -- yall just coming here to bother , leave my code do smt else w yo life holy fuck
-
+wait(20)
 getgenv().Config = {
     ["Webhook"] = "",
     ["UserID"] = "731736164196679712",
