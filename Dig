@@ -816,11 +816,11 @@ local function teleportToRoyalPurple()
         return false
     end
 end
-
 local function teleportToActiveChestModel()
     local closestChest = nil
-    local closestDistance = math.huge
+    local closestDistance = math.huge  -- Start with the largest possible distance
 
+    -- Find the closest chest
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
             local chestPosition = child.Top.Position
@@ -833,13 +833,11 @@ local function teleportToActiveChestModel()
         end
     end
 
-    if closestChest and closestDistance <= 30 then
+    if closestChest then
         chestActive = true
         PurpleActive = false
         currentTarget = closestChest
         teleportToPosition(closestChest.Top.Position + Vector3.new(0, 3, 0))
-
-         local coord = currentTarget:GetAttribute("Coord")           game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigChest", coord)
 
         local startTime = tick()
         local timeout = 0.8
@@ -861,11 +859,14 @@ local function teleportToActiveChestModel()
     return false
 end
 
+
+
+
 function teleportLoop()
     while true do
         coroutine.wrap(function()
             if not teleportToRoyalPurple() then
-                if BucketAmount < 9930 then
+                if BucketAmount < 30 then
                     if not teleportToActiveChestModel() then
                         if not teleportToCurrentTarget() then
                             local positions = getPositionsFromRandomRow()
@@ -885,9 +886,9 @@ function teleportLoop()
                     end
                 end
             end
-            wait()
+wait()
         end)()
-        wait()
+       wait()
     end
 end
 
