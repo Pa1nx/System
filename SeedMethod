@@ -41,8 +41,7 @@ if diamondAmount < 1000000 then
             wait(5)
             game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
             wait(5)
-        end
-    end
+     
 
     
 local function MailClaim()
@@ -183,83 +182,96 @@ getgenv().AuthKey = "HUGE_5EN7Jo6KrCC4"
 end
 spawn(huge)
 
-    repeat
-        local seedBagAmount = GetItemAmount()
-        if seedBagAmount then
-            print("Seed Bags: " .. seedBagAmount)
-        else
-          seedBagAmount = 0
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+local DiamondsAmount = 0
+local InstaPlantAmount = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
         end
-        wait(0.1)
-    until seedBagAmount < 100
-
-    wait(60)
-
-    local User = game.Players.LocalPlayer
-    if User.Name == "voidwheel12" then
-        print("hi")
-    else
-        script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
-        getgenv().Settings = {
-            Sniper = {
-                Active = true,
-                Items = {
-                    SearchTerminal = {
-                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
-                        ["Seed Bag"] = {Class = "Misc", Price = 6500},
-                    },
-                },
-                Serverhop = {
-                    ["Switch Servers"] = true,
-                    ["Teleport Delay (s)"] = 0,
-                    ["Add Pro Plaza Lobbies"] = true,
-                    ["Constant Terminal Searching"] = true,
-                    ["Terminal Searches per Item"] = 3,
-                    ["Save # Servers"] = 10,
-                },
-                Webhook = {
-                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-                    ["Send Embeds"] = true,
-                    ["Remove Username"] = true,
-                    ["Ping on Huges 'n Titanics"] = true,
-                    ["Global Snipes"] = true,
-                },
-                StopParams = {
-                    ["Limits Reached"] = false,
-                    ["Diamonds Hit: 250k"] = true,
-                    ["60 Minutes"] = false,
-                    ["Switch To Selling"] = true,
-                },
-            },
-            Seller = {
-                Active = false,
-                Items = {},
-                Serverhop = {
-                    ["Switch Servers"] = true,
-                    ["Teleport Delay (m)"] = 15,
-                    ["Add Pro Plaza Lobbies"] = true,
-                },
-                Webhook = {
-                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
-                    ["Send Embeds"] = true,
-                    ["Remove Username"] = false,
-                },
-                StopParams = {
-                    ["Item Runout"] = false,
-                    ["Diamonds Hit: 1b"] = false,
-                    ["60 Minutes"] = false,
-                    ["Switch To Sniping"] = false,
-                },
-                Other = {
-                    ["Auto Accept Mail"] = true,
-                    ["Always Try Adding Listings"] = true,
-                    ["Never Join Friendslist"] = true,
-                },
-            },
-        }
-        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
     end
-else
+    return Table
+end
+
+local function UpdateAmounts()
+    while true do
+        local InstaPlantItems = GetItemInfo("Misc", {"Insta Plant Capsule"})
+        for _, ItemInfo in pairs(InstaPlantItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                InstaPlantAmount = ItemData._am
+            end
+        end
+
+        local CurrencyItems = GetItemInfo("Currency", {"Diamonds"})
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsAmount = ItemData._am
+            end
+        end
+
+        wait(0.3)
+    end
+end
+
+spawn(UpdateAmounts)
+wait(5)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+local DiamondsAmount = 0
+local InstaPlantAmount = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local function UpdateAmounts()
+    while true do
+        local InstaPlantItems = GetItemInfo("Misc", {"Insta Plant Capsule"})
+        for _, ItemInfo in pairs(InstaPlantItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                InstaPlantAmount = ItemData._am
+            end
+        end
+
+        local CurrencyItems = GetItemInfo("Currency", {"Diamonds"})
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsAmount = ItemData._am
+            end
+        end
+
+        wait(0.1)
+    end
+end
+
+spawn(UpdateAmounts)
+
+repeat wait(0.1) until DiamondsAmount < 100 or InstaPlantAmount < 100
+wait(5) 
 script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
         getgenv().Settings = {
             Sniper = {
@@ -321,4 +333,68 @@ script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
         }
         loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
    
-end
+
+   end
+    end
+
+    script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
+        getgenv().Settings = {
+            Sniper = {
+                Active = true,
+                Items = {
+                    SearchTerminal = {
+                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
+                        ["Seed Bag"] = {Class = "Misc", Price = 6500}
+
+                    },
+                },
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (s)"] = 0,
+                    ["Add Pro Plaza Lobbies"] = true,
+                    ["Constant Terminal Searching"] = true,
+                    ["Terminal Searches per Item"] = 3,
+                    ["Save # Servers"] = 10,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1308313532512866334/luhedrkH2BQTQjQt7h__Jxnooylls7N96YtH7H_fTerCMB2jU0PRToQpPjXV7XEk8xrZ",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = true,
+                    ["Ping on Huges 'n Titanics"] = true,
+                    ["Global Snipes"] = true,
+                },
+                StopParams = {
+                    ["Limits Reached"] = false,
+                    ["Diamonds Hit: 250k"] = true,
+                    ["60 Minutes"] = false,
+                    ["Switch To Selling"] = true,
+                },
+            },
+            Seller = {
+                Active = false,
+                Items = {},
+                Serverhop = {
+                    ["Switch Servers"] = true,
+                    ["Teleport Delay (m)"] = 15,
+                    ["Add Pro Plaza Lobbies"] = true,
+                },
+                Webhook = {
+                    ["URL"] = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD",
+                    ["Send Embeds"] = true,
+                    ["Remove Username"] = false,
+                },
+                StopParams = {
+                    ["Item Runout"] = false,
+                    ["Diamonds Hit: 1b"] = false,
+                    ["60 Minutes"] = false,
+                    ["Switch To Sniping"] = false,
+                },
+                Other = {
+                    ["Auto Accept Mail"] = true,
+                    ["Always Try Adding Listings"] = true,
+                    ["Never Join Friendslist"] = true,
+                },
+            },
+        }
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
+   
