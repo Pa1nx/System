@@ -923,41 +923,6 @@ end
 
 spawn(RemoteRun)
 
-local function ClosestChest()
-while true do 
- coroutine.wrap(function()
-local player = game.Players.LocalPlayer
-local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-if not humanoidRootPart then return end
-
-local closestChest = nil
-local closestDistance = math.huge
-
-for _, child in ipairs(activeChests:GetChildren()) do
-    if child:IsA("Model") and child:FindFirstChild("Top") then
-        local topPosition = child.Top.Position
-        local distance = (humanoidRootPart.Position - topPosition).Magnitude
-
-        if distance < closestDistance then
-            closestDistance = distance
-            closestChest = child
-        end
-    end
-end
-
-if closestChest and closestDistance <= 30 then
-    local coord = closestChest:GetAttribute("Coord")
-    if coord then
-        game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigChest", coord)
-    end
-end
-
-wait()
-end)()
-wait()
-end
-end
-spawn(ClosestChest)
 
 print("if made it through")
 wait(330)
