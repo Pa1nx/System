@@ -985,24 +985,89 @@ repeat
     end
 until not royalPurpleFound  -- Repeat until no Royal purple parts are found
 
-while true do
 local Http = game:GetService("HttpService")
-local TPS = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
-
-local _place = game.PlaceId
-local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
-function ListServers(cursor)
-  local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
-  return Http:JSONDecode(Raw)
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+local response = request({
+    Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
+    Method = 'GET',
+    Headers = {
+        ['Content-Type'] = 'application/json'
+    }
+})
+local data = Http:JSONDecode(response.Body)
+local servers = data.uniqueServers
+local mergedServers = {}
+for _, server in ipairs(servers) do
+    table.insert(mergedServers, server)
+end
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local File = pcall(function()
+    AllIDs = Http:JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+    table.insert(AllIDs, actualHour)
+    writefile("NotSameServers.json", Http:JSONEncode(AllIDs))
 end
 
-local Server, Next; repeat
-  local Servers = ListServers(Next)
-  Server = Servers.data[1]
-  Next = Servers.nextPageCursor
-until Server
+function TPReturner()
+    local Site
+    if foundAnything == "" then
+        Site = Http:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+    else
+        Site = Http:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+    end
+    if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+        foundAnything = Site.nextPageCursor
+    end
+    local serverIDs = {}
+    for _, v in pairs(Site.data) do
+        local ID = tostring(v.id)
+        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+            local alreadyUsed = false
+            if table.find(mergedServers, ID) or table.find(AllIDs, ID) then
+                alreadyUsed = true
+            end
+            if not alreadyUsed then
+                table.insert(AllIDs, ID)
+                table.insert(serverIDs, ID)
+                if #serverIDs >= 10 then
+                    break
+                end
+            end
+        end
+    end
+    if #serverIDs > 0 then
+        while #serverIDs > 0 do
+            local randomIndex = math.random(1, #serverIDs)
+            local selectedServerID = serverIDs[randomIndex]
+            if not table.find(mergedServers, selectedServerID) then
+                pcall(function()
+                    writefile("NotSameServers.json", Http:JSONEncode(AllIDs))
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, selectedServerID, game.Players.LocalPlayer)
+                end)
+                break
+            else
+                table.remove(serverIDs, randomIndex)
+            end
+        end
+    end
+end
 
-TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
-wait(15)
+function Teleport()
+    while wait() do
+        pcall(function()
+            TPReturner()
+            if foundAnything ~= "" then
+                TPReturner()
+            end
+        end)
+    end
+end
+
+while true do
+    Teleport()
+    wait(15)
 end
