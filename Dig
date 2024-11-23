@@ -976,7 +976,7 @@ function TPReturner()
             if not alreadyUsed then
                 table.insert(AllIDs, ID)
                 table.insert(serverIDs, ID)
-                if #serverIDs >= 20 then -- Collect up to 20 IDs
+                if #serverIDs >= 100 then -- Collect up to 20 IDs
                     break
                 end
             end
