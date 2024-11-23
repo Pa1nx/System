@@ -60,7 +60,8 @@ if gui and gui:FindFirstChild("Merchant") then
                     local image = child.ITEM.ItemSlot.Icon.Image
                     if image ~= "rbxassetid://15554895803" and 
                        image ~= "rbxassetid://15554896103" and 
-                       image ~= "rbxassetid://15554895953" then
+                       image ~= "rbxassetid://15554895953" and
+image ~= "rbxassetid://15555104643" then
                         if child:FindFirstChild("Locked") and not child.Locked.Visible then
                             local args = {
                                 [1] = "GardenMerchant",
