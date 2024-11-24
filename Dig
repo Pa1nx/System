@@ -141,6 +141,12 @@ end
 local function hugepotionnnn()
 while true do
 local args = {
+    [1] = "Huge Potion"
+}
+
+game:GetService("ReplicatedStorage").Network.MagicMachine_Activate:InvokeServer(unpack(args))
+
+local args = {
     [1] = itemuid,
     [2] = 1
 }
@@ -148,11 +154,6 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Potions: Consume"):FireServer(unpack(args))
 
 
-local args = {
-    [1] = "Huge Potion"
-}
-
-game:GetService("ReplicatedStorage").Network.MagicMachine_Activate:InvokeServer(unpack(args))
 wait()
 end
 end
