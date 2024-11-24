@@ -1,5 +1,4 @@
-wait(30)
-
+wait(10)
 local function WebsiteDataUpdate()
     while true do
         local Player = game.Players.LocalPlayer
