@@ -736,7 +736,7 @@ local function DestroyRows()
                         end
                     end
 
-                    if not inRow and child.BrickColor ~= BrickColor.new("Royal purple") then
+                    if not inRow and child.BrickColor ~= BrickColor.new("Royal purple") and child.BrickColor ~= BrickColor.new("Really black") then
                         child:Destroy()
                     end
                 end
