@@ -146,6 +146,17 @@ local args = {
 
 game:GetService("ReplicatedStorage").Network.MagicMachine_Activate:InvokeServer(unpack(args))
 
+
+
+wait()
+end
+end
+
+spawn(hugepotionnnn)
+
+local function hugepotio()
+while true do
+
 local args = {
     [1] = itemuid,
     [2] = 1
@@ -157,6 +168,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Potio
 wait()
 end
 end
-spawn(hugepotionnnn)
+
+spawn(hugepotio)
 
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ea0ab6ccca282c76c23a12244973ad4e.lua"))()
