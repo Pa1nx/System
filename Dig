@@ -1,4 +1,4 @@
-wait(10)
+wait(60)
 
 local function WebsiteDataUpdate()
     while true do
