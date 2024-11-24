@@ -117,5 +117,45 @@ end
 
 spawn(ProcessHugePets)
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local itemuid = ""
+local function GetItemInfo(ItemsClass, ItemName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if Item.id == ItemName then
+            table.insert(Table, {["uid"] = UID, ["data"] = Item})
+        end
+    end
+    return Table
+end
+
+
+    local HugeItems = GetItemInfo("Potion", "Huge")
+    for _, ItemInfo in pairs(HugeItems) do
+        local ItemData = ItemInfo.data
+        if ItemData._am then
+            itemuid = ItemInfo.uid
+        end
+    end
+local function hugepotionnnn()
+while true do
+local args = {
+    [1] = itemuid,
+    [2] = 1
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Potions: Consume"):FireServer(unpack(args))
+
+
+local args = {
+    [1] = "Huge Potion"
+}
+
+game:GetService("ReplicatedStorage").Network.MagicMachine_Activate:InvokeServer(unpack(args))
+wait()
+end
+end
+spawn(hugepotionnnn)
 
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ea0ab6ccca282c76c23a12244973ad4e.lua"))()
