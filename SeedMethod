@@ -1,15 +1,4 @@
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local function GetItemInfo(ItemsClass, ItemsName)
-    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-    for _, Item in pairs(Inventory[ItemsClass]) do
-        if table.find(ItemsName, Item.id) and Item._am then
-            return Item._am
-        end
-    end
-    return nil
-end
 
 local function seedbag()
         while true do
@@ -26,15 +15,47 @@ local function seedbag()
     spawn(seedbag)
 
 
-local CurrencyData = {"Diamonds"}
-local diamondAmount = GetItemInfo("Currency", CurrencyData)
-if diamondAmount then
-    print("Diamonds: " .. diamondAmount)
-else
-    print("Diamond amount not found.")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+
+local ItemTable = {"Diamonds"}
+local DiamondsAmount = 0
+local DiamondsID = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
+    for UID, Item in pairs(Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
 end
 
-if diamondAmount < 1000000 then
+local function UpdateDiamondAmount()
+    while true do
+        local CurrencyItems = GetItemInfo("Currency", ItemTable)
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsID = ItemInfo.uid
+                DiamondsAmount = ItemData._am
+            end
+        end
+        wait(0.3)
+    end
+end
+
+
+spawn(UpdateDiamondAmount)
+wait(3)
+if DiamondsAmount < 1000000 then
     if game.PlaceId ~= 8737899170 then
       
             game.ReplicatedStorage.Network:FindFirstChild("Travel to Main World"):InvokeServer()
