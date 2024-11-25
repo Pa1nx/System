@@ -277,7 +277,7 @@ local function UpdateAmounts()
             end
         end
 
-        local CurrencyItems = GetItemInfo("Currency", {"Diamonds"})
+        local CurrencyItems = GetItemInfo("Seed", {"Diamond"})
         for _, ItemInfo in pairs(CurrencyItems) do
             local ItemData = ItemInfo.data
             if ItemData._am and ItemData.id == "Diamonds" then
