@@ -62,7 +62,7 @@ if DiamondsAmount < 1000000 then
             wait(5)
             game.ReplicatedStorage.Network.World1Teleport:InvokeServer()
             wait(5)
-     
+     end
 
     
 local function MailClaim()
@@ -355,7 +355,7 @@ script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
         loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/60a293774110e918789cddc0e20be048.lua"))()
    
 
-   end
+   
     end
 
     script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
