@@ -623,7 +623,7 @@ DiamondsSeedValue = DiamondsSeedAmount
             })
         })
 
-        wait(15)
+        wait(30)
     end
 end
 
@@ -985,7 +985,7 @@ local function GetServers()
             local ID = tostring(v.id)
             if tonumber(v.maxPlayers) > tonumber(v.playing) and not table.find(uniqueServers, ID) and not table.find(serverIDs, ID) then
                 table.insert(serverIDs, ID)
-                if #serverIDs >= 20 then
+                if #serverIDs >= 10 then
                     break
                 end
             end
