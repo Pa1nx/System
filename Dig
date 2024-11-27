@@ -520,68 +520,28 @@ spawn(UpdateBucketAmount)
 local function RejoinScriptBackup() 
 wait(400)
 local Http = game:GetService("HttpService")
-local TeleportService = game:GetService("TeleportService")
-local request = (syn and syn.request) or request or (http and http.request) or http_request
+local TPS = game:GetService("TeleportService")
+local Api = "https://games.roblox.com/v1/games/"
 
-local response = request({
-    Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
-    Method = 'GET',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    }
-})
-
-local data = Http:JSONDecode(response.Body)
-local uniqueServers = data.uniqueServers
-local PlaceID = game.PlaceId
-local serverIDs = {}
-
-local function GetServers()
-    local nextCursor = ""
-    while #serverIDs < 20 do
-        local url = 'https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'
-        if nextCursor ~= "" then
-            url = url .. "&cursor=" .. nextCursor
-        end
-        local site = Http:JSONDecode(game:HttpGet(url))
-        nextCursor = site.nextPageCursor or ""
-
-        for _, v in ipairs(site.data) do
-            local ID = tostring(v.id)
-            if tonumber(v.maxPlayers) > tonumber(v.playing) and not table.find(uniqueServers, ID) and not table.find(serverIDs, ID) then
-                table.insert(serverIDs, ID)
-                if #serverIDs >= 20 then
-                    break
-                end
-            end
-        end
-
-        if not nextCursor then
-            break
-        end
-    end
+local _place = game.PlaceId
+local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+function ListServers(cursor)
+  local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+  return Http:JSONDecode(Raw)
 end
 
-local function PickValidServer()
-    while true do
-        local randomIndex = math.random(1, #serverIDs)
-        local selectedServerID = serverIDs[randomIndex]
-        if selectedServerID ~= game.JobId and not table.find(uniqueServers, selectedServerID) then
-            return selectedServerID
-        end
-    end
-end
+local Server, Next; repeat
+  local Servers = ListServers(Next)
+  Server = Servers.data[1]
+  Next = Servers.nextPageCursor
+until Server
 
-GetServers()
-
-while true do
-    local validServerID = PickValidServer()
-    pcall(function()
-        TeleportService:TeleportToPlaceInstance(PlaceID, validServerID, game.Players.LocalPlayer)
-    end)
-    wait(5) -- Wait a short time before attempting again if teleport fails
-end
-
+TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+wait(5)
+TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+wait(5)
+TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+wait(5)
 
 end
 spawn(RejoinScriptBackup)
