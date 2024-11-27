@@ -5,11 +5,6 @@
 
 
 
-
-
-
-
-
 -- to the niggas stalking my shir
 -- my nugga this is my code nobody else is using this leave me alone
 -- yall just coming here to bother , leave my code do smt else w yo life holy fuck
@@ -939,29 +934,53 @@ local Http = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-local response = request({
-    Url = 'https://bots-juzzoualive.replit.app/uniqueServers',
-    Method = 'GET',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    }
-})
+local function SafeRequest(url, method, headers)
+    for _ = 1, 3 do -- Retry up to 3 times if there's an error
+        local success, response = pcall(function()
+            return request({
+                Url = url,
+                Method = method or 'GET',
+                Headers = headers or { ['Content-Type'] = 'application/json' },
+            })
+        end)
+        if success and response then
+            return response
+        end
+        wait(1) -- Delay between retries
+    end
+    return nil -- Return nil if all retries fail
+end
+
+local response = SafeRequest('https://bots-juzzoualive.replit.app/uniqueServers', 'GET')
+if not response then
+    warn("Failed to retrieve unique servers after retries.")
+    return
+end
 
 local data = Http:JSONDecode(response.Body)
-local uniqueServers = data.uniqueServers
+local uniqueServers = data.uniqueServers or {}
 local PlaceID = game.PlaceId
 local serverIDs = {}
 
 local function GetServers()
     local nextCursor = ""
-    while #serverIDs < 20 do
+    while #serverIDs < 5 do
         local url = 'https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'
         if nextCursor ~= "" then
             url = url .. "&cursor=" .. nextCursor
         end
-        local site = Http:JSONDecode(game:HttpGet(url))
-        nextCursor = site.nextPageCursor or ""
 
+        local success, site = pcall(function()
+            return Http:JSONDecode(game:HttpGet(url))
+        end)
+
+        if not success or not site then
+            warn("Error fetching server list. Retrying...")
+            wait(1)
+            continue
+        end
+
+        nextCursor = site.nextPageCursor or ""
         for _, v in ipairs(site.data) do
             local ID = tostring(v.id)
             if tonumber(v.maxPlayers) > tonumber(v.playing) and not table.find(uniqueServers, ID) and not table.find(serverIDs, ID) then
@@ -988,12 +1007,23 @@ local function PickValidServer()
     end
 end
 
+local function TeleportToServer(serverID)
+    pcall(function()
+        TeleportService:TeleportToPlaceInstance(PlaceID, serverID, game.Players.LocalPlayer)
+    end)
+end
+
 GetServers()
 
 while true do
+    if #serverIDs == 0 then
+        warn("No valid servers found. Fetching again...")
+        GetServers()
+    end
+
     local validServerID = PickValidServer()
-    pcall(function()
-        TeleportService:TeleportToPlaceInstance(PlaceID, validServerID, game.Players.LocalPlayer)
-    end)
-    wait(5) -- Wait a short time before attempting again if teleport fails
+    if validServerID then
+        TeleportToServer(validServerID)
+    end
+    wait(15)
 end
