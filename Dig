@@ -205,6 +205,9 @@ local HttpService = game:GetService("HttpService")
 local activeBlocks = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveBlocks
 local activeChests = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveChests
 
+
+
+
 local function AdvancedDeleter()
 while true do
 local workspace = game:GetService("Workspace")
@@ -914,6 +917,41 @@ end
 
 spawn(RemoteRun)
 
+
+local function StartPurpleTimers()
+    while true do
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+                if not tonumber(string.match(child.Name, "%d+")) then
+                    child.Name = "StartTimer"
+                end
+            end
+        end
+        wait()
+    end
+end
+
+local function BeginTimerDestroys()
+    while true do
+        for _, child in ipairs(activeBlocks:GetChildren()) do
+            if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
+                if child.Name == "StartTimer" then
+                    child.Name = "1"
+                elseif tonumber(string.match(child.Name, "%d+")) then
+                    local num = tonumber(string.match(child.Name, "%d+")) + 1
+                    child.Name = tostring(num)
+                    if num >= 100 then
+                        child:Destroy()
+                    end
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(StartPurpleTimers)
+spawn(BeginTimerDestroys)
 
 
 
