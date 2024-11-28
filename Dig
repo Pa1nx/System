@@ -32,59 +32,6 @@ end
 spawn(DayCare)
 
 
-local Http = game:GetService("HttpService")
-local TeleportService = game:GetService("TeleportService")
-local Api = "https://games.roblox.com/v1/games/"
-local PlaceID = game.PlaceId
-local ServersURL = Api .. PlaceID .. "/servers/Public?sortOrder=Asc&limit=100"
-
-local MatchKeywords = {"soulwheel", "voidwheel", "giftbatch", "svipbatch", "treemeth", "farmbuckgem"}
-
-function ListServers(cursor)
-    local Raw = game:HttpGet(ServersURL .. ((cursor and "&cursor=" .. cursor) or ""))
-    return Http:JSONDecode(Raw)
-end
-
-function TeleportToNewServer()
-    local ServerWithFewestPlayers, FewestPlayers, Next
-    repeat
-        local Servers = ListServers(Next)
-        Next = Servers.nextPageCursor
-        for _, Server in ipairs(Servers.data) do
-            if tonumber(Server.maxPlayers) > tonumber(Server.playing) then
-                local CurrentPlayers = tonumber(Server.playing)
-                if not FewestPlayers or CurrentPlayers < FewestPlayers then
-                    FewestPlayers = CurrentPlayers
-                    ServerWithFewestPlayers = Server
-                end
-            end
-        end
-    until not Next or ServerWithFewestPlayers
-
-    if ServerWithFewestPlayers then
-        TeleportService:TeleportToPlaceInstance(PlaceID, ServerWithFewestPlayers.id, game.Players.LocalPlayer)
-    end
-end
-
-function ShouldServerHop()
-    local MatchCount = 0
-    for _, Player in ipairs(game.Players:GetChildren()) do
-        for _, Keyword in ipairs(MatchKeywords) do
-            if string.find(string.lower(Player.Name), Keyword) then
-                MatchCount = MatchCount + 1
-                break
-            end
-        end
-    end
-    return MatchCount > 3
-end
-
-spawn(function()
-    if ShouldServerHop() then
-        TeleportToNewServer()
-    end
-end)
-
 
 
 local function ChangePosition()
