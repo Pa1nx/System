@@ -68,7 +68,32 @@ end
 spawn(DayCare)
 
 
+local function chest()
+    while true do
+        wait(0.1)
+        
+        local args1 = {
+            [1] = "Rainbow Mini Chest"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args1))
 
+        local args2 = {
+            [1] = "Large Gift Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args2))
+
+        local args5 = {
+            [1] = "Mini Chest"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
+        
+        local args3 = {
+            [1] = "Gift Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args3))
+    end
+end
+spawn(chest)
 
 local function ChangePosition()
     while true do
