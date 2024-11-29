@@ -26,6 +26,42 @@ if game.PlaceId ~= 8737899170 then
 end
 spawn(GameCheck)
 
+local function wheel()
+while true do
+local map = game.Workspace:FindFirstChild("Map")
+if map then
+    local castle = map:FindFirstChild("3 | Castle")
+    if castle and castle:FindFirstChild("INTERACT") then
+        local machines = castle.INTERACT:FindFirstChild("Machines")
+        if machines and machines:FindFirstChild("SpinnyWheel") then
+            local spinnyWheel = machines.SpinnyWheel:FindFirstChild("SpinnyWheel")
+            if spinnyWheel and spinnyWheel:FindFirstChild("SurfaceGui") then
+                local wheel = spinnyWheel.SurfaceGui:FindFirstChild("Wheel")
+                if wheel and wheel:FindFirstChild("WheelCore") then
+                    local wheelCore = wheel.WheelCore
+                    for _, child in ipairs(wheelCore:GetChildren()) do
+                        if child:IsA("Frame") then
+                            local prizeRender = child:FindFirstChild("PrizeRender")
+                            if prizeRender and prizeRender:FindFirstChild("Icon") and prizeRender.Icon.Image == "rbxassetid://15340315459" then
+                                local args = {
+                                    [1] = "StarterWheel"
+                                }
+                                game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+wait()
+end
+end
+spawn(wheel)
+
 local function DayCare()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
 end
