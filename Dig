@@ -431,8 +431,8 @@ local function CatchQuest1()
                 end
             end
         end
-  local randomWaitTime = math.random(1, 20) / 100
-wait(randomWaitTime)
+
+wait()
 
     end
 end
@@ -487,8 +487,8 @@ local function CatchQuest2()
             end
         end
 
-local randomWaitTime = math.random(1, 20) / 100
-wait(randomWaitTime)
+
+wait()
 
     end
 end
@@ -543,8 +543,8 @@ local function CatchQuest3()
             end
         end
 
-local randomWaitTime = math.random(1, 20) / 100
-wait(randomWaitTime)
+
+wait()
 
     end
 end
@@ -552,3 +552,57 @@ end
 spawn(CatchQuest1)
 spawn(CatchQuest2)
 spawn(CatchQuest3)
+
+
+local function finalCheck()
+    while true do
+        local check1, check2, check3 = false, false, false
+        local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
+
+        if pets then
+            for _, pet in pairs(pets:GetChildren()) do
+                if pet:IsA("Model") then
+                    local part = pet:FindFirstChildWhichIsA("Part") or pet:FindFirstChildWhichIsA("MeshPart")
+                    if part then
+                        local mesh = part:FindFirstChild("Mesh")
+                        
+                        if mesh then
+                            if Quest1 ~= "NO" and mesh.MeshId == Quest1 then
+                                check1 = true
+                            end
+
+                            if Quest2 ~= "NO" and mesh.MeshId == Quest2 then
+                                check2 = true
+                            end
+
+                            if Quest3 ~= "NO" and mesh.MeshId == Quest3 then
+                                check3 = true
+                            end
+                        end
+                    end
+                end
+            end
+
+            if not check1 and not check2 and not check3 then
+                local randomPet = pets:GetChildren()[math.random(1, #pets:GetChildren())]
+                if randomPet:IsA("Model") then
+                    local part = randomPet:FindFirstChildWhichIsA("Part") or randomPet:FindFirstChildWhichIsA("MeshPart")
+                    if part then
+                        local roamingPet = part:GetAttribute("RoamingPet")
+                        if roamingPet then
+                            local args = {
+                                [1] = "Pet Cube",
+                                [2] = roamingPet
+                            }
+                            game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
+                        end
+                    end
+                end
+            end
+        end
+
+        wait()
+    end
+end
+
+spawn(finalCheck)
