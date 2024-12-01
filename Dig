@@ -231,7 +231,7 @@ local args = {
 
 end
 wait(10)
-        if ElementalGiftAmount > 20 then
+        if ElementalGiftAmount > 999920 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
