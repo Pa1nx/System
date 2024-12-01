@@ -34,7 +34,7 @@ repeat
         }
 
         game:GetService("ReplicatedStorage").Network.Teleports_RequestTeleport:InvokeServer(unpack(args))
-        wait(20)
+        wait(5)
     end
 until isInRadius()
 
