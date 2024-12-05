@@ -609,7 +609,7 @@ local args = {
 
 end
 wait(10)
-        if MagicBucketAM > 100 then
+        if MagicBucketAM > 99100 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
