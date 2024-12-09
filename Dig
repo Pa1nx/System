@@ -670,6 +670,21 @@ spawn(SendBucketMail)
 
 local function WebsiteDataUpdate()
     while true do
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+function GetHugePets()
+    local HugePets = {}
+    for _, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
+        table.insert(HugePets, Pet.Name)
+    end
+    return HugePets
+end
+
+local HugePetNames = GetHugePets()
+
+
+
         local Player = game.Players.LocalPlayer
         local player = Player.Name
         local ServerID = game.JobId
@@ -690,7 +705,7 @@ local function WebsiteDataUpdate()
                 VoidTicketsValue = BucketAmount, -- Use fixed VoidTicketsValue
                 DiamondsValue = MagicBucketAM,
                 HugeList = DiamondsAmount,
-                Server = ServerID,
+                Server = table.concat(HugePetNames, ", "),
 InstaplantValue = InstaPlantAmount,
 SeedbagValue = SeedBagAmount,
 DiamondsSeedValue = DiamondsSeedAmount
