@@ -251,6 +251,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Client = require(ReplicatedStorage:WaitForChild("Library"))
 local DiamondsAmount = 0
 local InstaPlantAmount = 0
+local SeedBagAmount = 0
 
 local function GetItemInfo(ItemsClass, ItemsName)
     local Table = {}
@@ -277,10 +278,18 @@ local function UpdateAmounts()
             end
         end
 
+local SeedItems = GetItemInfo("Misc", {"Seed Bag"})
+        for _, ItemInfo in pairs(SeedItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am then
+                SeedBagAmount = ItemData._am
+            end
+        end
+
         local CurrencyItems = GetItemInfo("Seed", {"Diamond"})
         for _, ItemInfo in pairs(CurrencyItems) do
             local ItemData = ItemInfo.data
-            if ItemData._am and ItemData.id == "Diamonds" then
+           if ItemData._am then
                 DiamondsAmount = ItemData._am
             end
         end
@@ -291,7 +300,8 @@ end
 
 spawn(UpdateAmounts)
 
-repeat wait(0.1) until DiamondsAmount < 100 or InstaPlantAmount < 100
+repeat wait(0.1) until (DiamondsAmount < 100 and SeedBagAmount < 100) or InstaPlantAmount < 100
+
 wait(5) 
 script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
         getgenv().Settings = {
