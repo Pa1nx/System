@@ -40,7 +40,7 @@ local function MonitorAndSpin()
 
 for _, child in pairs(wheelCore:GetChildren()) do
             if child:IsA("Frame") and child.Name ~= "Line" then
-                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" or child.PrizeRender.Icon.Image == "rbxassetid://17515613028" then
+                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" then
                     local args = { [1] = "VoidWheel" }
                     game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
                 end
