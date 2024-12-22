@@ -1,14 +1,57 @@
 print("went through")
-local function GameCheck()
+
 if game.PlaceId == 8737899170 then
     while true do
         game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
         wait(5)
     end
 end
+
+local function MonitorAndSpin()
+    while true do
+
+        wait()
+        repeat wait() until workspace:FindFirstChild("Map3")
+        local map3 = workspace:FindFirstChild("Map3")
+
+        repeat wait() until map3:FindFirstChild("200 | Void Spawn")
+        local voidSpawn = map3:FindFirstChild("200 | Void Spawn")
+
+        repeat wait() until voidSpawn:FindFirstChild("INTERACT")
+        local interact = voidSpawn:FindFirstChild("INTERACT")
+
+        repeat wait() until interact:FindFirstChild("Machines")
+        local machines = interact:FindFirstChild("Machines")
+
+        repeat wait() until machines:FindFirstChild("SpinnyWheel")
+        local spinnyWheel = machines:FindFirstChild("SpinnyWheel")
+
+        repeat wait() until spinnyWheel:FindFirstChild("SpinnyWheel")
+        local spinnyWheelInstance = spinnyWheel:FindFirstChild("SpinnyWheel")
+
+        repeat wait() until spinnyWheelInstance:FindFirstChild("SurfaceGui")
+        local surfaceGui = spinnyWheelInstance:FindFirstChild("SurfaceGui")
+
+        repeat wait() until surfaceGui:FindFirstChild("Wheel")
+        local wheel = surfaceGui:FindFirstChild("Wheel")
+
+        repeat wait() until wheel:FindFirstChild("WheelCore")
+        local wheelCore = wheel:FindFirstChild("WheelCore")
+
+for _, child in pairs(wheelCore:GetChildren()) do
+            if child:IsA("Frame") and child.Name ~= "Line" then
+                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" or child.PrizeRender.Icon.Image == "rbxassetid://17515613028" then
+                    local args = { [1] = "VoidWheel" }
+                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
+                end
+            end
+        end
+    end
 end
-spawn(GameCheck)
-wait(30)
+
+spawn(MonitorAndSpin)
+
+
 local MailCheck = false
 local function MailClaim()
 while true do
@@ -117,77 +160,8 @@ end
 
 spawn(MapDestroy)
 
-local function MailClaim()
-    while true do
-        local gui = Player.PlayerGui:FindFirstChild("_MACHINES")
-        if gui then
-            local mailboxMachine = gui.MailboxMachine
-            if mailboxMachine then
-                local giftsFrame = mailboxMachine.Frame.GiftsFrame
-                if giftsFrame then
-                    local itemsFrame = giftsFrame.ItemsFrame
-                    if itemsFrame then
-                        local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
-                        if frameChild then
-                            local args = {
-                                [1] = {
-                                    [1] = frameChild.Name
-                                }
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
-        wait(1)
-    end
-end
-
-spawn(MailClaim)
 
 
-local function MonitorAndSpin()
-    while true do
-
-        wait()
-        repeat wait() until workspace:FindFirstChild("Map3")
-        local map3 = workspace:FindFirstChild("Map3")
-
-        repeat wait() until map3:FindFirstChild("200 | Void Spawn")
-        local voidSpawn = map3:FindFirstChild("200 | Void Spawn")
-
-        repeat wait() until voidSpawn:FindFirstChild("INTERACT")
-        local interact = voidSpawn:FindFirstChild("INTERACT")
-
-        repeat wait() until interact:FindFirstChild("Machines")
-        local machines = interact:FindFirstChild("Machines")
-
-        repeat wait() until machines:FindFirstChild("SpinnyWheel")
-        local spinnyWheel = machines:FindFirstChild("SpinnyWheel")
-
-        repeat wait() until spinnyWheel:FindFirstChild("SpinnyWheel")
-        local spinnyWheelInstance = spinnyWheel:FindFirstChild("SpinnyWheel")
-
-        repeat wait() until spinnyWheelInstance:FindFirstChild("SurfaceGui")
-        local surfaceGui = spinnyWheelInstance:FindFirstChild("SurfaceGui")
-
-        repeat wait() until surfaceGui:FindFirstChild("Wheel")
-        local wheel = surfaceGui:FindFirstChild("Wheel")
-
-        repeat wait() until wheel:FindFirstChild("WheelCore")
-        local wheelCore = wheel:FindFirstChild("WheelCore")
-
-for _, child in pairs(wheelCore:GetChildren()) do
-            if child:IsA("Frame") and child.Name ~= "Line" then
-                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" or child.PrizeRender.Icon.Image == "rbxassetid://17515613028" then
-                    local args = { [1] = "VoidWheel" }
-                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
-                end
-            end
-        end
-    end
-end
 
 local function ChangePosition()
     while true do
@@ -297,7 +271,8 @@ end
 
 spawn(PrintDiamonds)
 spawn(chest)
-spawn(MonitorAndSpin)
+
+
 
 local SendAmount = false
 
@@ -305,33 +280,6 @@ print("DiamondsID:", DiamondsID)
 print("DiamondsAmount:", DiamondsAmount)
 print("VoidAmount:", VoidAmount)
 
-
-local function WebsiteUpdate()
-    while true do
-        local player = Players.LocalPlayer
-        local Http = game:GetService("HttpService")
-
-        if player then
-            request({
-                Url = 'https://67f552e4-5e03-4d76-bc81-e7c398e4e63f-00-1db81sgqdm8hk.riker.replit.dev/update',
-                Method = 'POST',
-                Headers = {
-                    ['Content-Type'] = 'application/json'
-                },
-                Body = Http:JSONEncode({
-                    Username = player.Name,
-                    VoidTicketsValue = VoidAmount,
-                    DiamondsValue = DiamondsAmount,
-                    HugeList = "nothing"
-                })
-            })
-        end
-
-        wait(1)
-    end
-end
-
-spawn(WebsiteUpdate)
 
 
 local waitTime = SendAmount and 30 or 10
@@ -377,24 +325,47 @@ local diamondsvalue = DiamondsAmount
 local voidvalue = VoidAmount 
 local player = game.Players.LocalPlayer.Name
 
--- Only send the request if we have valid values for Diamonds and VoidTickets
-if diamondsvalue and voidvalue then
-    local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-    local response = request({
-        Url = 'https://d344b03d-a8a9-44de-a584-954a5099e9dd-00-3853s22ty40np.riker.replit.dev/update',
-        Method = 'POST',
-        Headers = {
-            ['Content-Type'] = 'application/json'
-        },
-        Body = game:GetService('HttpService'):JSONEncode({
-            Username = player,
-            VoidTicketsValue = voidvalue,
-            DiamondsValue = diamondsvalue,
-            HugeList = hugePetsString
+
+local function WebsiteDataUpdate()
+    while true do
+
+
+
+
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local ServerID = game.JobId
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Ensure all variables have default values (0) if they are nil
+        -- Updated URL
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = diamondsvalue, -- Use fixed VoidTicketsValue
+                DiamondsValue = voidvalue,
+                HugeList = "0",
+                Server = "0",
+InstaplantValue = "0",
+SeedbagValue = "0",
+DiamondsSeedValue = "0"
+
+            })
         })
-    })
+
+        wait(30)
+    end
 end
+
+spawn(WebsiteDataUpdate)
 
 
 
@@ -513,17 +484,17 @@ HugeCheck = true
 end
 
 spawn(ProcessHugePets)
-wait(30)
+
 if MailCheck then
 wait(30)
 else
-wait(0)
+wait()
 end
 
 if HugeCheck then
     wait(30)
 else
-    wait(0)
+    wait()
 end
 
 local TPS = game:GetService("TeleportService")
