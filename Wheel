@@ -350,13 +350,13 @@ local function WebsiteDataUpdate()
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = diamondsvalue, -- Use fixed VoidTicketsValue
+                VoidTicketsValue = "0", -- Use fixed VoidTicketsValue
                 DiamondsValue = voidvalue,
                 HugeList = "0",
                 Server = "0",
 InstaplantValue = "0",
 SeedbagValue = "0",
-DiamondsSeedValue = "0"
+DiamondsSeedValue = diamondsvalue
 
             })
         })
