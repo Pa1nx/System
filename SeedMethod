@@ -293,7 +293,7 @@ spawn(UpdateAmounts)
 
 repeat wait(0.1) until DiamondsAmount < 100 or InstaPlantAmount < 100
 wait(5) 
-script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
+script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
         getgenv().Settings = {
             Sniper = {
                 Active = true,
@@ -358,7 +358,7 @@ script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
    
     end
 
-    script_key = "DngXZfdjQLHkxITyQmXUOMwGDCaJLyKl"
+    script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
         getgenv().Settings = {
             Sniper = {
                 Active = true,
