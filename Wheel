@@ -6,6 +6,34 @@ if game.PlaceId == 8737899170 then
         wait(5)
     end
 end
+function OrbCollect()
+    while true do 
+        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Orbs") then
+            for _, orb in ipairs(Workspace.__THINGS.Orbs:GetChildren()) do
+                local ohTable1 = { tonumber(orb.Name) }
+                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
+                orb:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+function LootbagCollect()
+    while true do 
+        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Lootbags") then
+            for _, bag in ipairs(Workspace.__THINGS.Lootbags:GetChildren()) do
+                local ohTable1 = { tostring(bag) }
+                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
+                bag:Destroy()
+            end 
+        end
+        task.wait()
+    end
+end
+
+spawn(OrbCollect)
+spawn(LootbagCollect)
 
 local function DayCare()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
