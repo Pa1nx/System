@@ -667,7 +667,11 @@ local function AutoFarm()
 end
 
 spawn(AutoFarm)
-
+local player = game.Players.LocalPlayer
+local function getHumanoidRootPart()
+    local char = player.Character or player.CharacterAdded:Wait()
+    return char:FindFirstChild("HumanoidRootPart")
+end
 
 local function BodyVelocity()
     while true do
