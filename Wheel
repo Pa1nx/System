@@ -672,35 +672,42 @@ local function AutoFarm()
     while true do
         local humanoidRootPart = getHumanoidRootPart()
         if humanoidRootPart and not tweenInProgress then
-            local closestParts = {}
+            local closestParents = {}
 
             for _, child in ipairs(workspace:GetChildren()) do
                 if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
                     local coinContainer = child.CoinContainer
-
-                    for _, item in ipairs(coinContainer:GetChildren()) do
-                        if item:IsA("Part") then
-                            local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                            if distance <= 150 then
-                                table.insert(closestParts, {Part = item, Distance = distance})
-                            end
-                        end
-                    end
+                    local distance = (humanoidRootPart.Position - child.PrimaryPart.Position).Magnitude
+                    table.insert(closestParents, {Parent = child, Distance = distance})
                 end
             end
 
-            table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
-            local randomParts = {}
-            for i = 1, math.min(4, #closestParts) do
-                table.insert(randomParts, closestParts[i].Part)
+            table.sort(closestParents, function(a, b) return a.Distance < b.Distance end)
+
+            local selectedParents = {}
+            for i = 1, math.min(4, #closestParents) do
+                table.insert(selectedParents, closestParents[i].Parent)
             end
 
-            if #randomParts > 0 then
-                tweenInProgress = true
-                local randomPart = randomParts[math.random(1, #randomParts)]
+            local randomParent = selectedParents[math.random(1, #selectedParents)]
+            if randomParent and randomParent:FindFirstChild("CoinContainer") then
+                local coinContainer = randomParent.CoinContainer
+                local closestPart
+                local closestDistance = math.huge
 
-                if randomPart and randomPart:IsDescendantOf(workspace) then
-                    local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
+                for _, item in ipairs(coinContainer:GetChildren()) do
+                    if item:IsA("Part") then
+                        local distance = (humanoidRootPart.Position - item.Position).Magnitude
+                        if distance < closestDistance then
+                            closestPart = item
+                            closestDistance = distance
+                        end
+                    end
+                end
+
+                if closestPart and closestPart:IsDescendantOf(workspace) then
+                    tweenInProgress = true
+                    local targetPosition = closestPart.Position + Vector3.new(0, 1, 0)
                     local distance = (humanoidRootPart.Position - targetPosition).Magnitude
 
                     if distance <= 4 then
@@ -708,25 +715,27 @@ local function AutoFarm()
                     elseif distance <= 40 then
                         tweenToPosition(targetPosition, 30)
                     elseif distance <= 150 then
-                        tweenToPosition(targetPosition, 25)
+                        tweenToPosition(targetPosition, 20)
                     end
 
-                    if not randomPart:IsDescendantOf(workspace) then
+                    if not closestPart:IsDescendantOf(workspace) then
                         tweenInProgress = false
                         continue
                     end
 
-                    tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
                     task.wait(0.01)
-                    tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
                     task.wait(0.02)
 
-                    if randomPart:IsDescendantOf(workspace) then
-                        randomPart:Destroy()
+                    if closestPart:IsDescendantOf(workspace) then
+                        pcall(function()
+                            closestPart:Destroy()
+                        end)
                     end
-                end
 
-                tweenInProgress = false
+                    tweenInProgress = false
+                end
             end
         end
         task.wait(0.1)
@@ -747,7 +756,6 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
-
 
 
 
