@@ -110,6 +110,7 @@ end
 end
 spawn(clickin)
 
+
 local function OpenInventory()
     while true do
         wait(1)
@@ -128,14 +129,16 @@ local function OpenInventory()
                         if dock:FindFirstChild("Inventory") then
                             local inventory = dock.Inventory
                             inventory.Position = UDim2.new(0, 300, 0, 25)
-inventory.Size = UDim2.new(0, 1000, 10, 100)
+inventory.Size = UDim2.new(0, 1000, 5, 100)
                             wait(1)
-          local xPos = absPos.X + absSize.X / 2
+                            local absPos = inventory.AbsolutePosition
+                            local absSize = inventory.AbsoluteSize
+
+                            local xPos = absPos.X + absSize.X / 2
                             local yPos = absPos.Y + absSize.Y / 2
 
                             VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
                             VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
-
                             wait(2)
 
                             if gameGui:FindFirstChild("Inventory") then
@@ -170,6 +173,11 @@ inventory.Size = UDim2.new(0, 1000, 10, 100)
 end
 
 spawn(OpenInventory)
+
+
+
+
+
 
 
 
