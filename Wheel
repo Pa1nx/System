@@ -643,9 +643,11 @@ end
 spawn(CaseOpener)
 spawn(CoinBagChecker)
 spawn(CoinContainerFinder)
+
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
+local ContainerName = "hi"
 
 local function getHumanoidRootPart()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -668,71 +670,86 @@ local function tweenToPosition(targetPosition, speed)
     tween.Completed:Wait()
 end
 
+local function FindContainer()
+    while true do
+        for _, child in ipairs(workspace:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+                ContainerName = child.Name
+            end
+        end
+        task.wait()
+    end
+end
+
 local function AutoFarm()
     while true do
         local humanoidRootPart = getHumanoidRootPart()
         if humanoidRootPart and not tweenInProgress then
-            local closestParts = {}
+            for _, model in ipairs(workspace:GetChildren()) do
+                if model:IsA("Model") and model.Name == ContainerName then
+                    local coinContainer = model:FindFirstChild("CoinContainer")
+                    if coinContainer then
+                        local closestParts = {}
+                        for _, item in ipairs(coinContainer:GetChildren()) do
+                            if item:IsA("Part") then
+                                local distance = (humanoidRootPart.Position - item.Position).Magnitude
+                                table.insert(closestParts, {Part = item, Distance = distance})
+                            end
+                        end
 
-            for _, child in ipairs(workspace:GetChildren()) do
-                if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
-                    local coinContainer = child.CoinContainer
+                        table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
 
-                    for _, item in ipairs(coinContainer:GetChildren()) do
-                        if item:IsA("Part") then
-                            local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                            table.insert(closestParts, {Part = item, Distance = distance})
+                        local selectedParts = {}
+                        for i = 1, math.min(4, #closestParts) do
+                            table.insert(selectedParts, closestParts[i].Part)
+                        end
+
+                        if #selectedParts > 0 then
+                            tweenInProgress = true
+                            local randomPart = selectedParts[math.random(1, #selectedParts)]
+
+                            if randomPart and randomPart:IsDescendantOf(workspace) then
+                                local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
+                                local distance = (humanoidRootPart.Position - targetPosition).Magnitude
+
+                                if distance <= 4 then
+                                    tweenToPosition(targetPosition, 99999)
+                                elseif distance <= 40 then
+                                    tweenToPosition(targetPosition, 30)
+                                elseif distance <= 150 then
+                                    tweenToPosition(targetPosition, 20)
+                                end
+
+                                if not randomPart:IsDescendantOf(workspace) then
+                                    tweenInProgress = false
+                                    continue
+                                end
+
+                                tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
+                                task.wait(0.01)
+                                tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
+                                task.wait(0.02)
+
+                                if randomPart:IsDescendantOf(workspace) then
+                                    pcall(function()
+                                        randomPart:Destroy()
+                                    end)
+                                end
+
+                                tweenInProgress = false
+                            end
                         end
                     end
-                end
-            end
-
-            table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
-
-            local selectedParts = {}
-            for i = 1, math.min(4, #closestParts) do
-                table.insert(selectedParts, closestParts[i].Part)
-            end
-
-            if #selectedParts > 0 then
-                tweenInProgress = true
-                local randomPart = selectedParts[math.random(1, #selectedParts)]
-
-                if randomPart and randomPart:IsDescendantOf(workspace) then
-                    local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
-                    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-
-                    if distance <= 4 then
-                        tweenToPosition(targetPosition, 99999)
-                    elseif distance <= 40 then
-                        tweenToPosition(targetPosition, 30)
-                    elseif distance <= 150 then
-                        tweenToPosition(targetPosition, 20)
-                    end
-
-                    if not randomPart:IsDescendantOf(workspace) then
-                        tweenInProgress = false
-                        continue
-                    end
-
-                    tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
-                    task.wait(0.01)
-                    tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
-                    task.wait(0.02)
-
-                    if randomPart:IsDescendantOf(workspace) then
-                        pcall(function()
-                            randomPart:Destroy()
-                        end)
-                    end
-
-                    tweenInProgress = false
                 end
             end
         end
         task.wait(0.1)
     end
 end
+
+spawn(FindContainer)
+spawn(AutoFarm)
+
 
 local function BodyVelocity()
     while true do
@@ -747,7 +764,7 @@ local function BodyVelocity()
 end
 
 spawn(BodyVelocity)
-spawn(AutoFarm)
+
 
 
 
