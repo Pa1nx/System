@@ -612,18 +612,18 @@ local function tweenToPart(part, speed)
         local newHumanoidRootPart = getHumanoidRootPart()
         if newHumanoidRootPart and part and part:IsDescendantOf(workspace) then
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
-            wait(0.05)
+            task.wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position + Vector3.new(0, 1, 0))
-            wait(0.05)
+            task.wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position - Vector3.new(0, 1, 0))
-            wait(0.05)
+            task.wait(0.05)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
             LastPosition = part.Position
             if part:IsDescendantOf(workspace) and part.Parent and part.Parent:FindFirstChild("CoinContainer") then
                 part:Destroy()
             end
             table.insert(processedPositions, part.Position)
-            wait(0.1)
+            wait(0.2)
         end
         tweenInProgress = false
     end)
