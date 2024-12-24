@@ -601,62 +601,16 @@ local function GetTime(distance, speed)
     return distance / speed
 end
 
-local function tweenToPart(part, speed)
-    if tweenInProgress or not part or not part:IsDescendantOf(workspace) then return end
+local function tweenToPosition(targetPosition, speed)
     local humanoidRootPart = getHumanoidRootPart()
     if not humanoidRootPart then return end
 
-    tweenInProgress = true
-    local distance = (humanoidRootPart.Position - (part.Position - Vector3.new(0, 12, 0))).Magnitude
+    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
     local time = GetTime(distance, speed)
     local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = part.CFrame - Vector3.new(0, 12, 0)})
-
-    local connection
-    connection = tween.Completed:Connect(function()
-        if not part or not part:IsDescendantOf(workspace) then
-            tweenInProgress = false
-            connection:Disconnect()
-            return
-        end
-
-        local newHumanoidRootPart = getHumanoidRootPart()
-        if newHumanoidRootPart then
-            local smallTweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-
-            local upTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame + Vector3.new(0, 1, 0)})
-            upTween:Play()
-            upTween.Completed:Wait()
-            wait(0.01)
-            if not part:IsDescendantOf(workspace) then
-                tweenInProgress = false
-                connection:Disconnect()
-                return
-            end
-
-            local downTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame - Vector3.new(0, 1, 0)})
-            downTween:Play()
-            downTween.Completed:Wait()
-            wait(0.01)
-            if part:IsDescendantOf(workspace) then
-                part:Destroy()
-            end
-        end
-
-        tweenInProgress = false
-        connection:Disconnect()
-    end)
-
+    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
     tween:Play()
-
-    while tweenInProgress do
-        if not part or not part:IsDescendantOf(workspace) then
-            tween:Cancel()
-            tweenInProgress = false
-            return
-        end
-        task.wait(0.1)
-    end
+    tween.Completed:Wait()
 end
 
 local function AutoFarm()
@@ -682,8 +636,28 @@ local function AutoFarm()
                 end
             end
 
-            if closestPart and closestDistance <= 150 then  -- Check if the closest part is within a radius of 150
-                tweenToPart(closestPart, 25)
+            if closestPart and closestDistance <= 150 then
+                tweenInProgress = true
+
+                if closestDistance <= 4 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 99999)
+                elseif closestDistance <= 40 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 30)
+                elseif closestDistance <= 150 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 20)
+                end
+
+                if closestPart:IsDescendantOf(workspace) then
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
+                    wait(0.015)
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
+                    wait(0.01)
+                    if closestPart:IsDescendantOf(workspace) then
+                        closestPart:Destroy()
+                    end
+                end
+
+                tweenInProgress = false
             end
         end
         task.wait(0.5)
