@@ -605,7 +605,7 @@ local function tweenToPart(part, speed)
     if not humanoidRootPart then return end
 
     tweenInProgress = true
-    local tweenInfo = TweenInfo.new((humanoidRootPart.Position - part.Position).Magnitude / speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+    local tweenInfo = TweenInfo.new(speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = part.CFrame - Vector3.new(0, 14, 0)})
 
     local connection
@@ -670,7 +670,7 @@ local function AutoFarm()
                     for i = 1, math.min(3, #parts) do
                         local randomPart = parts[i]
                         if randomPart and randomPart:IsDescendantOf(workspace) then
-                            tweenToPart(randomPart, 35)
+                            tweenToPart(randomPart, 2)
                             while tweenInProgress do
                                 wait()
                             end
