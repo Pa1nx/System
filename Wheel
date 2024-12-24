@@ -631,9 +631,9 @@ local function CaseOpener()
     while true do
 Wait(1)
 local args = {
-    [1] = "Halloween2024Box",
+    [1] = "Christmas2024Box",
     [2] = "MysteryBox",
-    [3] = "Candies2024"
+    [3] = "SnowTokens2024"
 }
 
 game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
