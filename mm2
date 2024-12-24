@@ -636,7 +636,7 @@ local function tweenToPart(part, speed)
 
             local downTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame - Vector3.new(0, 1, 0)})
             downTween:Play()
-            downTween.Completed:Wait()
+            downTween.Completed:Wait(0.01)
 
             if part:IsDescendantOf(workspace) then
                 part:Destroy()
@@ -655,7 +655,7 @@ local function tweenToPart(part, speed)
             tweenInProgress = false
             return
         end
-        task.wait()
+        task.wait(0.03)
     end
 end
 
@@ -683,10 +683,10 @@ local function AutoFarm()
             end
 
             if closestPart then
-                tweenToPart(closestPart, 20)
+                tweenToPart(closestPart, 30)
             end
         end
-        task.wait(0.5)
+        task.wait(0.3)
     end
 end
 
