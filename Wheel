@@ -664,22 +664,8 @@ local function tweenToPosition(targetPosition, speed)
     local time = GetTime(distance, speed)
     local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
-
     tween:Play()
-
-    local connection
-    connection = tween.Completed:Connect(function()
-        if tweenInProgress then
-            tweenInProgress = false
-        end
-        connection:Disconnect()
-    end)
-
-    while tweenInProgress and targetPosition:IsDescendantOf(workspace) do
-        task.wait(0.1)
-    end
-
-    tween:Cancel()
+    tween.Completed:Wait()
 end
 
 local function AutoFarm()
@@ -696,50 +682,54 @@ local function AutoFarm()
                         if item:IsA("Part") then
                             local distance = (humanoidRootPart.Position - item.Position).Magnitude
                             if distance <= 150 then
-                                table.insert(closestParts, {item = item, distance = distance})
+                                table.insert(closestParts, {Part = item, Distance = distance})
                             end
                         end
                     end
                 end
             end
 
-            table.sort(closestParts, function(a, b) return a.distance < b.distance end)
-            local topFour = {}
+            table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
+            local randomParts = {}
             for i = 1, math.min(4, #closestParts) do
-                table.insert(topFour, closestParts[i].item)
+                table.insert(randomParts, closestParts[i].Part)
             end
 
-            if #topFour > 0 then
-                local selectedPart = topFour[math.random(1, #topFour)]
+            if #randomParts > 0 then
+                tweenInProgress = true
+                local randomPart = randomParts[math.random(1, #randomParts)]
 
-                if selectedPart and selectedPart:IsDescendantOf(workspace) then
-                    tweenInProgress = true
+                if randomPart and randomPart:IsDescendantOf(workspace) then
+                    local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
+                    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
 
-                    local selectedDistance = (humanoidRootPart.Position - selectedPart.Position).Magnitude
-
-                    if selectedDistance <= 4 then
-                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 99999)
-                    elseif selectedDistance <= 40 then
-                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 30)
-                    elseif selectedDistance <= 150 then
-                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 20)
+                    if distance <= 4 then
+                        tweenToPosition(targetPosition, 99999)
+                    elseif distance <= 40 then
+                        tweenToPosition(targetPosition, 30)
+                    elseif distance <= 150 then
+                        tweenToPosition(targetPosition, 20)
                     end
 
-                    if selectedPart:IsDescendantOf(workspace) then
-                        tweenToPosition(selectedPart.Position - Vector3.new(0, 1, 0), 20)
-                        task.wait(0.015)
-                        tweenToPosition(selectedPart.Position - Vector3.new(0, 12, 0), 99999)
-                        task.wait(0.02)
-                        if selectedPart:IsDescendantOf(workspace) then
-                            selectedPart:Destroy()
-                        end
+                    if not randomPart:IsDescendantOf(workspace) then
+                        tweenInProgress = false
+                        continue
                     end
 
-                    tweenInProgress = false
+                    tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
+                    task.wait(0.01)
+                    tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
+                    task.wait(0.02)
+
+                    if randomPart:IsDescendantOf(workspace) then
+                        randomPart:Destroy()
+                    end
                 end
+
+                tweenInProgress = false
             end
         end
-        task.wait(0.25)
+        task.wait(0.1)
     end
 end
 
@@ -757,9 +747,6 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
-
-
-
 
 
 
