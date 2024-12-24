@@ -631,8 +631,6 @@ end
 
 spawn(CaseOpener)
 spawn(CoinBagChecker)
-
-
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
@@ -693,7 +691,9 @@ local function AutoFarm()
                         for _, item in ipairs(coinContainer:GetChildren()) do
                             if item:IsA("Part") then
                                 local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                                table.insert(closestParts, {Part = item, Distance = distance})
+                                if distance <= 150 then -- Only consider parts within a 150-stud radius
+                                    table.insert(closestParts, {Part = item, Distance = distance})
+                                end
                             end
                         end
 
@@ -712,32 +712,34 @@ local function AutoFarm()
                                 local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
                                 local distance = (humanoidRootPart.Position - targetPosition).Magnitude
 
-                                if distance <= 4 then
-                                    tweenToPosition(targetPosition, 99999)
-                                elseif distance <= 40 then
-                                    tweenToPosition(targetPosition, 30)
-                                elseif distance <= 150 then
-                                    tweenToPosition(targetPosition, 25)
+                                if distance <= 150 then
+                                    if distance <= 4 then
+                                        tweenToPosition(targetPosition, 99999)
+                                    elseif distance <= 40 then
+                                        tweenToPosition(targetPosition, 30)
+                                    else
+                                        tweenToPosition(targetPosition, 25)
+                                    end
+
+                                    if not randomPart:IsDescendantOf(workspace) then
+                                        tweenInProgress = false
+                                        continue
+                                    end
+
+                                    tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
+                                    task.wait(0.01)
+                                    tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
+                                    task.wait(0.02)
+
+                                    if randomPart:IsDescendantOf(workspace) then
+                                        pcall(function()
+                                            randomPart:Destroy()
+                                        end)
+                                    end
                                 end
-
-                                if not randomPart:IsDescendantOf(workspace) then
-                                    tweenInProgress = false
-                                    continue
-                                end
-
-                                tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
-                                task.wait(0.01)
-                                tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
-                                task.wait(0.02)
-
-                                if randomPart:IsDescendantOf(workspace) then
-                                    pcall(function()
-                                        randomPart:Destroy()
-                                    end)
-                                end
-
-                                tweenInProgress = false
                             end
+
+                            tweenInProgress = false
                         end
                     end
                 end
@@ -749,6 +751,7 @@ end
 
 spawn(FindContainer)
 spawn(AutoFarm)
+
 
 
 
