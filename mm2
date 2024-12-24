@@ -608,15 +608,22 @@ local function tweenToPart(part, speed)
     local tweenInfo = TweenInfo.new((humanoidRootPart.Position - part.Position).Magnitude / speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = part.CFrame - Vector3.new(0, 14, 0)})
 
-    tween.Completed:Connect(function()
+    local connection
+    connection = tween.Completed:Connect(function()
+        if not part or not part:IsDescendantOf(workspace) then
+            tweenInProgress = false
+            connection:Disconnect()
+            return
+        end
+
         local newHumanoidRootPart = getHumanoidRootPart()
-        if newHumanoidRootPart and part and part:IsDescendantOf(workspace) then
+        if newHumanoidRootPart then
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
-            task.wait(0.05)
+            wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position + Vector3.new(0, 1, 0))
-            task.wait(0.05)
+            wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position - Vector3.new(0, 1, 0))
-            task.wait(0.05)
+            wait(0.05)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
             LastPosition = part.Position
             if part:IsDescendantOf(workspace) and part.Parent and part.Parent:FindFirstChild("CoinContainer") then
@@ -626,9 +633,19 @@ local function tweenToPart(part, speed)
             wait(0.2)
         end
         tweenInProgress = false
+        connection:Disconnect()
     end)
 
     tween:Play()
+
+    while tweenInProgress do
+        if not part or not part:IsDescendantOf(workspace) then
+            tween:Cancel()
+            tweenInProgress = false
+            return
+        end
+        wait()
+    end
 end
 
 local function AutoFarm()
@@ -680,6 +697,7 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
+
 
 
 
