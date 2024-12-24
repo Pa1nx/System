@@ -92,6 +92,23 @@ wait(1)
 end
 
 spawn(StartTablet)
+local function clickin()
+while true do
+local VirtualInputManager = game:GetService('VirtualInputManager')
+
+local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
+local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
+
+local centerX = screenWidth / 2
+local centerY = screenHeight / 2
+
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 0)
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 0)
+
+wait(5)
+end
+end
+spawn(clickin)
 
 local function OpenInventory()
     while true do
