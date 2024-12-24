@@ -715,7 +715,7 @@ local function AutoFarm()
                     elseif distance <= 40 then
                         tweenToPosition(targetPosition, 30)
                     elseif distance <= 150 then
-                        tweenToPosition(targetPosition, 20)
+                        tweenToPosition(targetPosition, 25)
                     end
 
                     if not closestPart:IsDescendantOf(workspace) then
