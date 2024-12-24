@@ -643,7 +643,7 @@ local function tweenToPart(part, speed)
             tweenInProgress = false
             return
         end
-        wait()
+        wait(0.015)
     end
 end
 
@@ -674,7 +674,7 @@ local function AutoFarm()
 
             for i = 1, math.min(3, #candidates) do
                 local selected = candidates[i]
-                local speed = selected.Distance <= 45 and 35 or 25
+                local speed = selected.Distance <= 40 and 30 or 20
 
                 if selected.Part and selected.Part:IsDescendantOf(workspace) then
                     tweenToPart(selected.Part, speed)
