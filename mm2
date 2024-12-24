@@ -627,7 +627,7 @@ local function tweenToPart(part, speed)
             local upTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame + Vector3.new(0, 1, 0)})
             upTween:Play()
             upTween.Completed:Wait()
-wait(0.01)
+            wait(0.01)
             if not part:IsDescendantOf(workspace) then
                 tweenInProgress = false
                 connection:Disconnect()
@@ -637,7 +637,7 @@ wait(0.01)
             local downTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame - Vector3.new(0, 1, 0)})
             downTween:Play()
             downTween.Completed:Wait()
-wait(0.01)
+            wait(0.01)
             if part:IsDescendantOf(workspace) then
                 part:Destroy()
             end
@@ -682,7 +682,7 @@ local function AutoFarm()
                 end
             end
 
-            if closestPart then
+            if closestPart and closestDistance <= 150 then  -- Check if the closest part is within a radius of 150
                 tweenToPart(closestPart, 25)
             end
         end
@@ -704,6 +704,7 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
+
 
 
 
