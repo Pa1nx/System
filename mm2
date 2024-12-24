@@ -588,7 +588,6 @@ end
 spawn(CaseOpener)
 spawn(CoinBagChecker)
 spawn(CoinContainerFinder)
-
 local LastPosition = ""
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
@@ -626,9 +625,9 @@ local function tweenToPart(part, speed)
         local newHumanoidRootPart = getHumanoidRootPart()
         if newHumanoidRootPart then
             newHumanoidRootPart.CFrame = part.CFrame + Vector3.new(0, 1, 0)
-            wait(0.09)
+            wait(0.05)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 1, 0)
-            wait(0.09)
+            wait(0.05)
             LastPosition = part.Position
         end
         tweenInProgress = false
@@ -643,14 +642,14 @@ local function tweenToPart(part, speed)
             tweenInProgress = false
             return
         end
-        wait(0.015)
+        wait()
     end
 end
 
 local function AutoFarm()
     while true do
         local humanoidRootPart = getHumanoidRootPart()
-        if humanoidRootPart then
+        if humanoidRootPart and not tweenInProgress then
             local candidates = {}
 
             for _, child in ipairs(workspace:GetChildren()) do
@@ -674,7 +673,7 @@ local function AutoFarm()
 
             for i = 1, math.min(3, #candidates) do
                 local selected = candidates[i]
-                local speed = selected.Distance <= 40 and 30 or 20
+                local speed = selected.Distance <= 50 and 40 or 35
 
                 if selected.Part and selected.Part:IsDescendantOf(workspace) then
                     tweenToPart(selected.Part, speed)
@@ -706,6 +705,7 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
+
 
 
 
