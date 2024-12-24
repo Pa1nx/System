@@ -625,9 +625,9 @@ local function tweenToPart(part, speed)
         local newHumanoidRootPart = getHumanoidRootPart()
         if newHumanoidRootPart then
             newHumanoidRootPart.CFrame = part.CFrame + Vector3.new(0, 1, 0)
-            wait(0.05)
+            task.wait(0.05)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 1, 0)
-            wait(0.05)
+            task.wait(0.05)
 
             while true do
                 local foundNearby = false
@@ -655,7 +655,7 @@ local function tweenToPart(part, speed)
             tweenInProgress = false
             return
         end
-        wait()
+        wait(0.01)
     end
 end
 
@@ -700,7 +700,7 @@ local function AutoFarm()
                 end
             end
         end
-        wait(0.3)
+        task.wait(0.3)
     end
 end
 
