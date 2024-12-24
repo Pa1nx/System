@@ -616,17 +616,6 @@ local function hasWeaponInBackpack(plr)
     return plr:FindFirstChild("Backpack") and (plr.Backpack:FindFirstChild("Knife") or plr.Backpack:FindFirstChild("Gun"))
 end
 
-local function CoinContainerFinder()
-    while true do
-        for _, child in pairs(workspace:GetChildren()) do
-            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
-                ModelFound = child.Name
-            end
-        end
-        wait(0.1)
-    end
-end
-
 local function CaseOpener()
     while true do
 Wait(1)
@@ -642,7 +631,7 @@ end
 
 spawn(CaseOpener)
 spawn(CoinBagChecker)
-spawn(CoinContainerFinder)
+
 
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
@@ -666,8 +655,19 @@ local function tweenToPosition(targetPosition, speed)
     local time = GetTime(distance, speed)
     local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+
+    local connection
+    connection = player.CharacterAdded:Connect(function()
+        tween:Cancel()
+        tweenInProgress = false
+        connection:Disconnect()
+    end)
+
     tween:Play()
     tween.Completed:Wait()
+    if connection.Connected then
+        connection:Disconnect()
+    end
 end
 
 local function FindContainer()
@@ -749,6 +749,7 @@ end
 
 spawn(FindContainer)
 spawn(AutoFarm)
+
 
 
 local function BodyVelocity()
