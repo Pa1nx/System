@@ -111,6 +111,7 @@ local function OpenInventory()
                         if dock:FindFirstChild("Inventory") then
                             local inventory = dock.Inventory
                             inventory.Position = UDim2.new(0, 300, 0, 25)
+inventory.Size = UDim2.new(0, 1000, 0, 100)
                             wait(1)
                             local absPos = inventory.AbsolutePosition
                             local absSize = inventory.AbsoluteSize
