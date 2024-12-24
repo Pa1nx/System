@@ -116,11 +116,26 @@ inventory.Size = UDim2.new(0, 1000, 0, 100)
                             local absPos = inventory.AbsolutePosition
                             local absSize = inventory.AbsoluteSize
 
-                            local xPos = absPos.X + absSize.X / 2
-                            local yPos = absPos.Y + absSize.Y / 2
+                         local xPos = absPos.X + absSize.X / 2
+local yPos = absPos.Y + absSize.Y / 2
 
-                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
-                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
+VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+
+wait(0.1)
+
+for i = 1, 2 do
+    local randomX = math.random(-5, 5)
+    local randomY = math.random(-5, 5)
+    local newXPos = xPos + randomX
+    local newYPos = yPos + randomY
+
+    VirtualInputManager:SendMouseButtonEvent(newXPos, newYPos, 0, true, game, 0)
+    VirtualInputManager:SendMouseButtonEvent(newXPos, newYPos, 0, false, game, 0)
+
+    wait(0.05)
+end
+
                             wait(2)
 
                             if gameGui:FindFirstChild("Inventory") then
