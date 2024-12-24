@@ -628,6 +628,19 @@ local function tweenToPart(part, speed)
             wait(0.05)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 1, 0)
             wait(0.05)
+
+            while true do
+                local foundNearby = false
+                for _, neighbor in ipairs(workspace:GetChildren()) do
+                    if neighbor:IsA("Part") and (neighbor.Position - part.Position).Magnitude <= 5 and neighbor ~= part then
+                        foundNearby = true
+                        tweenToPart(neighbor, 55)
+                        break
+                    end
+                end
+                if not foundNearby then break end
+            end
+
             LastPosition = part.Position
         end
         tweenInProgress = false
