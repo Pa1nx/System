@@ -1,130 +1,704 @@
-print("went through")
+local TeleportService = game:GetService("TeleportService")
+local player = game.Players.LocalPlayer
 
-if game.PlaceId == 8737899170 then
-    while true do
-        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
-        wait(5)
-    end
+
+if game.PlaceId ~= 142823291 then
+while true do
+    TeleportService:Teleport(142823291, player)
+wait(10)
 end
-function OrbCollect()
-    while true do 
-        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Orbs") then
-            for _, orb in ipairs(Workspace.__THINGS.Orbs:GetChildren()) do
-                local ohTable1 = { tonumber(orb.Name) }
-                ReplicatedStorage.Network["Orbs: Collect"]:FireServer(ohTable1)
-                orb:Destroy()
-            end 
+end
+
+local function CloseLeader()
+while true do
+local player = game.Players.LocalPlayer
+
+if player:FindFirstChild("PlayerGui") then
+    if player.PlayerGui:FindFirstChild("MainGUI") then
+        if player.PlayerGui.MainGUI:FindFirstChild("Game") then
+            if player.PlayerGui.MainGUI.Game:FindFirstChild("Leaderboard") then
+                player.PlayerGui.MainGUI.Game.Leaderboard.Visible = false
+            end
         end
-        task.wait()
     end
 end
+wait()
+end
+end
+spawn(CloseLeader)
 
-function LootbagCollect()
-    while true do 
-        if Workspace:FindFirstChild("__THINGS") and Workspace.__THINGS:FindFirstChild("Lootbags") then
-            for _, bag in ipairs(Workspace.__THINGS.Lootbags:GetChildren()) do
-                local ohTable1 = { tostring(bag) }
-                ReplicatedStorage.Network.Lootbags_Claim:FireServer(ohTable1)
-                bag:Destroy()
-            end 
-        end
-        task.wait()
-    end
+
+
+local TweenService = game:GetService("TweenService")
+local player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local humanoidRootPart, humanoid, ModelFound = nil, nil, ""
+
+local function updateCharacter()
+    local character = player.Character or player.CharacterAdded:Wait()
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    humanoid = character:WaitForChild("Humanoid")
 end
 
-spawn(OrbCollect)
-spawn(LootbagCollect)
+updateCharacter()
 
-local function DayCare()
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/f420cbd8fa65c531f13fd0d569bc3300.lua"))()
-end
-spawn(DayCare)
-
-local function MonitorAndSpin()
+player.CharacterAdded:Connect(function()
+    wait(1) -- Wait for character to fully load
+    updateCharacter()
+end)
+local function StartTablet()
     while true do
+wait(1)
+        local VirtualInputManager = game:GetService("VirtualInputManager")
+        local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
-        wait()
-        repeat wait() until workspace:FindFirstChild("Map3")
-        local map3 = workspace:FindFirstChild("Map3")
+        local deviceSelect = playerGui:FindFirstChild("DeviceSelect")
+        if deviceSelect then
+            local container = deviceSelect:FindFirstChild("Container")
+            if container then
+                local tablet = container:FindFirstChild("Tablet")
+                if tablet then
+                    local button = tablet:FindFirstChild("Button")
+                    local phone = container:FindFirstChild("Phone")
 
-        repeat wait() until map3:FindFirstChild("200 | Void Spawn")
-        local voidSpawn = map3:FindFirstChild("200 | Void Spawn")
+                    if phone then
+                        phone:Destroy()
+                    end
 
-        repeat wait() until voidSpawn:FindFirstChild("INTERACT")
-        local interact = voidSpawn:FindFirstChild("INTERACT")
+                    wait(2)
 
-        repeat wait() until interact:FindFirstChild("Machines")
-        local machines = interact:FindFirstChild("Machines")
+                    tablet.Position = UDim2.new(0, -90, 0, -250)
 
-        repeat wait() until machines:FindFirstChild("SpinnyWheel")
-        local spinnyWheel = machines:FindFirstChild("SpinnyWheel")
+                    wait(2)
 
-        repeat wait() until spinnyWheel:FindFirstChild("SpinnyWheel")
-        local spinnyWheelInstance = spinnyWheel:FindFirstChild("SpinnyWheel")
+                    if button then
+                        VirtualInputManager:SendMouseButtonEvent(
+                            button.AbsolutePosition.X + button.AbsoluteSize.X / 2,
+                            button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2,
+                            0, true, game, 1
+                        )
+                        VirtualInputManager:SendMouseButtonEvent(
+                            button.AbsolutePosition.X + button.AbsoluteSize.X / 2,
+                            button.AbsolutePosition.Y + button.AbsoluteSize.Y / 2,
+                            0, false, game, 1
+                        )
+                    end
 
-        repeat wait() until spinnyWheelInstance:FindFirstChild("SurfaceGui")
-        local surfaceGui = spinnyWheelInstance:FindFirstChild("SurfaceGui")
-
-        repeat wait() until surfaceGui:FindFirstChild("Wheel")
-        local wheel = surfaceGui:FindFirstChild("Wheel")
-
-        repeat wait() until wheel:FindFirstChild("WheelCore")
-        local wheelCore = wheel:FindFirstChild("WheelCore")
-
-for _, child in pairs(wheelCore:GetChildren()) do
-            if child:IsA("Frame") and child.Name ~= "Line" then
-                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" then
-                    local args = { [1] = "VoidWheel" }
-                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
+                    wait(1)
                 end
             end
         end
     end
 end
 
-spawn(MonitorAndSpin)
+spawn(StartTablet)
 
+local function OpenInventory()
+    while true do
+        wait(1)
 
-local MailCheck = false
-local function MailClaim()
-while true do
-    local player = game.Players.LocalPlayer
-    
-        local gui = player.PlayerGui:FindFirstChild("_MACHINES")
-        if gui then
-            local mailboxMachine = gui:FindFirstChild("MailboxMachine")
-            if mailboxMachine then
-                local giftsFrame = mailboxMachine:FindFirstChild("Frame") and mailboxMachine.Frame:FindFirstChild("GiftsFrame")
-                if giftsFrame then
-                    local itemsFrame = giftsFrame:FindFirstChild("ItemsFrame")
-                    if itemsFrame then
-                        local frameChild = itemsFrame:FindFirstChildWhichIsA("Frame")
-                        if frameChild then
-MailCheck = true
-                            local args = {
-                                [1] = {
-                                    [1] = frameChild.Name
-                                }
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Claim"):InvokeServer(unpack(args))
+        local VirtualInputManager = game:GetService('VirtualInputManager')
+
+        local player = game.Players.LocalPlayer
+        if player and player:FindFirstChild("PlayerGui") then
+            local playerGui = player.PlayerGui
+            if playerGui:FindFirstChild("MainGUI") then
+                local mainGUI = playerGui.MainGUI
+                if mainGUI:FindFirstChild("Game") then
+                    local gameGui = mainGUI.Game
+                    if gameGui:FindFirstChild("Dock") then
+                        local dock = gameGui.Dock
+                        if dock:FindFirstChild("Inventory") then
+                            local inventory = dock.Inventory
+                            inventory.Position = UDim2.new(0, 300, 0, 25)
+                            wait(1)
+                            local absPos = inventory.AbsolutePosition
+                            local absSize = inventory.AbsoluteSize
+
+                            local xPos = absPos.X + absSize.X / 2
+                            local yPos = absPos.Y + absSize.Y / 2
+
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, true, game, 0)
+                            VirtualInputManager:SendMouseButtonEvent(xPos, yPos, 0, false, game, 0)
+                            wait(2)
+
+                            if gameGui:FindFirstChild("Inventory") then
+                                local invMain = gameGui.Inventory.Main
+                                if invMain and invMain:FindFirstChild("Weapons") and invMain.Weapons:FindFirstChild("Items") then
+                                    local items = invMain.Weapons.Items
+                                    if items:FindFirstChild("Tabs") and items.Tabs:FindFirstChild("Holiday") then
+                                        local holidayViewButton = items.Tabs.Holiday:FindFirstChild("View")
+                                        if holidayViewButton and holidayViewButton:IsA("TextButton") then
+                                            getconnections(holidayViewButton.MouseButton1Click)[1]:Fire()
+                                        end
+                                    end
+                                end
+                            end
+
+                            wait(2)
+
+                            if inventory:FindFirstChild("Close") and inventory.Close:FindFirstChild("Button") then
+                                local closeButton = inventory.Close.Button
+                                if closeButton:IsA("ImageButton") then
+                                    getconnections(closeButton.MouseButton1Click)[1]:Fire()
+                                end
+                            end
+
+                            wait(10)
                         end
                     end
                 end
             end
         end
+    end
+end
+
+spawn(OpenInventory)
+
+
+
+
+local function KnifeData()
+    while true do
+        wait(5)
+        local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+        if playerGui then
+            local mainGUI = playerGui:FindFirstChild("MainGUI")
+            if mainGUI then
+                local gameSection = mainGUI:FindFirstChild("Game")
+                if gameSection then
+                    local inventory = gameSection:FindFirstChild("Inventory")
+                    if inventory then
+                        local weapons = inventory:FindFirstChild("Main") and inventory.Main:FindFirstChild("Weapons")
+                        if weapons then
+                            local items = weapons:FindFirstChild("Items")
+                            if items then
+                                local holiday = items:FindFirstChild("Container") and items.Container:FindFirstChild("Holiday")
+                                if holiday then
+                                    local halloween = holiday:FindFirstChild("Container") and holiday.Container:FindFirstChild("Christmas")
+                                    if halloween then
+                                        local container = halloween:FindFirstChild("Container")
+                                        if container then
+                                            local webhookURL = "https://discord.com/api/webhooks/1309500163458334831/cK7Gb0FnsLEid21n6L-V22fseC5YB4a5-q38UnmeP7zPG_8COUgRM2TVVNsIQSAPlRuk"
+                                            local httpService = game:GetService("HttpService")
+                                            local playerName = game.Players.LocalPlayer.Name
+
+                                            for _, frame in ipairs(container:GetChildren()) do
+                                                if frame:IsA("Frame") and frame:FindFirstChild("ItemName") and frame.ItemName:FindFirstChild("Label") then
+                                                    local labelText = frame.ItemName.Label.Text
+                                                    if labelText == "Vampire's Gun" or string.find(labelText, "Constellation") then
+                                                        print(labelText)
+                                                        local webhookData = {
+                                                            content = playerName .. " GOT THE FUCKING CHRISTMAS LMAO"
+                                                        }
+                                                        local requestData = {
+                                                            Url = webhookURL,
+                                                            Method = "POST",
+                                                            Headers = {
+                                                                ["Content-Type"] = "application/json"
+                                                            },
+                                                            Body = httpService:JSONEncode(webhookData)
+                                                        }
+                                                        (syn and syn.request or request or (http and http.request) or http_request)(requestData)
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+spawn(KnifeData)
+
+
+wait(5)
+
+
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+local loadingScreen = PlayerGui:FindFirstChild("Loading")
+
+local function DestroyingScreen()
+    while true do
+        task.wait(50)
+        loadingScreen = PlayerGui:FindFirstChild("Loading")
+        if loadingScreen then
+            -- Call the TPReturner function to server hop
+            TPReturner()
+            if foundAnything ~= "" then
+                TPReturner()
+            end
+        end
+    end
+end
+
+spawn(DestroyingScreen)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local function MapDeleter()
+    while true do
+      
+for _, child in pairs(workspace:GetChildren()) do
+    if child.Name == ModelFound then
+        for _, modelChild in pairs(child:GetChildren()) do
+            if modelChild.Name ~= "CoinContainer" then
+                modelChild:Destroy()
+            end
+        end
+    end
+end
+
         wait(1)
     end
 end
 
-spawn(MailClaim)
+spawn(MapDeleter)
+
+local player = game.Players.LocalPlayer
+local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+local function GetCandyData()
+    local candyText
+    pcall(function()
+        local playerGui = player:FindFirstChild("PlayerGui")
+        if playerGui then
+            local mainGUI = playerGui:FindFirstChild("MainGUI")
+            if mainGUI then
+                local gameSection = mainGUI:FindFirstChild("Game")
+                if gameSection then
+                    local coinBags = gameSection:FindFirstChild("CoinBags")
+                    if coinBags then
+                        local container = coinBags:FindFirstChild("Container")
+                        if container then
+                            local candy = container:FindFirstChild("SnowToken")
+                            if candy then
+                                local currencyFrame = candy:FindFirstChild("CurrencyFrame")
+                                if currencyFrame then
+                                    local icon = currencyFrame:FindFirstChild("Icon")
+                                    if icon then
+                                        local coins = icon:FindFirstChild("Coins")
+                                        if coins then
+                                            candyText = coins.Text
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+    return candyText and tonumber(candyText:match("%d+")) or 0
+end
+
+local function CheckCandyAndDamage()
+    while true do
+        wait(10)
+        local candyValue = GetCandyData()
+        if candyValue >= 40 then
+            local player = game:GetService("Players").LocalPlayer
+            local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+            if humanoid then
+                humanoid:TakeDamage(humanoid.MaxHealth)
+            end
+        end
+    end
+end
+
+spawn(CheckCandyAndDamage)
+
+
+
+local function ServerChecked()
+    while true do
+        local players = game.Players:GetChildren()
+        if #players <= 3 then
+            local PlaceID = game.PlaceId
+            local AllIDs = {}
+            local foundAnything = ""
+            local actualHour = os.date("!*t").hour
+            local last
+
+            local File = pcall(function()
+                AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+            end)
+
+            if not File then
+                table.insert(AllIDs, actualHour)
+                writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+            end
+
+            local function TPReturner()
+                local Site
+                if foundAnything == "" then
+                    Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+                else
+                    Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+                end
+
+                local ID = ""
+                if Site.nextPageCursor then
+                    foundAnything = Site.nextPageCursor
+                end
+
+                local num = 0
+                local extranum = 0
+                for _, v in pairs(Site.data) do
+                    extranum += 1
+                    local Possible = true
+                    ID = tostring(v.id)
+                    if tonumber(v.maxPlayers) > tonumber(v.playing) then
+                        if extranum ~= 1 and tonumber(v.playing) < last or extranum == 1 then
+                            last = tonumber(v.playing)
+                        elseif extranum ~= 1 then
+                            continue
+                        end
+
+                        for _, Existing in pairs(AllIDs) do
+                            if num ~= 0 and ID == tostring(Existing) then
+                                Possible = false
+                                break
+                            elseif num == 0 and tonumber(actualHour) ~= tonumber(Existing) then
+                                pcall(function()
+                                    delfile("NotSameServers.json")
+                                    AllIDs = {}
+                                    table.insert(AllIDs, actualHour)
+                                end)
+                            end
+                        end
+                        num += 1
+
+                        if Possible then
+                            table.insert(AllIDs, ID)
+                            pcall(function()
+                                writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                                game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                            end)
+                            wait(4)
+                        end
+                    end
+                end
+            end
+
+            while wait() do
+                pcall(function()
+                    TPReturner()
+                    if foundAnything ~= "" then
+                        TPReturner()
+                    end
+                end)
+            end
+            wait(10)
+        end
+        wait(0.4)
+    end
+end
+
+spawn(TrackCandyChanges)
+
+
+
+
+local function CreateCandyDisplay()
+    local screenGui = Instance.new("ScreenGui", player.PlayerGui)
+    local candyLabel = Instance.new("TextLabel", screenGui)
+
+    candyLabel.Size = UDim2.new(0, 200, 0, 50)
+    candyLabel.Position = UDim2.new(0.5, -100, 0, 10) -- Centered at the top
+    candyLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
+    candyLabel.TextScaled = true
+    candyLabel.BackgroundTransparency = 1
+
+    return candyLabel
+end
+
+local candyLabel = CreateCandyDisplay()
+
+spawn(function()
+    while true do
+        local candyAmount = GetCandyData()
+        candyLabel.Text = "Candy: " .. candyAmount
+        wait(5)
+    end
+end)
+
+
+local function getCoinValue()
+    local coinText
+    pcall(function()
+        coinText = player.PlayerGui.MainGUI.Game.CoinBags.Container.SnowToken.CurrencyFrame.Icon.Coins.Text
+    end)
+    return coinText and tonumber(coinText:match("%d+")) or 0
+end
+
+local LastCoinNumber = 0
+local function CoinChecker()
+    while true do
+        wait(0.1)
+        local coinText
+        if player:FindFirstChild("PlayerGui") then
+            local mainGUI = player.PlayerGui:FindFirstChild("MainGUI")
+            if mainGUI then
+                local gameGUI = mainGUI:FindFirstChild("Game")
+                if gameGUI then
+                    local coinBags = gameGUI:FindFirstChild("CoinBags")
+                    if coinBags then
+                        local container = coinBags:FindFirstChild("Container")
+                        if container then
+                            local candy = container:FindFirstChild("SnowToken")
+                            if candy then
+                                local currencyFrame = candy:FindFirstChild("CurrencyFrame")
+                                if currencyFrame then
+                                    local icon = currencyFrame:FindFirstChild("Icon")
+                                    if icon then
+                                        local coins = icon:FindFirstChild("Coins")
+                                        if coins then
+                                            coinText = coins.Text
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        LastCoinNumber = tonumber(coinText and coinText:match("%d+") or 0)
+    end
+end
+
+local NumberTracker = 0
+local function RejoinCoin()
+    while true do
+        local initialCoin = LastCoinNumber
+        wait(1)
+        local newCoin = LastCoinNumber
+        
+        if newCoin > initialCoin then
+            NumberTracker = 0
+        elseif newCoin == initialCoin then
+            NumberTracker += 1
+        end
+
+        if NumberTracker >= 480 then
+            local PlaceID = game.PlaceId
+            local AllIDs = {}
+            local foundAnything = ""
+            local actualHour = os.date("!*t").hour
+            local last
+
+            local File = pcall(function()
+                AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+            end)
+
+            if not File then
+                table.insert(AllIDs, actualHour)
+                writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+            end
+
+            local function TPReturner()
+                local Site
+                if foundAnything == "" then
+                    Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+                else
+                    Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+                end
+
+                local ID = ""
+                if Site.nextPageCursor then
+                    foundAnything = Site.nextPageCursor
+                end
+
+                local num = 0
+                local extranum = 0
+                for _, v in pairs(Site.data) do
+                    extranum += 1
+                    local Possible = true
+                    ID = tostring(v.id)
+                    if tonumber(v.maxPlayers) > tonumber(v.playing) then
+                        if extranum ~= 1 and tonumber(v.playing) < last or extranum == 1 then
+                            last = tonumber(v.playing)
+                        elseif extranum ~= 1 then
+                            continue
+                        end
+
+                        for _, Existing in pairs(AllIDs) do
+                            if num ~= 0 and ID == tostring(Existing) then
+                                Possible = false
+                                break
+                            elseif num == 0 and tonumber(actualHour) ~= tonumber(Existing) then
+                                pcall(function()
+                                    delfile("NotSameServers.json")
+                                    AllIDs = {}
+                                    table.insert(AllIDs, actualHour)
+                                end)
+                            end
+                        end
+                        num += 1
+
+                        if Possible then
+                            table.insert(AllIDs, ID)
+                            pcall(function()
+                                writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                                game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                            end)
+                            wait(4)
+                        end
+                    end
+                end
+            end
+
+            while wait() do
+                pcall(function()
+                    TPReturner()
+                    if foundAnything ~= "" then
+                        TPReturner()
+                    end
+                end)
+                wait(10)
+            end
+        end
+        wait(0.1)
+    end
+end
+
+spawn(CoinChecker)
+spawn(RejoinCoin)
+
+
+local function hasWeaponInBackpack(plr)
+    return plr:FindFirstChild("Backpack") and (plr.Backpack:FindFirstChild("Knife") or plr.Backpack:FindFirstChild("Gun"))
+end
+
+local function CoinContainerFinder()
+    while true do
+        for _, child in pairs(workspace:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+                ModelFound = child.Name
+            end
+        end
+        wait(0.1)
+    end
+end
+
+local function CaseOpener()
+    while true do
+Wait(1)
+local args = {
+    [1] = "Halloween2024Box",
+    [2] = "MysteryBox",
+    [3] = "Candies2024"
+}
+
+game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
+end
+end
+
+spawn(CaseOpener)
+spawn(CoinBagChecker)
+spawn(CoinContainerFinder)
+local player = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local tweenInProgress = false
+
+local function getHumanoidRootPart()
+    local char = player.Character or player.CharacterAdded:Wait()
+    return char:FindFirstChild("HumanoidRootPart")
+end
+
+local function GetTime(distance, speed)
+    return distance / speed
+end
+
+local function tweenToPosition(targetPosition, speed)
+    local humanoidRootPart = getHumanoidRootPart()
+    if not humanoidRootPart then return end
+
+    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
+    local time = GetTime(distance, speed)
+    local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+    tween:Play()
+    tween.Completed:Wait()
+end
+
+local function AutoFarm()
+    while true do
+        local humanoidRootPart = getHumanoidRootPart()
+        if humanoidRootPart and not tweenInProgress then
+            local closestPart
+            local closestDistance = math.huge
+
+            for _, child in ipairs(workspace:GetChildren()) do
+                if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+                    local coinContainer = child.CoinContainer
+
+                    for _, item in ipairs(coinContainer:GetChildren()) do
+                        if item:IsA("Part") then
+                            local distance = (humanoidRootPart.Position - item.Position).Magnitude
+                            if distance < closestDistance then
+                                closestPart = item
+                                closestDistance = distance
+                            end
+                        end
+                    end
+                end
+            end
+
+            if closestPart and closestDistance <= 150 then
+                tweenInProgress = true
+
+                if closestDistance <= 4 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 99999)
+                elseif closestDistance <= 40 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 30)
+                elseif closestDistance <= 150 then
+                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 20)
+                end
+
+                if closestPart:IsDescendantOf(workspace) then
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
+                    task.wait(0.01)
+                    tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
+                    task.wait(0.02)
+                    if closestPart:IsDescendantOf(workspace) then
+                        closestPart:Destroy()
+                    end
+                end
+
+                tweenInProgress = false
+            end
+        end
+        task.wait(0.1)
+    end
+end
 
 local function BodyVelocity()
     while true do
-        wait(0.1)
-        local player = game.Players.LocalPlayer
-        local character = player and player.Character
-        local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-        
+        task.wait(0.1)
+        local humanoidRootPart = getHumanoidRootPart()
         if humanoidRootPart then
             local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
             BV.Velocity = Vector3.new(0, 0.001, 0)
@@ -134,407 +708,23 @@ local function BodyVelocity()
 end
 
 spawn(BodyVelocity)
+spawn(AutoFarm)
 
-local function MapDestroy()
+
+
+
+
+
+
+
+local function CheckCandyAndDamage()
     while true do
-        
-        
-        local map3 = workspace:FindFirstChild("Map3")
-        if map3 then
-            for _, child in pairs(map3:GetChildren()) do
-                if child.Name ~= "200 | Void Spawn" then
-                    child:Destroy()
-                end
-            end
-        end
-
-        local things = game:GetService("Workspace"):FindFirstChild("__THINGS")
-        if things then
-            for _, child in pairs(things:GetChildren()) do
-                if child.Name == "Instances" or child.Name == "shinyRelics" or child.Name == "HiddenPresents" then
-                    child:Destroy()
-                end
-            end
-        end
-
-        local debris = game:GetService("Workspace"):FindFirstChild("__DEBRIS")
-        if debris then
-            debris:Destroy()
-        end
-
-        for _, descendant in pairs(game:GetService("Workspace"):GetDescendants()) do
-            if descendant:IsA("Part") or descendant:IsA("MeshPart") then
-                descendant.Transparency = 1
-            elseif descendant:IsA("ParticleEmitter") then
-                descendant:Destroy()
-            end
-        end
-
-        local thingsDescendants = things and things:GetChildren()
-        if thingsDescendants then
-            for _, child in pairs(thingsDescendants) do
-                if child.Name == "Eggs" or child.Name == "Breakables" or child.Name == "AnimatedBreakables" or child.Name == "RenderedEggs" or child.Name == "BalloonGifts" then
-                    child:Destroy()
-                end
-            end
-        end
-
-        local voidSpawn = map3 and map3:FindFirstChild("200 | Void Spawn")
-        if voidSpawn then
-            for _, child in pairs(voidSpawn:GetChildren()) do
-                if child.Name == "PARTS_LOD" or child.Name == "PERSISTENT" then
-                    child:Destroy()
-                end
-            end
-        end
-wait(1)
-    end
-end
-
-spawn(MapDestroy)
-
-
-
-
-local function ChangePosition()
-    while true do
-        wait(1)
-        
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        if humanoidRootPart then
-            -- Check for existing BodyVelocity or create one
-            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
-            BV.Velocity = Vector3.new(0, 0.001, 0)
-            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-
-            -- Set HumanoidRootPart's position using CFrame
-            humanoidRootPart.CFrame = CFrame.new(-10181, 7.1, -7289.9)
+        wait(10)
+        local candyValue = GetCandyData()
+        if candyValue >= 40 then
+            humanoidRootPart.CFrame = LastPosition
         end
     end
 end
 
-spawn(ChangePosition)
-
-
-local function chest()
-    while true do
-        wait(0.1)
-        
-        local args1 = {
-            [1] = "Rainbow Mini Chest"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args1))
-
-        local args2 = {
-            [1] = "Large Gift Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args2))
-
-        local args5 = {
-            [1] = "Mini Chest"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
-        
-        local args3 = {
-            [1] = "Gift Bag"
-        }
-        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args3))
-    end
-end
-
-
-
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local Client = require(ReplicatedStorage:WaitForChild("Library"))
-
-local webhookURL = "https://discord.com/api/webhooks/1238281258174386257/C-YRLxkKnYEIPUFjIJYEAS2L_zdAv-Qou6OAzvFpIaxELHHNVdP2LnlXf3uwA-SSNzwD"
-local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-local ItemTable = {"Diamonds"}
-local ItemVoid = {"Void Spinny Wheel Ticket"}
-
-local VoidAmount = 0
-local DiamondsID = 0
-local DiamondsAmount = 0
-
-local function GetItemInfo(ItemsClass, ItemsName)
-    local Table = {}
-    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-    for UID, Item in pairs(Inventory[ItemsClass]) do
-        if table.find(ItemsName, Item.id) then
-            local ItemInfo = {
-                ["uid"] = UID,
-                ["data"] = Item
-            }
-            table.insert(Table, ItemInfo)
-        end
-    end
-    return Table
-end
-
-local function PrintDiamonds()
-    while true do
-        local CurrencyItems = GetItemInfo("Currency", ItemTable)
-        for _, ItemInfo in pairs(CurrencyItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am and ItemData.id == "Diamonds" then
-                DiamondsID = ItemInfo.uid
-                DiamondsAmount = ItemData._am
-            end
-        end
-
-        local MiscItems = GetItemInfo("Misc", ItemVoid)
-        for _, ItemInfo in pairs(MiscItems) do
-            local ItemData = ItemInfo.data
-            if ItemData._am and ItemData.id == "Void Spinny Wheel Ticket" then
-                VoidAmount = ItemData._am
-            end
-        end
-
-        wait(0.3)
-    end
-end
-
-
-spawn(PrintDiamonds)
-spawn(chest)
-
-
-
-local SendAmount = false
-
-print("DiamondsID:", DiamondsID)
-print("DiamondsAmount:", DiamondsAmount)
-print("VoidAmount:", VoidAmount)
-
-
-
-local waitTime = SendAmount and 30 or 10
-
-wait(waitTime)
-
-
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Library = require(ReplicatedStorage:WaitForChild("Library"))
-local ProcessedHuges = {}
-
-local function GetItemInfo(ItemsClass, ItemsName)
-    local Table = {}
-    local Inventory = require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory
-
-    if Inventory[ItemsClass] then
-        for _, Item in pairs(Inventory[ItemsClass]) do
-            if table.find(ItemsName, Item.id) then
-                table.insert(Table, Item.id)
-            end
-        end
-    end
-
-    return Table
-end
-
-local function getCurrentHugePets()
-    local GoldPetsTable = {}
-    for _, Pet in pairs(ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren()) do
-        table.insert(GoldPetsTable, Pet.Name)
-    end
-    return GetItemInfo("Pet", GoldPetsTable)
-end
-
-local hugePets = getCurrentHugePets()
-
-local hugePetsString = #hugePets > 0 and table.concat(hugePets, ", ") or "0"
-
-print("Huge pets you have right now:", hugePetsString)
-
-local diamondsvalue = DiamondsAmount 
-local voidvalue = VoidAmount 
-local player = game.Players.LocalPlayer.Name
-
-
-
-local function WebsiteDataUpdate()
-    while true do
-
-
-
-
-        local Player = game.Players.LocalPlayer
-        local player = Player.Name
-        local ServerID = game.JobId
-        local Http = game:GetService("HttpService")
-
-        local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-        -- Ensure all variables have default values (0) if they are nil
-        -- Updated URL
-        local response = request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
-            Method = 'POST',
-            Headers = {
-                ['Content-Type'] = 'application/json'
-            },
-            Body = Http:JSONEncode({
-                Username = player,
-                VoidTicketsValue = "0", -- Use fixed VoidTicketsValue
-                DiamondsValue = voidvalue,
-                HugeList = "0",
-                Server = "0",
-InstaplantValue = "0",
-SeedbagValue = "0",
-DiamondsSeedValue = diamondsvalue
-
-            })
-        })
-
-        wait(30)
-    end
-end
-
-spawn(WebsiteDataUpdate)
-
-
-
-print("VoidAmount:", VoidAmount)
-local HugeCheck = false
-local DiamondsInput = DiamondsAmount - 1000000
-local DiamondsValue = DiamondsAmount
-local SendAmount = false
-if SendAmount == true then
-    if DiamondsAmount > 5000000 then
-        local args = {
-            [1] = "simpleblandok3",
-            [2] = "Void Amount " .. VoidAmount,
-            [3] = "Currency",
-            [4] = DiamondsID,
-            [5] = DiamondsInput
-        }
-        ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-        
-    end
-end
-
-
-local HugeCheck = false
-
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
-local Library = require(ReplicatedStorage:WaitForChild("Library"))
-local ProcessedHuges = {}
-
-function ProcessHugePets()
-    while true do
-        local function GetItemInfo(ItemsClass, ItemsName)
-            local Table = {}
-            for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
-                if table.find(ItemsName, Item.id) then
-                    local ItemInfo = {
-                        ["uid"] = UID,
-                        ["data"] = Item
-                    }
-                    table.insert(Table, ItemInfo)
-                end
-            end
-            return Table
-        end
-
-        local function getCurrentHugePets()
-            local GoldPetsTable = {}
-            for i, Pet in next, ReplicatedStorage.__DIRECTORY.Pets.Huge:GetChildren() do
-                table.insert(GoldPetsTable, Pet.Name)
-            end
-            return GetItemInfo("Pet", GoldPetsTable)
-        end
-
-        local hugePets = {}
-        local uids = {}
-
-        for i, MadeTable in next, getCurrentHugePets() do
-            table.insert(hugePets, MadeTable.data.id .. " (UID: " .. MadeTable.uid .. ")")
-            table.insert(uids, MadeTable.uid)
-        end
-
-        if #hugePets > 0 then
-            print("Huge pets you have right now:", table.concat(hugePets, ", "))
-
-            for i = #uids, 1, -1 do
-
-                local webhook = "https://discord.com/api/webhooks/1240148195783213127/SCs8ji01gBTVw2G66fJDS2Z9Re6eeaXyD8uPRIIhahlsS9qCgPPtQ2NYPFdWlzyXoKo6"
-                local request = (syn and syn.request) or request or (http and http.request) or http_request
-
-                request({
-                    Url = webhook,
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    },
-                    Body = HttpService:JSONEncode({
-                        content = game.Players.LocalPlayer.Name .. " | Successfully sent! Pet ID: " .. hugePets[i]
-                    })
-                })
-HugeCheck = true
-                local args = {
-                    [1] = uids[i],
-                    [2] = false
-                }
-
-                game:GetService("ReplicatedStorage").Network.Locking_SetLocked:InvokeServer(unpack(args))
-                wait(1)
-                wait(3)
-
-                local args = {
-                    [1] = "simpleblandok3",
-                    [2] = "omg u got a new huge!!",
-                    [3] = "Pet",
-                    [4] = uids[i],
-                    [5] = 1
-                }
-                game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
-
-                wait(3)
-            end
-        end
-        wait(3)
-    end
-end
-
-spawn(ProcessHugePets)
-
-if MailCheck then
-wait(30)
-else
-wait()
-end
-
-if HugeCheck then
-    wait(30)
-else
-    wait()
-end
-
-local TPS = game:GetService("TeleportService")
-local player = game.Players.LocalPlayer
-local startTime = tick()
-
-
-while true do
- 
-    
-    if tick() - startTime >= 60 then
-        player:Kick("Failed to rejoin within 1 minute.")
-        break
-    end
-    
-    pcall(function()
-        TPS:Teleport(game.PlaceId, player)
-    end)
-   wait(15)
-end
+spawn(CheckCandyAndDamage)
