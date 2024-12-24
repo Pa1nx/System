@@ -417,7 +417,7 @@ end)
 local function getCoinValue()
     local coinText
     pcall(function()
-        coinText = player.PlayerGui.MainGUI.Game.CoinBags.Container.Candy.CurrencyFrame.Icon.Coins.Text
+        coinText = player.PlayerGui.MainGUI.Game.CoinBags.Container.SnowToken.CurrencyFrame.Icon.Coins.Text
     end)
     return coinText and tonumber(coinText:match("%d+")) or 0
 end
