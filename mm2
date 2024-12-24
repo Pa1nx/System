@@ -627,7 +627,7 @@ local function tweenToPart(part, speed)
             local upTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame + Vector3.new(0, 1, 0)})
             upTween:Play()
             upTween.Completed:Wait()
-
+wait(0.01)
             if not part:IsDescendantOf(workspace) then
                 tweenInProgress = false
                 connection:Disconnect()
@@ -637,7 +637,7 @@ local function tweenToPart(part, speed)
             local downTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame - Vector3.new(0, 1, 0)})
             downTween:Play()
             downTween.Completed:Wait()
-
+wait(0.01)
             if part:IsDescendantOf(workspace) then
                 part:Destroy()
             end
@@ -655,7 +655,7 @@ local function tweenToPart(part, speed)
             tweenInProgress = false
             return
         end
-        task.wait()
+        task.wait(0.1)
     end
 end
 
