@@ -588,9 +588,7 @@ end
 spawn(CaseOpener)
 spawn(CoinBagChecker)
 spawn(CoinContainerFinder)
-
 local LastPosition = ""
-
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
@@ -605,32 +603,27 @@ local function tweenToPart(part, speed)
     if tweenInProgress or not part or not part:IsDescendantOf(workspace) then return end
     local humanoidRootPart = getHumanoidRootPart()
     if not humanoidRootPart then return end
-    
-    tweenInProgress = true
 
-    local distance = (humanoidRootPart.Position - part.Position).Magnitude
-    local tweenInfo = TweenInfo.new(distance / speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+    tweenInProgress = true
+    local tweenInfo = TweenInfo.new((humanoidRootPart.Position - part.Position).Magnitude / speed, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = part.CFrame - Vector3.new(0, 14, 0)})
 
     tween.Completed:Connect(function()
         local newHumanoidRootPart = getHumanoidRootPart()
         if newHumanoidRootPart and part and part:IsDescendantOf(workspace) then
-            newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 14, 0)
-            wait(0.1)
+            newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
+            wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position + Vector3.new(0, 1, 0))
-            wait(0.1)
+            wait(0.05)
             newHumanoidRootPart.CFrame = CFrame.new(part.Position - Vector3.new(0, 1, 0))
-            wait(0.1)
-            newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 14, 0)
-
+            wait(0.05)
+            newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 12, 0)
             LastPosition = part.Position
-
             if part:IsDescendantOf(workspace) and part.Parent and part.Parent:FindFirstChild("CoinContainer") then
                 part:Destroy()
             end
-
             table.insert(processedPositions, part.Position)
-            wait(0.3)
+            wait(0.1)
         end
         tweenInProgress = false
     end)
@@ -657,17 +650,10 @@ local function AutoFarm()
                         return (humanoidRootPart.Position - a.Position).Magnitude < (humanoidRootPart.Position - b.Position).Magnitude
                     end)
 
-                    local selectedParts = {}
                     for i = 1, math.min(3, #parts) do
-                        table.insert(selectedParts, parts[i])
-                    end
-
-                    if #selectedParts > 0 then
-                        local randomPart = selectedParts[math.random(1, #selectedParts)]
+                        local randomPart = parts[i]
                         if randomPart and randomPart:IsDescendantOf(workspace) then
-                            local distanceToPart = (humanoidRootPart.Position - randomPart.Position).Magnitude
-                            local speed = distanceToPart <= 25 and 55 or 35
-                            tweenToPart(randomPart, speed)
+                            tweenToPart(randomPart, 35)
                             while tweenInProgress do
                                 wait()
                             end
@@ -676,7 +662,7 @@ local function AutoFarm()
                 end
             end
         end
-        wait(0.4)
+        wait(0.2)
     end
 end
 
@@ -696,11 +682,12 @@ spawn(BodyVelocity)
 spawn(AutoFarm)
 
 
+
 local function CheckCandyAndDamage()
     while true do
-        wait(20)
+        wait(10)
         local candyValue = GetCandyData()
-        if candyValue >= 40 then
+        if candyValue >= 39 then
             humanoidRootPart.CFrame = LastPosition
         end
     end
