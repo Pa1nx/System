@@ -9,6 +9,24 @@ wait(10)
 end
 end
 
+local function CloseLeader()
+while true do
+local player = game.Players.LocalPlayer
+
+if player:FindFirstChild("PlayerGui") then
+    if player.PlayerGui:FindFirstChild("MainGUI") then
+        if player.PlayerGui.MainGUI:FindFirstChild("Game") then
+            if player.PlayerGui.MainGUI.Game:FindFirstChild("Leaderboard") then
+                player.PlayerGui.MainGUI.Game.Leaderboard.Visible = false
+            end
+        end
+    end
+end
+wait()
+end
+end
+spawn(CloseLeader)
+
 
 
 local TweenService = game:GetService("TweenService")
