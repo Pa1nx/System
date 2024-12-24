@@ -711,7 +711,7 @@ local function AutoFarm()
                         table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
 
                         local selectedParts = {}
-                        for i = 1, math.min(4, #closestParts) do
+                        for i = 1, math.min(2, #closestParts) do
                             table.insert(selectedParts, closestParts[i].Part)
                         end
 
