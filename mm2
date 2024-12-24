@@ -662,9 +662,9 @@ local function AutoFarm()
 
                 if closestPart:IsDescendantOf(workspace) then
                     tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
-                    wait(0.015)
+                    task.wait(0.01)
                     tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
-                    wait(0.01)
+                    task.wait(0.02)
                     if closestPart:IsDescendantOf(workspace) then
                         closestPart:Destroy()
                     end
