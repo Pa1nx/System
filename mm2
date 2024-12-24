@@ -260,7 +260,7 @@ local function GetCandyData()
                     if coinBags then
                         local container = coinBags:FindFirstChild("Container")
                         if container then
-                            local candy = container:FindFirstChild("Candy")
+                            local candy = container:FindFirstChild("SnowToken")
                             if candy then
                                 local currencyFrame = candy:FindFirstChild("CurrencyFrame")
                                 if currencyFrame then
@@ -284,7 +284,7 @@ end
 
 local function CheckCandyAndDamage()
     while true do
-        wait(20)
+        wait(10)
         local candyValue = GetCandyData()
         if candyValue >= 40 then
             local player = game:GetService("Players").LocalPlayer
@@ -381,7 +381,7 @@ local function ServerChecked()
             end
             wait(10)
         end
-        wait(0.2)
+        wait(0.4)
     end
 end
 
@@ -436,7 +436,7 @@ local function CoinChecker()
                     if coinBags then
                         local container = coinBags:FindFirstChild("Container")
                         if container then
-                            local candy = container:FindFirstChild("Candy")
+                            local candy = container:FindFirstChild("SnowToken")
                             if candy then
                                 local currencyFrame = candy:FindFirstChild("CurrencyFrame")
                                 if currencyFrame then
@@ -679,7 +679,7 @@ local function AutoFarm()
                 end
             end
         end
-        wait(0.2)
+        wait(0.3)
     end
 end
 
@@ -705,7 +705,7 @@ local function CheckCandyAndDamage()
     while true do
         wait(10)
         local candyValue = GetCandyData()
-        if candyValue >= 39 then
+        if candyValue >= 40 then
             humanoidRootPart.CFrame = LastPosition
         end
     end
