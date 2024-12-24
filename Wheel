@@ -664,16 +664,29 @@ local function tweenToPosition(targetPosition, speed)
     local time = GetTime(distance, speed)
     local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+
     tween:Play()
-    tween.Completed:Wait()
+
+    local connection
+    connection = tween.Completed:Connect(function()
+        if tweenInProgress then
+            tweenInProgress = false
+        end
+        connection:Disconnect()
+    end)
+
+    while tweenInProgress and targetPosition:IsDescendantOf(workspace) do
+        task.wait(0.1)
+    end
+
+    tween:Cancel()
 end
 
 local function AutoFarm()
     while true do
         local humanoidRootPart = getHumanoidRootPart()
         if humanoidRootPart and not tweenInProgress then
-            local closestPart
-            local closestDistance = math.huge
+            local closestParts = {}
 
             for _, child in ipairs(workspace:GetChildren()) do
                 if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
@@ -682,37 +695,48 @@ local function AutoFarm()
                     for _, item in ipairs(coinContainer:GetChildren()) do
                         if item:IsA("Part") then
                             local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                            if distance < closestDistance then
-                                closestPart = item
-                                closestDistance = distance
+                            if distance <= 150 then
+                                table.insert(closestParts, {item = item, distance = distance})
                             end
                         end
                     end
                 end
             end
 
-            if closestPart and closestDistance <= 150 then
-                tweenInProgress = true
+            table.sort(closestParts, function(a, b) return a.distance < b.distance end)
+            local topFour = {}
+            for i = 1, math.min(4, #closestParts) do
+                table.insert(topFour, closestParts[i].item)
+            end
 
-                if closestDistance <= 4 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 99999)
-                elseif closestDistance <= 40 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 30)
-                elseif closestDistance <= 150 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 20)
-                end
+            if #topFour > 0 then
+                local selectedPart = topFour[math.random(1, #topFour)]
 
-                if closestPart:IsDescendantOf(workspace) then
-                    tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
-                    task.wait(0.01)
-                    tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
-                    task.wait(0.02)
-                    if closestPart:IsDescendantOf(workspace) then
-                        closestPart:Destroy()
+                if selectedPart and selectedPart:IsDescendantOf(workspace) then
+                    tweenInProgress = true
+
+                    local selectedDistance = (humanoidRootPart.Position - selectedPart.Position).Magnitude
+
+                    if selectedDistance <= 4 then
+                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 99999)
+                    elseif selectedDistance <= 40 then
+                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 30)
+                    elseif selectedDistance <= 150 then
+                        tweenToPosition(selectedPart.Position + Vector3.new(0, 1, 0), 20)
                     end
-                end
 
-                tweenInProgress = false
+                    if selectedPart:IsDescendantOf(workspace) then
+                        tweenToPosition(selectedPart.Position - Vector3.new(0, 1, 0), 20)
+                        task.wait(0.01)
+                        tweenToPosition(selectedPart.Position - Vector3.new(0, 12, 0), 99999)
+                        task.wait(0.02)
+                        if selectedPart:IsDescendantOf(workspace) then
+                            selectedPart:Destroy()
+                        end
+                    end
+
+                    tweenInProgress = false
+                end
             end
         end
         task.wait(0.1)
