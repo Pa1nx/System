@@ -588,7 +588,6 @@ end
 spawn(CaseOpener)
 spawn(CoinBagChecker)
 spawn(CoinContainerFinder)
-local LastPosition = ""
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
@@ -629,6 +628,12 @@ local function tweenToPart(part, speed)
             upTween:Play()
             upTween.Completed:Wait()
 
+            if not part:IsDescendantOf(workspace) then
+                tweenInProgress = false
+                connection:Disconnect()
+                return
+            end
+
             local downTween = TweenService:Create(newHumanoidRootPart, smallTweenInfo, {CFrame = part.CFrame - Vector3.new(0, 1, 0)})
             downTween:Play()
             downTween.Completed:Wait()
@@ -658,7 +663,8 @@ local function AutoFarm()
     while true do
         local humanoidRootPart = getHumanoidRootPart()
         if humanoidRootPart and not tweenInProgress then
-            local candidates = {}
+            local closestPart
+            local closestDistance = math.huge
 
             for _, child in ipairs(workspace:GetChildren()) do
                 if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
@@ -667,26 +673,17 @@ local function AutoFarm()
                     for _, item in ipairs(coinContainer:GetChildren()) do
                         if item:IsA("Part") then
                             local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                            table.insert(candidates, {Part = item, Distance = distance})
+                            if distance < closestDistance then
+                                closestPart = item
+                                closestDistance = distance
+                            end
                         end
                     end
                 end
             end
 
-            table.sort(candidates, function(a, b)
-                return a.Distance < b.Distance
-            end)
-
-            for i = 1, math.min(4, #candidates) do
-                local selected = candidates[i]
-                local speed = selected.Distance <= 50 and 30 or 20
-
-                if selected.Part and selected.Part:IsDescendantOf(workspace) then
-                    tweenToPart(selected.Part, speed)
-                    while tweenInProgress do
-                        task.wait()
-                    end
-                end
+            if closestPart then
+                tweenToPart(closestPart, 20)
             end
         end
         task.wait(0.5)
@@ -707,6 +704,7 @@ end
 
 spawn(BodyVelocity)
 spawn(AutoFarm)
+
 
 
 
