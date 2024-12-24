@@ -626,9 +626,9 @@ local function tweenToPart(part, speed)
         local newHumanoidRootPart = getHumanoidRootPart()
         if newHumanoidRootPart then
             newHumanoidRootPart.CFrame = part.CFrame + Vector3.new(0, 1, 0)
-            wait(0.05)
+            wait(0.09)
             newHumanoidRootPart.CFrame = part.CFrame - Vector3.new(0, 1, 0)
-            wait(0.05)
+            wait(0.09)
             LastPosition = part.Position
         end
         tweenInProgress = false
@@ -674,7 +674,7 @@ local function AutoFarm()
 
             for i = 1, math.min(3, #candidates) do
                 local selected = candidates[i]
-                local speed = selected.Distance <= 50 and 40 or 35
+                local speed = selected.Distance <= 45 and 35 or 25
 
                 if selected.Part and selected.Part:IsDescendantOf(workspace) then
                     tweenToPart(selected.Part, speed)
