@@ -274,7 +274,7 @@ spawn(DestroyingScreen)
 
 
 
-
+local ModelFound = "hi"
 
 
 
@@ -631,6 +631,17 @@ end
 
 spawn(CaseOpener)
 spawn(CoinBagChecker)
+local function CoinContainerFinder()
+    while true do
+        for _, child in pairs(workspace:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+                ModelFound = child.Name
+            end
+        end
+        wait(0.1)
+    end
+end
+spawn(CoinContainerFinder)
 local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local tweenInProgress = false
