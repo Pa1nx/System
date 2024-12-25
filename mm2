@@ -711,6 +711,7 @@ local function TeleportTo(position)
 end
 
 local function HandleCoinContainer()
+while true do
     local humanoidRootPart = getHumanoidRootPart()
     if humanoidRootPart then
         local container = workspace:FindFirstChild(ContainerName)
@@ -749,6 +750,7 @@ local function HandleCoinContainer()
                 end
             end
         end
+wait(2)
     end
 end
 
