@@ -631,6 +631,7 @@ end
 
 spawn(CaseOpener)
 spawn(CoinBagChecker)
+
 local function CoinContainerFinder()
     while true do
         for _, child in pairs(workspace:GetChildren()) do
@@ -642,9 +643,43 @@ local function CoinContainerFinder()
     end
 end
 spawn(CoinContainerFinder)
+
+
+local function GameChecker()
+    while true do
+        local player = game.Players.LocalPlayer
+        local playerGui = player:FindFirstChild("PlayerGui")
+
+        if playerGui then
+            local mainGui = playerGui:FindFirstChild("MainGUI")
+            if mainGui then
+                local gameGui = mainGui:FindFirstChild("Game")
+                if gameGui then
+                    local earnedXP = gameGui:FindFirstChild("EarnedXP")
+                    if earnedXP and earnedXP:IsA("GuiObject") and earnedXP.Visible then
+                        local character = player.Character or player.CharacterAdded:Wait()
+                        local humanoid = character:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            local backpack = player:FindFirstChild("Backpack")
+                            if backpack and backpack:FindFirstChild("Knife") then
+                                task.wait(30)
+                            end
+                            humanoid.Health = 0
+                        end
+                    end
+                end
+            end
+        end
+
+        task.wait()
+    end
+end
+
+spawn(GameChecker)
+
+
 local player = game.Players.LocalPlayer
-local TweenService = game:GetService("TweenService")
-local tweenInProgress = false
+local savedPosition = nil
 local ContainerName = "hi"
 
 local function getHumanoidRootPart()
@@ -652,133 +687,80 @@ local function getHumanoidRootPart()
     return char:FindFirstChild("HumanoidRootPart")
 end
 
-local function GetTime(distance, speed)
-    return distance / speed
-end
-
-local function tweenToPosition(targetPosition, speed)
-    local humanoidRootPart = getHumanoidRootPart()
-    if not humanoidRootPart then return end
-
-    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-    local time = GetTime(distance, speed)
-    local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
-
-    local connection
-    connection = player.CharacterAdded:Connect(function()
-        tween:Cancel()
-        tweenInProgress = false
-        connection:Disconnect()
-    end)
-
-    tween:Play()
-    tween.Completed:Wait()
-    if connection.Connected then
-        connection:Disconnect()
+local function FindContainer()
+    for _, child in ipairs(workspace:GetChildren()) do
+        if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+            ContainerName = child.Name
+            break
+        end
     end
 end
 
-local function FindContainer()
-    while true do
-        for _, child in ipairs(workspace:GetChildren()) do
-            if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
-                ContainerName = child.Name
+local function SavePosition()
+    local humanoidRootPart = getHumanoidRootPart()
+    if humanoidRootPart then
+        savedPosition = humanoidRootPart.Position
+    end
+end
+
+local function TeleportTo(position)
+    local humanoidRootPart = getHumanoidRootPart()
+    if humanoidRootPart then
+        humanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+local function HandleCoinContainer()
+    local humanoidRootPart = getHumanoidRootPart()
+    if humanoidRootPart then
+        local container = workspace:FindFirstChild(ContainerName)
+        if container and container:IsA("Model") then
+            local coinContainer = container:FindFirstChild("CoinContainer")
+            if coinContainer then
+                local farthestPart = nil
+                local maxDistance = 0
+
+                for _, item in ipairs(coinContainer:GetChildren()) do
+                    if item:IsA("Part") then
+                        local distance = (humanoidRootPart.Position - item.Position).Magnitude
+                        if distance > maxDistance then
+                            maxDistance = distance
+                            farthestPart = item
+                        end
+                    end
+                end
+
+                if farthestPart then
+                    SavePosition()
+                    TeleportTo(farthestPart.Position + Vector3.new(0, 1, 0))
+                    task.wait(0.2)
+                    TeleportTo(farthestPart.Position - Vector3.new(0, 1, 0))
+                    task.wait(0.05)
+
+                    if farthestPart:IsDescendantOf(coinContainer) then
+                        pcall(function()
+                            farthestPart:Destroy()
+                        end)
+                    end
+
+                    if savedPosition then
+                        TeleportTo(savedPosition)
+                    end
+                end
             end
         end
-        task.wait()
     end
 end
 
 local function AutoFarm()
     while true do
-        local humanoidRootPart = getHumanoidRootPart()
-        if humanoidRootPart and not tweenInProgress then
-            for _, model in ipairs(workspace:GetChildren()) do
-                if model:IsA("Model") and model.Name == ContainerName then
-                    local coinContainer = model:FindFirstChild("CoinContainer")
-                    if coinContainer then
-                        local closestParts = {}
-                        for _, item in ipairs(coinContainer:GetChildren()) do
-                            if item:IsA("Part") then
-                                local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                                if distance <= 150 then -- Only consider parts within a 150-stud radius
-                                    table.insert(closestParts, {Part = item, Distance = distance})
-                                end
-                            end
-                        end
-
-                        table.sort(closestParts, function(a, b) return a.Distance < b.Distance end)
-
-                        local selectedParts = {}
-                        for i = 1, math.min(2, #closestParts) do
-                            table.insert(selectedParts, closestParts[i].Part)
-                        end
-
-                        if #selectedParts > 0 then
-                            tweenInProgress = true
-                            local randomPart = selectedParts[math.random(1, #selectedParts)]
-
-                            if randomPart and randomPart:IsDescendantOf(workspace) then
-                                local targetPosition = randomPart.Position + Vector3.new(0, 1, 0)
-                                local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-
-                                if distance <= 150 then
-                                    if distance <= 4 then
-                                        tweenToPosition(targetPosition, 99999)
-                                    elseif distance <= 40 then
-                                        tweenToPosition(targetPosition, 30)
-                                    else
-                                        tweenToPosition(targetPosition, 25)
-                                    end
-
-                                    if not randomPart:IsDescendantOf(workspace) then
-                                        tweenInProgress = false
-                                        continue
-                                    end
-
-                                    tweenToPosition(randomPart.Position - Vector3.new(0, 1, 0), 20)
-                                    task.wait(0.01)
-                                    tweenToPosition(randomPart.Position - Vector3.new(0, 12, 0), 99999)
-                                    task.wait(0.02)
-
-                                    if randomPart:IsDescendantOf(workspace) then
-                                        pcall(function()
-                                            randomPart:Destroy()
-                                        end)
-                                    end
-                                end
-                            end
-
-                            tweenInProgress = false
-                        end
-                    end
-                end
-            end
-        end
-        task.wait(0.25)
+        FindContainer()
+        HandleCoinContainer()
+        task.wait(2)
     end
 end
 
-spawn(FindContainer)
 spawn(AutoFarm)
-
-
-
-
-local function BodyVelocity()
-    while true do
-        task.wait(0.1)
-        local humanoidRootPart = getHumanoidRootPart()
-        if humanoidRootPart then
-            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
-            BV.Velocity = Vector3.new(0, 0.001, 0)
-            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        end
-    end
-end
-
-spawn(BodyVelocity)
 
 
 
