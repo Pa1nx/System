@@ -625,7 +625,17 @@ local args = {
     [3] = "SnowTokens2024"
 }
 
-game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
+local success, result = pcall(function()
+    return game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
+end)
+
+if success then
+    print("Crate opened successfully:", result)
+else
+    warn("Error occurred while opening crate:", result)
+    
+end
+
 end
 end
 
