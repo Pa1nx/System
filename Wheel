@@ -618,7 +618,7 @@ end
 
 local function CaseOpener()
     while true do
-wait(1)
+wait(10)
 local args = {
     [1] = "Christmas2024Box",
     [2] = "MysteryBox",
