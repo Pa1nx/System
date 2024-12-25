@@ -653,7 +653,11 @@ local function CoinContainerFinder()
     end
 end
 spawn(CoinContainerFinder)
-
+local function getHumanoidRootPart()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    return character:FindFirstChild("HumanoidRootPart")
+end
 
 local function GameChecker()
     while true do
@@ -672,9 +676,26 @@ local function GameChecker()
                         if humanoid then
                             local backpack = player:FindFirstChild("Backpack")
                             if backpack and backpack:FindFirstChild("Knife") then
-                                task.wait(30)
+                                local humanoidRootPart = getHumanoidRootPart()
+                                if humanoidRootPart then
+                                    local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+                                    BV.Velocity = Vector3.new(0, 0.001, 0)
+                                    BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                                end
+
+                                local number = 180
+                                repeat
+                                    task.wait(1)
+                                    number = number - 1
+                                    if not backpack:FindFirstChild("Knife") then
+                                        break
+                                    end
+                                until number <= 0
+
+                                humanoid.Health = 0
+                            elseif not backpack:FindFirstChild("Knife") then
+                                humanoid.Health = 0
                             end
-                            humanoid.Health = 0
                         end
                     end
                 end
@@ -686,6 +707,7 @@ local function GameChecker()
 end
 
 spawn(GameChecker)
+
 
 
 local player = game.Players.LocalPlayer
