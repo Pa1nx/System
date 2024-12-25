@@ -92,6 +92,24 @@ wait(1)
 end
 
 spawn(StartTablet)
+local function clickin()
+while true do
+local VirtualInputManager = game:GetService('VirtualInputManager')
+
+local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
+local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
+
+local centerX = screenWidth / 2
+local centerY = screenHeight / 2
+
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 0)
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 0)
+
+wait(5)
+end
+end
+spawn(clickin)
+
 
 local function OpenInventory()
     while true do
@@ -111,6 +129,7 @@ local function OpenInventory()
                         if dock:FindFirstChild("Inventory") then
                             local inventory = dock.Inventory
                             inventory.Position = UDim2.new(0, 300, 0, 25)
+inventory.Size = UDim2.new(0, 1000, 5, 100)
                             wait(1)
                             local absPos = inventory.AbsolutePosition
                             local absSize = inventory.AbsoluteSize
@@ -154,6 +173,11 @@ local function OpenInventory()
 end
 
 spawn(OpenInventory)
+
+
+
+
+
 
 
 
@@ -250,7 +274,7 @@ spawn(DestroyingScreen)
 
 
 
-
+local ModelFound = "hi"
 
 
 
@@ -592,6 +616,55 @@ local function hasWeaponInBackpack(plr)
     return plr:FindFirstChild("Backpack") and (plr.Backpack:FindFirstChild("Knife") or plr.Backpack:FindFirstChild("Gun"))
 end
 
+local function CaseOpener()
+    while true do
+wait(10)
+local args = {
+    [1] = "Christmas2024Box",
+    [2] = "MysteryBox",
+    [3] = "SnowTokens2024"
+}
+
+game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
+end
+end
+
+spawn(CaseOpener)
+spawn(CoinBagChecker)
+local function GameChecker()
+    while true do
+        local player = game.Players.LocalPlayer
+        local playerGui = player:FindFirstChild("PlayerGui")
+
+        if playerGui then
+            local mainGui = playerGui:FindFirstChild("MainGUI")
+            if mainGui then
+                local gameGui = mainGui:FindFirstChild("Game")
+                if gameGui then
+                    local earnedXP = gameGui:FindFirstChild("EarnedXP")
+                    if earnedXP and earnedXP:IsA("GuiObject") and earnedXP.Visible then
+                        local character = player.Character or player.CharacterAdded:Wait()
+                        local humanoid = character:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            local backpack = player:FindFirstChild("Backpack")
+                            if backpack and backpack:FindFirstChild("Knife") then
+                                task.wait(30)
+                            end
+                            humanoid.Health = 0
+                        end
+                    end
+                end
+            end
+        end
+
+        task.wait()
+    end
+end
+
+spawn(GameChecker)
+
+
+
 local function CoinContainerFinder()
     while true do
         for _, child in pairs(workspace:GetChildren()) do
@@ -602,98 +675,92 @@ local function CoinContainerFinder()
         wait(0.1)
     end
 end
-
-local function CaseOpener()
-    while true do
-Wait(1)
-local args = {
-    [1] = "Halloween2024Box",
-    [2] = "MysteryBox",
-    [3] = "Candies2024"
-}
-
-game:GetService("ReplicatedStorage").Remotes.Shop.OpenCrate:InvokeServer(unpack(args))
-end
-end
-
-spawn(CaseOpener)
-spawn(CoinBagChecker)
 spawn(CoinContainerFinder)
+
+
 local player = game.Players.LocalPlayer
-local TweenService = game:GetService("TweenService")
-local tweenInProgress = false
+local savedPosition = nil
+local ContainerName = "hi"
 
 local function getHumanoidRootPart()
     local char = player.Character or player.CharacterAdded:Wait()
     return char:FindFirstChild("HumanoidRootPart")
 end
 
-local function GetTime(distance, speed)
-    return distance / speed
+local function FindContainer()
+    for _, child in ipairs(workspace:GetChildren()) do
+        if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
+            ContainerName = child.Name
+            break
+        end
+    end
 end
 
-local function tweenToPosition(targetPosition, speed)
+local function SavePosition()
     local humanoidRootPart = getHumanoidRootPart()
-    if not humanoidRootPart then return end
-
-    local distance = (humanoidRootPart.Position - targetPosition).Magnitude
-    local time = GetTime(distance, speed)
-    local tweenInfo = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
-    tween:Play()
-    tween.Completed:Wait()
+    if humanoidRootPart then
+        savedPosition = humanoidRootPart.Position
+    end
 end
 
-local function AutoFarm()
-    while true do
-        local humanoidRootPart = getHumanoidRootPart()
-        if humanoidRootPart and not tweenInProgress then
-            local closestPart
-            local closestDistance = math.huge
+local function TeleportTo(position)
+    local humanoidRootPart = getHumanoidRootPart()
+    if humanoidRootPart then
+        humanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
 
-            for _, child in ipairs(workspace:GetChildren()) do
-                if child:IsA("Model") and child:FindFirstChild("CoinContainer") then
-                    local coinContainer = child.CoinContainer
+local function HandleCoinContainer()
+    local humanoidRootPart = getHumanoidRootPart()
+    if humanoidRootPart then
+        local container = workspace:FindFirstChild(ContainerName)
+        if container and container:IsA("Model") then
+            local coinContainer = container:FindFirstChild("CoinContainer")
+            if coinContainer then
+                local farthestPart = nil
+                local maxDistance = 0
 
-                    for _, item in ipairs(coinContainer:GetChildren()) do
-                        if item:IsA("Part") then
-                            local distance = (humanoidRootPart.Position - item.Position).Magnitude
-                            if distance < closestDistance then
-                                closestPart = item
-                                closestDistance = distance
-                            end
+                for _, item in ipairs(coinContainer:GetChildren()) do
+                    if item:IsA("Part") then
+                        local distance = (humanoidRootPart.Position - item.Position).Magnitude
+                        if distance > maxDistance then
+                            maxDistance = distance
+                            farthestPart = item
                         end
                     end
                 end
-            end
 
-            if closestPart and closestDistance <= 150 then
-                tweenInProgress = true
+                if farthestPart then
+                    SavePosition()
+                    TeleportTo(farthestPart.Position + Vector3.new(0, 1, 0))
+                    task.wait(0.2)
+                    TeleportTo(farthestPart.Position - Vector3.new(0, 1, 0))
+                    task.wait(0.05)
 
-                if closestDistance <= 4 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 99999)
-                elseif closestDistance <= 40 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 30)
-                elseif closestDistance <= 150 then
-                    tweenToPosition(closestPart.Position + Vector3.new(0, 1, 0), 20)
-                end
+                    if farthestPart:IsDescendantOf(coinContainer) then
+                        pcall(function()
+                            farthestPart:Destroy()
+                        end)
+                    end
 
-                if closestPart:IsDescendantOf(workspace) then
-                    tweenToPosition(closestPart.Position - Vector3.new(0, 1, 0), 20)
-                    task.wait(0.01)
-                    tweenToPosition(closestPart.Position - Vector3.new(0, 12, 0), 99999)
-                    task.wait(0.02)
-                    if closestPart:IsDescendantOf(workspace) then
-                        closestPart:Destroy()
+                    if savedPosition then
+                        TeleportTo(savedPosition)
                     end
                 end
-
-                tweenInProgress = false
             end
         end
-        task.wait(0.1)
     end
 end
+
+spawn(FindContainer)
+spawn(HandleCoinContainer) 
+
+
+
+
+
+
+
 
 local function BodyVelocity()
     while true do
@@ -708,10 +775,6 @@ local function BodyVelocity()
 end
 
 spawn(BodyVelocity)
-spawn(AutoFarm)
-
-
-
 
 
 
