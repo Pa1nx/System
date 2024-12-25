@@ -702,7 +702,7 @@ local function GameChecker()
             end
         end
 
-        task.wait()
+        task.wait(10)
     end
 end
 
