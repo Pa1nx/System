@@ -639,7 +639,7 @@ end
 end
 end
 
-
+spawn(CaseOpener)
 spawn(CoinBagChecker)
 
 local function CoinContainerFinder()
