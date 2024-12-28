@@ -128,6 +128,13 @@ DiamondsSeedValue = "0"
 end
 
 spawn(WebsiteDataUpdate)  
+local function redeem()
+while true do
+game:GetService("ReplicatedStorage").API:FindFirstChild("WinterEventAPI/RedeemPendingGingerbread"):FireServer()
+wait(1)
+end
+end
+spawn(redeem)
 
 local function MapDestroy()
 while true do
