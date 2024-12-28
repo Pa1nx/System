@@ -1,0 +1,102 @@
+local TeleportService = game:GetService("TeleportService")
+local player = game.Players.LocalPlayer
+
+
+if game.PlaceId ~= 920587237 then
+while true do
+    TeleportService:Teleport(920587237, player)
+wait(10)
+end
+end
+
+local function getHumanoidRootPart()
+    local char = player.Character or player.CharacterAdded:Wait()
+    return char:FindFirstChild("HumanoidRootPart")
+end
+local function BodyVelocity()
+    while true do
+        task.wait(0.1)
+        local humanoidRootPart = getHumanoidRootPart()
+        if humanoidRootPart then
+            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
+            BV.Velocity = Vector3.new(0, 0.001, 0)
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+        end
+    end
+end
+
+wait(10)
+local function remotescript()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
+end
+spawn(remotescript)
+wait(2)
+local args = {
+    [1] = "Parents",
+    [2] = {
+        ["source_for_logging"] = "intro_sequence"
+    }
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("TeamAPI/ChooseTeam"):InvokeServer(unpack(args))
+wait(10)
+local args = {
+    [1] = game:GetService("Players").LocalPlayer,
+    [2] = true
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("HousingAPI/UnsubscribeFromHouse"):InvokeServer(unpack(args))
+wait(5)
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+character.HumanoidRootPart.CFrame = CFrame.new(-12009, 11529, -15935)
+character.Humanoid.WalkToPoint = Vector3.new(-12009, 11529, -15900)
+repeat wait(1) until (character.HumanoidRootPart.Position - Vector3.new(-254, 30, -1813)).Magnitude <= 100
+
+spawn(BodyVelocity)
+while true do
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local tweenService = game:GetService("TweenService")
+
+local function getClosest(targets)
+    local closest, shortestDistance = nil, math.huge
+    for _, target in ipairs(targets) do
+        local distance = (humanoidRootPart.Position - target.Position).Magnitude
+        if distance < shortestDistance then
+            closest = target
+            shortestDistance = distance
+        end
+    end
+    return closest
+end
+
+local function tweenToPosition(endPosition, speed)
+    local distance = (humanoidRootPart.Position - endPosition).Magnitude
+    local time = distance / speed
+    local tween = tweenService:Create(humanoidRootPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(endPosition)})
+    tween:Play()
+    tween.Completed:Wait()
+end
+
+local mainMap = game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
+
+if mainMap then
+    local targets = {}
+    for _, child in ipairs(mainMap:GetChildren()) do
+        if child:IsA("Model") and child:FindFirstChild("GingerbreadMan") then
+            table.insert(targets, child.GingerbreadMan)
+        end
+    end
+
+    while #targets > 0 do
+        local closest = getClosest(targets)
+        if closest then
+            tweenToPosition(closest.Position, 55)
+            table.remove(targets, table.find(targets, closest))
+        end
+    end
+end
+wait()
+end
