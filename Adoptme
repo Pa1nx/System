@@ -61,30 +61,35 @@ humanoidRootPart.CFrame = CFrame.new(-253, 30, -1788)
 
 spawn(BodyVelocity)
 local GingerAmount = 0
+
 local function GingerbreadAmount()
-while true do
-    local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-    if playerGui then
-        local altCurrency = playerGui:FindFirstChild("AltCurrencyIndicatorApp")
-        if altCurrency then
-            local currencyIndicator = altCurrency:FindFirstChild("CurrencyIndicator")
-            if currencyIndicator then
-                local container = currencyIndicator:FindFirstChild("Container")
-                if container then
-                    local amount = container:FindFirstChild("Amount")
-                    if amount and amount:IsA("TextLabel") then
-                         GingerAmount = amount.Text
-print(amount.Text)
+    while true do
+        local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+        if playerGui then
+            local altCurrency = playerGui:FindFirstChild("AltCurrencyIndicatorApp")
+            if altCurrency then
+                local currencyIndicator = altCurrency:FindFirstChild("CurrencyIndicator")
+                if currencyIndicator then
+                    local container = currencyIndicator:FindFirstChild("Container")
+                    if container then
+                        local amount = container:FindFirstChild("Amount")
+                        if amount and amount:IsA("TextLabel") then
+                            -- Remove commas from the string and store it as an integer
+                            local amountText = amount.Text
+                            amountText = amountText:gsub(",", "") -- Remove commas
+                            GingerAmount = tonumber(amountText) or 0 -- Convert to number, default to 0 if not a valid number
+                        
+                        end
                     end
                 end
             end
         end
+        wait(2)
     end
-wait()
-end
 end
 
 spawn(GingerbreadAmount)
+
 
 
 local function WebsiteDataUpdate()
@@ -124,51 +129,85 @@ end
 
 spawn(WebsiteDataUpdate)  
 
+local function MapDestroy()
+while true do
+for _, child in ipairs(game.Workspace:GetChildren()) do
+    if child:IsA("Model") then
+        
+    elseif child.Name == "Interiors" then
+        local mainMap = child:FindFirstChild("MainMap!WinterSnow")
+        if mainMap then
+            for _, mainMapChild in ipairs(mainMap:GetChildren()) do
+                if mainMapChild.Name == "Static" then
+                    for _, staticChild in ipairs(mainMapChild:GetChildren()) do
+                        if staticChild.Name ~= "Terrain" then
+                            staticChild:Destroy()
+                        end
+                    end
+                elseif mainMapChild.Name ~= "GingerbreadRig" and mainMapChild.Name ~= "GingerbreadPileMedium" then
+                    mainMapChild:Destroy()
+                end
+            end
+        end
+    end
+end
+
+wait()
+end
+end
+spawn(MapDestroy)
 
 while true do
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local tweenService = game:GetService("TweenService")
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local tweenService = game:GetService("TweenService")
 
-local function getClosest(targets)
-    local closest, shortestDistance = nil, math.huge
-    for _, target in ipairs(targets) do
-        local distance = (humanoidRootPart.Position - target.Position).Magnitude
-        if distance < shortestDistance then
-            closest = target
-            shortestDistance = distance
+    local function getClosest(targets)
+        local closest, shortestDistance = nil, math.huge
+        for _, target in ipairs(targets) do
+            local distance = (humanoidRootPart.Position - target.Position).Magnitude
+            if distance < shortestDistance then
+                closest = target
+                shortestDistance = distance
+            end
         end
-    end
-    return closest
-end
-
-local function tweenToPosition(endPosition, speed)
-    local distance = (humanoidRootPart.Position - endPosition).Magnitude
-    local time = distance / speed
-    local tween = tweenService:Create(humanoidRootPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(endPosition)})
-    tween:Play()
-    tween.Completed:Wait()
-end
-
-local mainMap = game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
-
-
-if mainMap then
-    local targets = {}
-    for _, child in ipairs(mainMap:GetChildren()) do
-        if child:IsA("Model") and child:FindFirstChild("GingerbreadMan") then
-            table.insert(targets, child.GingerbreadMan)
-        end
+        return closest
     end
 
-    while #targets > 0 do
-        local closest = getClosest(targets)
-        if closest then
-            tweenToPosition(closest.Position, 90)
-            table.remove(targets, table.find(targets, closest))
+    local function tweenToPosition(endPosition, speed)
+        local distance = (humanoidRootPart.Position - endPosition).Magnitude
+        local time = distance / speed
+        local tween = tweenService:Create(humanoidRootPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(endPosition)})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+
+    local mainMap = game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
+
+    if mainMap then
+        local targets = {}
+        for _, child in ipairs(mainMap:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("GingerbreadMan") then
+                table.insert(targets, child.GingerbreadMan)
+            end
+        end
+
+        while #targets > 0 do
+            local closest = getClosest(targets)
+            if closest then
+                local targetPosition = closest.Position
+                local distanceToTarget = (humanoidRootPart.Position - targetPosition).Magnitude
+                
+                if distanceToTarget > 80 then
+                    local randomPosition = targetPosition + Vector3.new(math.random(-5, 5), 0, math.random(-5, 5))
+                    humanoidRootPart.CFrame = CFrame.new(randomPosition)
+                end
+
+                tweenToPosition(targetPosition, 90)
+                table.remove(targets, table.find(targets, closest))
+            end
         end
     end
-end
-wait()
+    wait()
 end
