@@ -54,6 +54,31 @@ character.Humanoid.WalkToPoint = Vector3.new(-12009, 11529, -15900)
 repeat wait(1) until (character.HumanoidRootPart.Position - Vector3.new(-254, 30, -1813)).Magnitude <= 100
 
 spawn(BodyVelocity)
+local GingerAmount = 0
+local function GingerbreadAmount()
+    local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+    if playerGui then
+        local altCurrency = playerGui:FindFirstChild("AltCurrencyIndicatorApp")
+        if altCurrency then
+            local currencyIndicator = altCurrency:FindFirstChild("CurrencyIndicator")
+            if currencyIndicator then
+                local container = currencyIndicator:FindFirstChild("Container")
+                if container then
+                    local amount = container:FindFirstChild("Amount")
+                    if amount and amount:IsA("TextLabel") then
+                         GingerAmount = amount.Text
+print(GingerAmount)
+                    end
+                end
+            end
+        end
+    end
+end
+
+spawn(GingerbreadAmount)
+
+
+
 while true do
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
