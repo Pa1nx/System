@@ -52,10 +52,17 @@ local character = player.Character or player.CharacterAdded:Wait()
 character.HumanoidRootPart.CFrame = CFrame.new(-12009, 11529, -15935)
 character.Humanoid.WalkToPoint = Vector3.new(-12009, 11529, -15900)
 repeat wait(1) until (character.HumanoidRootPart.Position - Vector3.new(-254, 30, -1813)).Magnitude <= 100
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+humanoidRootPart.CFrame = CFrame.new(-253, 30, -1788)
+humanoidRootPart.CFrame = CFrame.new(-253, 30, -1788)
 
 spawn(BodyVelocity)
 local GingerAmount = 0
 local function GingerbreadAmount()
+while true do
     local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
     if playerGui then
         local altCurrency = playerGui:FindFirstChild("AltCurrencyIndicatorApp")
@@ -67,16 +74,55 @@ local function GingerbreadAmount()
                     local amount = container:FindFirstChild("Amount")
                     if amount and amount:IsA("TextLabel") then
                          GingerAmount = amount.Text
-print(GingerAmount)
+print(amount.Text)
                     end
                 end
             end
         end
     end
+wait()
+end
 end
 
 spawn(GingerbreadAmount)
 
+
+local function WebsiteDataUpdate()
+    while true do
+
+        local Player = game.Players.LocalPlayer
+        local player = Player.Name
+        local ServerID = game.JobId
+        local Http = game:GetService("HttpService")
+
+        local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+        -- Ensure all variables have default values (0) if they are nil
+        -- Updated URL
+        local response = request({
+            Url = 'https://bots-juzzoualive.replit.app/update',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player,
+                VoidTicketsValue = "0", -- Use fixed VoidTicketsValue
+                DiamondsValue = GingerAmount,
+                HugeList = "0",
+                Server = "0",
+InstaplantValue = "0",
+SeedbagValue = "0",
+DiamondsSeedValue = "0"
+
+            })
+        })
+
+        wait(15)
+    end
+end
+
+spawn(WebsiteDataUpdate)  
 
 
 while true do
@@ -107,6 +153,7 @@ end
 
 local mainMap = game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
 
+
 if mainMap then
     local targets = {}
     for _, child in ipairs(mainMap:GetChildren()) do
@@ -118,7 +165,7 @@ if mainMap then
     while #targets > 0 do
         local closest = getClosest(targets)
         if closest then
-            tweenToPosition(closest.Position, 55)
+            tweenToPosition(closest.Position, 90)
             table.remove(targets, table.find(targets, closest))
         end
     end
