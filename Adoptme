@@ -236,13 +236,13 @@ end
 local function Teleport()
     while true do
         wait(10)
-
+        
         if game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow") then
             if SwitchOne == true then
                 local player = game.Players.LocalPlayer
                 local character = player.Character or player.CharacterAdded:Wait()
                 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
+                
                 waitcooldown = true
                 repeat
                     -- Check and remove BodyVelocity before teleporting
@@ -251,14 +251,10 @@ local function Teleport()
                         BV:Destroy()
                     end
 
-                    -- Generate a random position within a radius of 5 on the same Z axis
-                    local randomOffset = Vector3.new(math.random(-5, 5), 0, 0)
-                    local newPosition = humanoidRootPart.Position + randomOffset
-                    humanoidRootPart.CFrame = CFrame.new(newPosition)
-
+                    humanoidRootPart.CFrame = CFrame.new(-323, 30, -1430)
                     wait(15)
                 until game.Workspace.Interiors:FindFirstChild("Winter2024Shop")
-
+                
                 SwitchOne = false
                 waitcooldown = false
             end
@@ -269,7 +265,7 @@ local function Teleport()
                 local player = game.Players.LocalPlayer
                 local character = player.Character or player.CharacterAdded:Wait()
                 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
+                
                 waitcooldown = true
                 repeat
                     -- Check and remove BodyVelocity before teleporting
@@ -278,14 +274,10 @@ local function Teleport()
                         BV:Destroy()
                     end
 
-                    -- Generate a random position within a radius of 5 on the same Z axis
-                    local randomOffset = Vector3.new(math.random(-5, 5), 0, 0)
-                    local newPosition = humanoidRootPart.Position + randomOffset
-                    humanoidRootPart.CFrame = CFrame.new(newPosition)
-
+                    humanoidRootPart.CFrame = CFrame.new(-100, 11157, -15971)
                     wait(15)
                 until game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
-
+                
                 SwitchOne = false
                 waitcooldown = false
             end
@@ -294,9 +286,4 @@ local function Teleport()
 end
 
 spawn(Teleport)
-
 spawn(FarmingGingerbread)
-
-
-
-
