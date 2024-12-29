@@ -13,17 +13,8 @@ local function getHumanoidRootPart()
     local char = player.Character or player.CharacterAdded:Wait()
     return char:FindFirstChild("HumanoidRootPart")
 end
-local function BodyVelocity()
-    while true do
-        task.wait(0.1)
-        local humanoidRootPart = getHumanoidRootPart()
-        if humanoidRootPart then
-            local BV = humanoidRootPart:FindFirstChild("BodyVelocity") or Instance.new("BodyVelocity", humanoidRootPart)
-            BV.Velocity = Vector3.new(0, 0.001, 0)
-            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        end
-    end
-end
+ 
+
 
 wait(10)
 local function remotescript()
@@ -59,7 +50,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 humanoidRootPart.CFrame = CFrame.new(-253, 30, -1788)
 humanoidRootPart.CFrame = CFrame.new(-253, 30, -1788)
 
-spawn(BodyVelocity)
+
 local GingerAmount = 0
 
 local function GingerbreadAmount()
@@ -136,85 +127,168 @@ end
 end
 spawn(redeem)
 
+local SwitchOne = false
+local waitcooldown = false
 local function MapDestroy()
-while true do
-for _, child in ipairs(game.Workspace:GetChildren()) do
-    if child:IsA("Model") then
-        
-    elseif child.Name == "Interiors" then
-        local mainMap = child:FindFirstChild("MainMap!WinterSnow")
-        if mainMap then
-            for _, mainMapChild in ipairs(mainMap:GetChildren()) do
-                if mainMapChild.Name == "Static" then
-                    for _, staticChild in ipairs(mainMapChild:GetChildren()) do
-                        if staticChild.Name ~= "Terrain" then
-                            staticChild:Destroy()
+    while true do
+        local interiors = game.Workspace:FindFirstChild("Interiors")
+
+        if interiors then
+            for _, child in ipairs(interiors:GetChildren()) do
+                for _, folderChild in ipairs(child:GetChildren()) do
+          
+
+                    if folderChild.Name == "Doors" then
+                        for _, doorChild in ipairs(folderChild:GetChildren()) do
+                            if doorChild.Name ~= "MainDoor" and doorChild.Name ~= "Winter2024Shop/MainDoor" then
+                                doorChild:Destroy()
+                            end
                         end
                     end
-                elseif mainMapChild.Name ~= "GingerbreadRig" and mainMapChild.Name ~= "GingerbreadPileMedium" then
-                    mainMapChild:Destroy()
                 end
             end
         end
+
+        wait(1)
     end
 end
 
-wait()
-end
-end
 spawn(MapDestroy)
 
-while true do
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-    local tweenService = game:GetService("TweenService")
+local function FarmingGingerbread()
+    while true do
+        SwitchOne = false
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        local tweenService = game:GetService("TweenService")
 
-    local function getClosest(targets)
-        local closest, shortestDistance = nil, math.huge
-        for _, target in ipairs(targets) do
-            local distance = (humanoidRootPart.Position - target.Position).Magnitude
-            if distance < shortestDistance then
-                closest = target
-                shortestDistance = distance
+        local function getClosest(targets)
+            local closest, shortestDistance = nil, math.huge
+            for _, target in ipairs(targets) do
+                local distance = (humanoidRootPart.Position - target.Position).Magnitude
+                if distance < shortestDistance then
+                    closest = target
+                    shortestDistance = distance
+                end
             end
-        end
-        return closest
-    end
-
-    local function tweenToPosition(endPosition, speed)
-        local distance = (humanoidRootPart.Position - endPosition).Magnitude
-        local time = distance / speed
-        local tween = tweenService:Create(humanoidRootPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(endPosition)})
-        tween:Play()
-        tween.Completed:Wait()
-    end
-
-    local mainMap = game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
-
-    if mainMap then
-        local targets = {}
-        for _, child in ipairs(mainMap:GetChildren()) do
-            if child:IsA("Model") and child:FindFirstChild("GingerbreadMan") then
-                table.insert(targets, child.GingerbreadMan)
-            end
+            return closest
         end
 
-        while #targets > 0 do
-            local closest = getClosest(targets)
-            if closest then
-                local targetPosition = closest.Position
-                local distanceToTarget = (humanoidRootPart.Position - targetPosition).Magnitude
-                
-                if distanceToTarget > 80 then
-                    local randomPosition = targetPosition + Vector3.new(math.random(-5, 5), 0, math.random(-5, 5))
-                    humanoidRootPart.CFrame = CFrame.new(randomPosition)
+        local function tweenToPosition(endPosition, speed)
+            if not waitcooldown then
+                if humanoidRootPart then
+                    local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+                    if BV then
+                        BV:Destroy() -- Destroy BV before starting the tween
+                    end
                 end
 
-                tweenToPosition(targetPosition, 90)
-                table.remove(targets, table.find(targets, closest))
+                local distance = (humanoidRootPart.Position - endPosition).Magnitude
+                local time = distance / speed
+                local tween = tweenService:Create(humanoidRootPart, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(endPosition)})
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end
+
+        local mainMap = game.Workspace.Interiors:FindFirstChildWhichIsA("Model")
+
+        if mainMap then
+            local targets = {}
+            for _, child in ipairs(mainMap:GetChildren()) do
+                if child:IsA("Model") and child:FindFirstChild("GingerbreadMan") then
+                    table.insert(targets, child.GingerbreadMan)
+                end
+            end
+
+            if #targets == 0 then
+                SwitchOne = true
+                task.wait(1)
+            end
+
+            while #targets > 0 do
+                local closest = getClosest(targets)
+                if closest then
+                    local targetPosition = closest.Position
+                    local distanceToTarget = (humanoidRootPart.Position - targetPosition).Magnitude
+
+                    local inWinter2024Shop = mainMap.Name == "Winter2024Shop"
+
+                    if distanceToTarget > 80 then
+                        if inWinter2024Shop then
+                            local randomPosition = targetPosition + Vector3.new(math.random(-15, 15), 0, math.random(-15, 15))
+                            humanoidRootPart.CFrame = CFrame.new(randomPosition)
+                        else
+                            local randomPosition = targetPosition + Vector3.new(math.random(-5, 5), 0, math.random(-5, 5))
+                            humanoidRootPart.CFrame = CFrame.new(randomPosition)
+                        end
+                    end
+
+                    tweenToPosition(targetPosition, 90)
+                    table.remove(targets, table.find(targets, closest))
+                end
+            end
+        end
+        wait()
+    end
+end
+
+local function Teleport()
+    while true do
+        wait(10)
+        
+        if game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow") then
+            if SwitchOne == true then
+                local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                
+                waitcooldown = true
+                repeat
+                    -- Check and remove BodyVelocity before teleporting
+                    local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+                    if BV then
+                        BV:Destroy()
+                    end
+
+                    humanoidRootPart.CFrame = CFrame.new(-323, 30, -1430)
+                    wait(15)
+                until game.Workspace.Interiors:FindFirstChild("Winter2024Shop")
+                
+                SwitchOne = false
+                waitcooldown = false
+            end
+        end
+
+        if game.Workspace.Interiors:FindFirstChild("Winter2024Shop") then
+            if SwitchOne == true then
+                local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                
+                waitcooldown = true
+                repeat
+                    -- Check and remove BodyVelocity before teleporting
+                    local BV = humanoidRootPart:FindFirstChild("BodyVelocity")
+                    if BV then
+                        BV:Destroy()
+                    end
+
+                    humanoidRootPart.CFrame = CFrame.new(-100, 11157, -15971)
+                    wait(15)
+                until game.Workspace.Interiors:FindFirstChild("MainMap!WinterSnow")
+                
+                SwitchOne = false
+                waitcooldown = false
             end
         end
     end
-    wait()
 end
+
+spawn(Teleport)
+spawn(FarmingGingerbread)
+
+
+
+
