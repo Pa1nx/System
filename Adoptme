@@ -128,7 +128,7 @@ local function WebsiteDataUpdate()
                 HugeList = "0",
                 Server = "0",
 InstaplantValue = "0",
-SeedbagValue = "0",
+SeedbagValue = ServerID,
 DiamondsSeedValue = "0"
 
             })
