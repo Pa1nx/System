@@ -224,7 +224,7 @@ end
 end
 spawn(buyfrost)
 
-local processedFrames = {}
+
 
 local function PetData()
     while true do
