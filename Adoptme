@@ -296,15 +296,22 @@ local function TradePets()
                 if tradeApp:FindFirstChild("Frame") then
                     local frame = tradeApp.Frame
                     if frame.Visible == true then
-                        while next(processedFrames) do
-                            local frameName = next(processedFrames)
-                            local args = {
-                                [1] = frameName
+
+
+while #processedFrames > 0 do
+
+local args = {
+                                [1] = processedFrames[1]
                             }
                             game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
-                            processedFrames[frameName] = nil
+                         
+    table.remove(processedFrames, 1) -- Remove the first name
+end
+                        
+                          
+                            
                            
-                        end
+                        
 wait(3)
 game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
 wait(10)
