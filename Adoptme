@@ -75,11 +75,13 @@ local VirtualInputManager = game:GetService('VirtualInputManager')
 local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
 local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
 
-local centerX = screenWidth / 2
-local centerY = screenHeight / 2
+local offsetX = screenWidth * 0.3  -- Moves the click 30% of the screen width to the right
+local rightX = screenWidth / 2 + offsetX  -- New X position, further to the right
+local centerY = screenHeight / 2  -- Y position remains the center of the screen
 
-VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 0)
-VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 0)
+VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
+VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
+
 
 wait(1)
 end
