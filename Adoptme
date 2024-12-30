@@ -153,7 +153,18 @@ end
 spawn(GingerbreadAmount)
 
 
-
+local processedFrames = {}
+local numberOfNames = 0
+local function convertnumber()
+while true do
+numberOfNames = 0
+for _ in pairs(processedFrames) do
+    numberOfNames = numberOfNames + 1
+end
+wait(5)
+end
+end
+spawn(convertnumber)
 local function WebsiteDataUpdate()
     while true do
 
@@ -174,12 +185,12 @@ local function WebsiteDataUpdate()
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = "0", -- Use fixed VoidTicketsValue
+                VoidTicketsValue = numberOfNames, -- Use fixed VoidTicketsValue
                 DiamondsValue = GingerAmount,
                 HugeList = "0",
-                Server = "0",
+                Server = ServerID,
 InstaplantValue = "0",
-SeedbagValue = ServerID,
+SeedbagValue = "",
 DiamondsSeedValue = "0"
 
             })
@@ -197,9 +208,23 @@ wait(1)
 end
 end
 spawn(redeem)
+local function buyfrost()
+while true do
+local args = {
+    [1] = "pets",
+    [2] = "winter_2024_frostclaw",
+    [3] = {
+        ["buy_count"] = 1
+    }
+}
+
+game:GetService("ReplicatedStorage").API:FindFirstChild("ShopAPI/BuyItem"):InvokeServer(unpack(args))
+wait(1)
+end
+end
+spawn(buyfrost)
 
 
-local processedFrames = {}
 local function PetData()
 while true do
     if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("BackpackApp") then
