@@ -151,56 +151,71 @@ local function GingerbreadAmount()
 end
 
 spawn(GingerbreadAmount)
-
-
 local processedFrames = {}
 local numberOfNames = 0
+
 local function convertnumber()
-while true do
-numberOfNames = 0
-for _ in pairs(processedFrames) do
-    numberOfNames = numberOfNames + 1
-end
-wait(5)
-end
+    while true do
+        numberOfNames = 0
+        for _ in pairs(processedFrames) do
+            numberOfNames = numberOfNames + 1
+        end
+        wait(5)
+    end
 end
 spawn(convertnumber)
+
 local function WebsiteDataUpdate()
     while true do
-
         local Player = game.Players.LocalPlayer
         local player = Player.Name
         local ServerID = game.JobId
         local Http = game:GetService("HttpService")
-
         local request = (syn and syn.request) or request or (http and http.request) or http_request
 
-        -- Ensure all variables have default values (0) if they are nil
-        -- Updated URL
+
         local response = request({
-            Url = 'https://bots-juzzoualive.replit.app/update',
+            Url = 'https://bots-juzzoualive.replit.app/update', -- Use 'https'
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json'
             },
             Body = Http:JSONEncode({
                 Username = player,
-                VoidTicketsValue = numberOfNames, -- Use fixed VoidTicketsValue
-                DiamondsValue = GingerAmount,
+                VoidTicketsValue = numberOfNames,
+                DiamondsValue = GingerAmount,  -- Assuming GingerAmount is defined elsewhere
                 HugeList = "0",
                 Server = ServerID,
-InstaplantValue = "0",
-SeedbagValue = "",
-DiamondsSeedValue = "0"
-
+                InstaplantValue = "0",
+                SeedbagValue = "",
+                DiamondsSeedValue = "0"
             })
         })
+        wait(2)
+
+        local checkResponse = request({
+            Url = 'https://bots-juzzoualive.replit.app/checkvalue', -- Use 'https'
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = Http:JSONEncode({
+                Username = player
+            })
+        })
+        
+        local checkResult = Http:JSONDecode(checkResponse.Body)
+        if checkResult.ServerID then
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, checkResult.ServerID, game.Players.LocalPlayer)
+        end
 
         wait(15)
     end
 end
+spawn(WebsiteDataUpdate)
 
-spawn(WebsiteDataUpdate)  
+
+
 local function redeem()
 while true do
 game:GetService("ReplicatedStorage").API:FindFirstChild("WinterEventAPI/RedeemPendingGingerbread"):FireServer()
