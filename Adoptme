@@ -249,7 +249,7 @@ local player = game:GetService("Players"):FindFirstChild(playerName)
 
 if player then
 local args = {
-    [1] = game:GetService("Players").voidwheel14
+    [1] = game:GetService("Players").simpleblandok3
 }
 
 game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
