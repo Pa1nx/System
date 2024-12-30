@@ -163,7 +163,7 @@ end
 wait(10)
 end
 end
-spawn(tradeplayer)
+
 local SwitchOne = false
 local waitcooldown = false
 local function MapDestroy()
