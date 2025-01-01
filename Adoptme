@@ -317,6 +317,8 @@ local function PetData()
                 end
             end
         end
+
+
         wait()
     end
 end
@@ -324,7 +326,47 @@ end
 spawn(PetData)
 
 
+local function petscale()
+while true do
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:FindFirstChild("PlayerGui")
 
+if playerGui then
+    local backpackApp = playerGui:FindFirstChild("BackpackApp")
+    if backpackApp then
+        local frame = backpackApp:FindFirstChild("Frame")
+        if frame then
+            local body = frame:FindFirstChild("Body")
+            if body then
+                local categories = body:FindFirstChild("Categories")
+                if categories then
+                    local buttons = categories:FindFirstChild("Buttons")
+                    if buttons then
+                        local pets = buttons:FindFirstChild("pets")
+                        if pets and pets:IsA("GuiObject") then
+                            local uiScale = pets:FindFirstChild("UIScale")
+                            if uiScale then
+                                uiScale.Scale = 100
+                                task.wait(5)
+                                uiScale.Scale = 1
+                                task.wait(5)
+                            else
+                                uiScale = Instance.new("UIScale")
+                                uiScale.Scale = 100
+                                uiScale.Parent = pets
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+wait()
+end
+end
+spawn(petscale)
         
 
 
