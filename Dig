@@ -1029,7 +1029,6 @@ spawn(teleportLoop)
 
 local function RemoteRun()
     while true do
- coroutine.wrap(function()
         if currentTarget and currentTarget:GetAttribute("Coord") then
             local coord = currentTarget:GetAttribute("Coord")
           
@@ -1045,13 +1044,51 @@ local function RemoteRun()
         else
             print("currentTarget is nil or doesn't have 'Coord' attribute")
         end
-wait()
-end)()
         wait()
     end
 end
 
 spawn(RemoteRun)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local activeBlocks = Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveBlocks
+local player = game.Players.LocalPlayer
+
+local function RemoteRunBelow()
+    while true do
+        coroutine.wrap(function()
+            local character = player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                local humanoidRootPart = character.HumanoidRootPart
+                local blockBelow = nil
+                local rayOrigin = humanoidRootPart.Position
+                local rayDirection = Vector3.new(0, -10, 0) -- Cast a ray directly below
+                local rayParams = RaycastParams.new()
+                rayParams.FilterDescendantsInstances = {character} -- Exclude the character from the raycast
+                rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+                local rayResult = Workspace:Raycast(rayOrigin, rayDirection, rayParams)
+
+                if rayResult and rayResult.Instance and rayResult.Instance:IsDescendantOf(activeBlocks) and rayResult.Instance:GetAttribute("Coord") then
+                    blockBelow = rayResult.Instance
+                end
+
+                if blockBelow then
+                    local coord = blockBelow:GetAttribute("Coord")
+                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedDigsite", "DigBlock", coord)
+                else
+                    print("No valid block found directly below")
+                end
+            else
+                print("Character or HumanoidRootPart not found")
+            end
+            wait()
+        end)()
+        wait()
+    end
+end
+
+spawn(RemoteRunBelow)
 
 
 local function StartPurpleTimers()
