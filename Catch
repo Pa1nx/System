@@ -305,21 +305,30 @@ local function GetCandyData()
     return candyText and tonumber(candyText:match("%d+")) or 0
 end
 
+local sessionCount = 0
 local function CheckCandyAndDamage()
+    local hasAdded = false
     while true do
-        wait(10)
+        wait(5)
         local candyValue = GetCandyData()
-        if candyValue >= 40 then
+        
+        if candyValue >= 40 and not hasAdded then
+            sessionCount += 1
+            hasAdded = true
+            
             local player = game:GetService("Players").LocalPlayer
             local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
             if humanoid then
                 humanoid:TakeDamage(humanoid.MaxHealth)
             end
+        elseif candyValue < 40 then
+            hasAdded = false
         end
     end
 end
 
 spawn(CheckCandyAndDamage)
+
 
 local function BodyVelocity()
     while true do
@@ -504,7 +513,7 @@ local function WebsiteDataUpdate()
             Body = Http:JSONEncode({
                 Username = player,
                 VoidTicketsValue = "0",
-                DiamondsValue = "0",
+                DiamondsValue = sessionCount,
                 HugeList = "0",
                 Server = "0",
 InstaplantValue = "0",
@@ -514,7 +523,7 @@ DiamondsSeedValue = "0"
             })
         })
 
-        wait(30)
+        wait(15)
     end
 end
 
