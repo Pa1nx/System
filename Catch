@@ -396,7 +396,7 @@ spawn(ContainerFinder)
 
 local function FindKnife()
     while true do
-        wait()
+        wait(1)
         for _, player in pairs(players:GetPlayers()) do
             local backpack = player:FindFirstChild("Backpack")
             if backpack then
