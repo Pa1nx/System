@@ -203,7 +203,7 @@ local function KnifeData()
                                     if halloween then
                                         local container = halloween:FindFirstChild("Container")
                                         if container then
-                                            local webhookURL = "https://discord.com/api/webhooks/1237152674735067380/fbzIUhQViqQ0e5YUBzq9FO5bOd_dR7xhJ-4kBxQ2yF-nQnMj6_fJYtDy2ul70xkRhQLJ"
+                                            local webhookURL = ""
                                             local httpService = game:GetService("HttpService")
                                             local playerName = game.Players.LocalPlayer.Name
 
