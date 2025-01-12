@@ -469,7 +469,7 @@ local function TeleportScript()
                             for _, part in pairs(child:GetChildren()) do
                                 if part:IsA("Part") then
                                     local coinVisual = part:FindFirstChild("CoinVisual")
-                                    if coinVisual and coinVisual:IsA("BasePart") and coinVisual.Transparency == 1 then
+                                    if coinVisual and coinVisual:IsA("BasePart") and coinVisual.Transparency == 0 then
                                         local distance = (humanoidRootPart.Position - part.Position).Magnitude
                                         if distance < shortestDistance and distance <= 100 then
                                             closestPart = part
