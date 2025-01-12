@@ -513,8 +513,7 @@ spawn(TeleportScript)
 
 local function KnifeWeb()
 while true do
-    wait(5)
-
+    wait()
     local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
     if playerGui then
         local mainGUI = playerGui:FindFirstChild("MainGUI")
