@@ -449,8 +449,6 @@ local function FindKnife()
 end
 
 spawn(FindKnife)
-
-
 local function TeleportScript()
     while true do
         wait()
@@ -465,11 +463,13 @@ local function TeleportScript()
                 if model:IsA("Model") and model.Name == ContainerPath then
                     for _, child in pairs(model:GetChildren()) do
                         if child.Name == "CoinContainer" then
-                            closestPart = nil
-                            shortestDistance = math.huge
+                            local closestPart = nil
+                            local shortestDistance = math.huge
+                            
                             for _, part in pairs(child:GetChildren()) do
                                 if part:IsA("Part") then
-                                    if PlayerKnife or part.Name ~= "DoNotTeleport" then
+                                    local coinVisual = part:FindFirstChild("CoinVisual")
+                                    if coinVisual and coinVisual:IsA("BasePart") and coinVisual.Transparency == 1 then
                                         local distance = (humanoidRootPart.Position - part.Position).Magnitude
                                         if distance < shortestDistance and distance <= 100 then
                                             closestPart = part
@@ -478,6 +478,7 @@ local function TeleportScript()
                                     end
                                 end
                             end
+
                             if closestPart then
                                 local speed = 25
                                 if shortestDistance <= 25 then
@@ -485,7 +486,9 @@ local function TeleportScript()
                                 elseif shortestDistance <= 100 then
                                     speed = 24
                                 end
+                                
                                 local time = shortestDistance / speed
+                                
                                 local tween = tweenService:Create(
                                     humanoidRootPart,
                                     TweenInfo.new(time, Enum.EasingStyle.Linear),
@@ -493,6 +496,7 @@ local function TeleportScript()
                                 )
                                 tween:Play()
                                 tween.Completed:Wait()
+                                
                                 if closestPart then
                                     closestPart:Destroy()
                                 end
@@ -506,6 +510,7 @@ local function TeleportScript()
 end
 
 spawn(TeleportScript)
+
 
 local function WebsiteDataUpdate()
     while true do
