@@ -406,7 +406,6 @@ local function FindKnife()
                     if character and character:FindFirstChild("HumanoidRootPart") then
                         KnifePosition = character.HumanoidRootPart.Position
 
-                        -- Remove numbers from localplayer.Name and knife player's name
                         local function removeNumbersFromName(name)
                             return name:gsub("%d+", "")
                         end
@@ -510,7 +509,55 @@ local function TeleportScript()
 end
 
 spawn(TeleportScript)
+ local collected = {}
 
+local function KnifeWeb()
+while true do
+    wait(5)
+collected = {}
+    local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+    if playerGui then
+        local mainGUI = playerGui:FindFirstChild("MainGUI")
+        if mainGUI then
+            local gameSection = mainGUI:FindFirstChild("Game")
+            if gameSection then
+                local inventory = gameSection:FindFirstChild("Inventory")
+                if inventory then
+                    local weapons = inventory:FindFirstChild("Main") and inventory.Main:FindFirstChild("Weapons")
+                    if weapons then
+                        local items = weapons:FindFirstChild("Items")
+                        if items then
+                            local holiday = items:FindFirstChild("Container") and items.Container:FindFirstChild("Holiday")
+                            if holiday then
+                                local halloween = holiday:FindFirstChild("Container") and holiday.Container:FindFirstChild("Christmas")
+                                if halloween then
+                                    local container = halloween:FindFirstChild("Container")
+                                    if container then
+                                       
+                                        for _, frame in ipairs(container:GetChildren()) do
+                                            if frame:IsA("Frame") and frame:FindFirstChild("ItemName") and frame.ItemName:FindFirstChild("Label") and frame:FindFirstChild("Container") and frame.Container:FindFirstChild("Amount") then
+                                                local labelText = frame.ItemName.Label.Text
+                                                local amountText = frame.Container.Amount.Text
+                                                local combined = labelText .. " " .. amountText
+                                                if not table.find(collected, combined) then
+                                                    table.insert(collected, combined)
+                                                end
+                                            end
+                                        end
+                                    
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+end
+
+spawn(KnifeWeb)
 
 local function WebsiteDataUpdate()
     while true do
@@ -538,7 +585,7 @@ local function WebsiteDataUpdate()
                 VoidTicketsValue = "0",
                 DiamondsValue = sessionCount,
                 HugeList = "0",
-                Server = "0",
+                Server = table.concat(collected, ", "),
 InstaplantValue = "0",
 SeedbagValue = "0",
 DiamondsSeedValue = "0"
@@ -551,6 +598,8 @@ DiamondsSeedValue = "0"
 end
 
 spawn(WebsiteDataUpdate)
+
+
 
 local function CaseOpener()
     while true do
