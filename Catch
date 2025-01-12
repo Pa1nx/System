@@ -405,15 +405,30 @@ local function FindKnife()
                     local character = workspace:FindFirstChild(player.Name)
                     if character and character:FindFirstChild("HumanoidRootPart") then
                         KnifePosition = character.HumanoidRootPart.Position
+
+                        -- Remove numbers from localplayer.Name and knife player's name
+                        local function removeNumbersFromName(name)
+                            return name:gsub("%d+", "")
+                        end
+
+                        local localPlayerName = removeNumbersFromName(player.Name)
+                        local knifePlayerName = removeNumbersFromName(players.LocalPlayer.Name)
+
                         for _, model in pairs(workspace:GetChildren()) do
                             if model:IsA("Model") and model.Name == ContainerPath then
                                 for _, part in pairs(model.CoinContainer:GetChildren()) do
                                     if part:IsA("Part") then
-                                        local distance = (KnifePosition - part.Position).Magnitude
-                                        if distance <= 30 then
-                                            part.Name = "DoNotTeleport"
-                                        else
+                                        if localPlayerName == knifePlayerName then
+                                       
                                             part.Name = "Teleport"
+                                        else
+                                            -- Different player: Check distance and set names accordingly
+                                            local distance = (KnifePosition - part.Position).Magnitude
+                                            if distance <= 30 then
+                                                part.Name = "DoNotTeleport"
+                                            else
+                                                part.Name = "Teleport"
+                                            end
                                         end
                                     end
                                 end
@@ -421,6 +436,8 @@ local function FindKnife()
                         end
                     end
                 end
+
+                -- Update PlayerKnife state for localplayer
                 if player == players.LocalPlayer then
                     PlayerKnife = knife ~= nil
                 else
@@ -432,6 +449,7 @@ local function FindKnife()
 end
 
 spawn(FindKnife)
+
 
 local function TeleportScript()
     while true do
