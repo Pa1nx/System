@@ -615,9 +615,7 @@ end)
 
 if success then
     print("Crate opened successfully:", result)
-else
-    warn("Error occurred while opening crate:", result)
-    
+ 
 end
 
 end
