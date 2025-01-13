@@ -319,7 +319,7 @@ local function CheckCandyAndDamage()
             local TeleportService = game:GetService("TeleportService")
     local player = game.Players.LocalPlayer
     TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, player)
-end
+
 
         elseif candyValue < 40 then
             hasAdded = false
