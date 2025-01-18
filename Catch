@@ -25,7 +25,6 @@ ab.Text="Roblox tried to kick u but i kicked him instead"wait(2)ab.Text="Status 
 
 
 
-
 local function clickin()
     while true do
         local VirtualInputManager = game:GetService('VirtualInputManager')
@@ -33,31 +32,31 @@ local function clickin()
         local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
         local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
 
-        local offsetX = screenWidth * 0.3  -- Moves the click 30% of the screen width to the right
-        local rightX = screenWidth / 2 + offsetX  -- New X position, further to the right
-        local centerY = screenHeight / 2  -- Y position remains the center of the screen
+        local offsetX = screenWidth * 0.3
+        local rightX = screenWidth / 2 + offsetX
+        local centerY = screenHeight / 2
 
         VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
 
         wait(0.3)
 
-        local leftX = rightX - screenWidth * 0.1  -- Adjust for the left position
+        local leftX = rightX - screenWidth * 0.1
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, false, game, 0)
 
         wait(0.3)
 
-        -- Third click even further to the left
-        local thirdLeftX = rightX - screenWidth * 0.25  -- Further left than the second click
+        local thirdLeftX = rightX - screenWidth * 0.5
         VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, false, game, 0)
 
-        wait(0.1)
+        wait(0.3)
     end
 end
 
 spawn(clickin)
+
 
 local PetData = {}
 local coins = 0
