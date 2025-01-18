@@ -40,6 +40,32 @@ local function clickin()
         VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
 
         wait(0.3)
+  local VirtualInputManager = game:GetService('VirtualInputManager')
+
+        local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
+        local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
+
+        local offsetX = screenWidth * 0.3
+        local rightX = screenWidth / 2 + offsetX
+        local centerY = screenHeight / 2
+
+        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
+        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
+
+        wait(0.3)
+  local VirtualInputManager = game:GetService('VirtualInputManager')
+
+        local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
+        local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
+
+        local offsetX = screenWidth * 0.3
+        local rightX = screenWidth / 2 + offsetX
+        local centerY = screenHeight / 2
+
+        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
+        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
+
+        wait(0.3)
 
         local leftX = rightX - screenWidth * 0.1
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, true, game, 0)
