@@ -47,7 +47,7 @@ local function clickin()
 
         wait(0.3)
 
-        local thirdLeftX = rightX - screenWidth * 0.5
+        local thirdLeftX = rightX - screenWidth * 0.3
         VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, false, game, 0)
 
