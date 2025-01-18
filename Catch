@@ -501,42 +501,7 @@ end
 
 spawn(FinishedScale)
 
-local function Counter()
 
-while true do
-    local playerGui = game.Players.LocalPlayer.PlayerGui
-    if playerGui:FindFirstChild("GameUI") then
-        local gameUI = playerGui.GameUI
-        if gameUI:FindFirstChild("Top") then
-            local top = gameUI.Top
-            if top:FindFirstChild("Main") then
-                local main = top.Main
-                if main:FindFirstChild("StageInfo") then
-                    local stageInfo = main.StageInfo
-                    if stageInfo:FindFirstChild("Frame") then
-                        local frame = stageInfo.Frame
-                        if frame:FindFirstChild("CurrentWave") then
-                            local waveText = frame.CurrentWave.Text
-                            repeat
-                                wait()
-                            until waveText == "Wave 15"
-
-                            Count = Count + 1
-
-                            repeat
-                                wait()
-                            until waveText == "Wave 1"
-                        end
-                    end
-                end
-            end
-        end
-    end
-    wait()
-end
-end
-
-spawn(Counter)
 
 
 local function Skip()
@@ -548,6 +513,47 @@ wait()
 end
 end
 spawn(Skip)
+
+
+local function Counter()
+    while true do
+        local playerGui = game.Players.LocalPlayer.PlayerGui
+        if playerGui:FindFirstChild("GameUI") then
+            local gameUI = playerGui.GameUI
+            if gameUI:FindFirstChild("Top") then
+                local top = gameUI.Top
+                if top:FindFirstChild("Main") then
+                    local main = top.Main
+                    if main:FindFirstChild("StageInfo") then
+                        local stageInfo = main.StageInfo
+                        if stageInfo:FindFirstChild("Frame") then
+                            local frame = stageInfo.Frame
+                            if frame:FindFirstChild("CurrentWave") then
+                                local waveText = frame.CurrentWave.Text
+                                repeat
+                                    wait()
+                                    waveText = frame.CurrentWave.Text
+                                until waveText:find("15")
+
+                                Count = Count + 1
+                                print(Count)
+
+                                repeat
+                                    wait()
+                                    waveText = frame.CurrentWave.Text
+                                until not waveText:find("15")
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        wait()
+    end
+end
+
+spawn(Counter)
+
 
 local function BodyVelocity()
     while true do
