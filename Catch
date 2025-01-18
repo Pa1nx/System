@@ -521,7 +521,7 @@ local function FinishedScale()
                         local actions = content.Actions
                         if actions:FindFirstChild("Replay") then
                             local replay = actions.Replay
-                            replay.Size = UDim2.new(100, -100, -100, -100)
+                            replay.Size = UDim2.new(5, 100, -100, -100)
                         end
                     end
                 end
