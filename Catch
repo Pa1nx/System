@@ -43,9 +43,15 @@ local function clickin()
         wait(0.3)
 
         local leftX = rightX - screenWidth * 0.1  -- Adjust for the left position
-
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, false, game, 0)
+
+        wait(0.3)
+
+        -- Third click even further to the left
+        local thirdLeftX = rightX - screenWidth * 0.25  -- Further left than the second click
+        VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, true, game, 0)
+        VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, false, game, 0)
 
         wait(0.1)
     end
