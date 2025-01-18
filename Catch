@@ -32,52 +32,21 @@ local function clickin()
         local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
         local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
 
-        local offsetX = screenWidth * 0.3
-        local rightX = screenWidth / 2 + offsetX
-        local centerY = screenHeight / 2
-
-        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
-        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
-
-        wait(0.3)
-  local VirtualInputManager = game:GetService('VirtualInputManager')
-
-        local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
-        local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
-
-        local offsetX = screenWidth * 0.3
-        local rightX = screenWidth / 2 + offsetX
-        local centerY = screenHeight / 2
-
-        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
-        VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
-
-        wait(0.3)
-  local VirtualInputManager = game:GetService('VirtualInputManager')
-
-        local screenWidth = game.Workspace.CurrentCamera.ViewportSize.X
-        local screenHeight = game.Workspace.CurrentCamera.ViewportSize.Y
-
-        local offsetX = screenWidth * 0.3
-        local rightX = screenWidth / 2 + offsetX
-        local centerY = screenHeight / 2
+        local offsetX = screenWidth * 0.3  -- Moves the click 30% of the screen width to the right
+        local rightX = screenWidth / 2 + offsetX  -- New X position, further to the right
+        local centerY = screenHeight / 2  -- Y position remains the center of the screen
 
         VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(rightX, centerY, 0, false, game, 0)
 
         wait(0.3)
 
-        local leftX = rightX - screenWidth * 0.1
+        local leftX = rightX - screenWidth * 0.2  -- Adjust for the left position
+
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, true, game, 0)
         VirtualInputManager:SendMouseButtonEvent(leftX, centerY, 0, false, game, 0)
 
-        wait(0.3)
-
-        local thirdLeftX = rightX - screenWidth * 0.3
-        VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, true, game, 0)
-        VirtualInputManager:SendMouseButtonEvent(thirdLeftX, centerY, 0, false, game, 0)
-
-        wait(0.3)
+        wait(0.1)
     end
 end
 
