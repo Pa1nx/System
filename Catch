@@ -100,7 +100,7 @@ local function WebsiteDataUpdate()
         local checkResult = Http:JSONDecode(checkResponse.Body)
         if checkResult.ServerID then
             if game.PlaceId ~= 123662243100680 then
-                game:GetService("TeleportService"):TeleportToPlaceInstance(123662243100680, checkResult.ServerID)
+            game.Players.LocalPlayer:Kick("Rejoin")
             end
         end
 
@@ -127,7 +127,6 @@ end
 spawn(opentower)
 
 
-
 local function HandleBin()
     while true do
         local playerGui = game.Players.LocalPlayer.PlayerGui
@@ -149,7 +148,6 @@ local function HandleBin()
                                 "MermainMan", 
                                 "CyborgPlankton"
                             }
-                            local allRemoteArgs = {}
                             for _, child in ipairs(bin:GetChildren()) do
                                 if child.Name == "UIGridLayout" then
                                     child.CellPadding = UDim2.new(0, 100, 0, 1)
@@ -170,22 +168,16 @@ local function HandleBin()
                                                         [1] = child.Name
                                                     }
                                                 }
-                                                table.insert(allRemoteArgs, args)
+                                                game:GetService("ReplicatedStorage")
+                                                    .Packages._Index:FindFirstChild("sleitnick_knit@1.7.0")
+                                                    .knit.Services.UnitService.RF.SellUnits:InvokeServer(unpack(args))
                                             end
                                         end
                                     end
                                 end
                             end
-                            
-                            -- Run the remote with all valid args
-                            for _, args in ipairs(allRemoteArgs) do
-                                game:GetService("ReplicatedStorage")
-                                    .Packages._Index:FindFirstChild("sleitnick_knit@1.7.0")
-                                    .knit.Services.UnitService.RF.SellUnits:InvokeServer(unpack(args))
-                            end
 
-                            -- Collect pet names into PetData
-                            for _, child in ipairs(bin:GetChildren()) do
+for _, child in ipairs(bin:GetChildren()) do
                                 if child:IsA("TextButton") then
                                     local splitName = string.split(child.Name, "_")
                                     local petName = splitName[1] or "Unknown"
@@ -199,6 +191,7 @@ local function HandleBin()
                 end
             end
         end
+
         
         wait()
     end
@@ -224,8 +217,7 @@ local function GUIStuff()
                 end
             end
         end
-        print(gems)
-        print(coins)
+        
         wait()
     end
 end
