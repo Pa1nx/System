@@ -502,27 +502,38 @@ end
 spawn(FinishedScale)
 
 local function Counter()
-    while true do
-        local playerGui = game.Players.LocalPlayer.PlayerGui
-        if playerGui:FindFirstChild("RoundSummary") then
-            local roundSummary = playerGui.RoundSummary
-            if roundSummary:FindFirstChild("Main") then
-                local main = roundSummary.Main
-                if main:FindFirstChild("Content") then
-                    local content = main.Content
-                    if content:FindFirstChild("Actions") then
-                        local actions = content.Actions
-                        if actions:FindFirstChild("Replay") then
-                            repeat wait() until actions.Visible == true
+
+while true do
+    local playerGui = game.Players.LocalPlayer.PlayerGui
+    if playerGui:FindFirstChild("GameUI") then
+        local gameUI = playerGui.GameUI
+        if gameUI:FindFirstChild("Top") then
+            local top = gameUI.Top
+            if top:FindFirstChild("Main") then
+                local main = top.Main
+                if main:FindFirstChild("StageInfo") then
+                    local stageInfo = main.StageInfo
+                    if stageInfo:FindFirstChild("Frame") then
+                        local frame = stageInfo.Frame
+                        if frame:FindFirstChild("CurrentWave") then
+                            local waveText = frame.CurrentWave.Text
+                            repeat
+                                wait()
+                            until waveText == "Wave 15"
+
                             Count = Count + 1
-                            repeat wait() until actions.Visible == false
+
+                            repeat
+                                wait()
+                            until waveText == "Wave 1"
                         end
                     end
                 end
             end
         end
-        task.wait()
     end
+    wait()
+end
 end
 
 spawn(Counter)
