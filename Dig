@@ -934,7 +934,7 @@ local function teleportToCurrentTarget()
 end
 
 local function teleportToRoyalPurple()
-    if BucketAmount > 3 then
+    if BucketAmount > 10 then
         for _, child in ipairs(activeBlocks:GetChildren()) do
             if child:IsA("Part") and child.BrickColor == BrickColor.new("Royal purple") then
                 chestActive = false
