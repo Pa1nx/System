@@ -358,13 +358,13 @@ script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
    
     end
 
-    script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
+    script_key = "ZgRWuaXzbiJityHZvlFlizyRNnhczYBP"
         getgenv().Settings = {
             Sniper = {
                 Active = true,
                 Items = {
                     SearchTerminal = {
-                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 25000},
+                        ["Insta Plant Capsule"] = {Class = "Misc", Price = 29999},
                         ["Seed Bag"] = {Class = "Misc", Price = 6000}
 
                     },
@@ -378,7 +378,7 @@ script_key = "JcZhRqHWDIKfGLnRXmHSrHDPvgZSTuMa"
                     ["Save # Servers"] = 10,
                 },
                 Webhook = {
-                    ["URL"] = "https://discord.com/api/webhooks/1308313532512866334/luhedrkH2BQTQjQt7h__Jxnooylls7N96YtH7H_fTerCMB2jU0PRToQpPjXV7XEk8xrZ",
+                    ["URL"] = "https://discord.com/api/webhooks/1233196606401019975/qIxgbxZsF4dwVkMkDNB_Ei-p7zWhGwQ4DoPlgraHwJOkhUedOaDH6PYLDeXtNElNOF4x",
                     ["Send Embeds"] = true,
                     ["Remove Username"] = true,
                     ["Ping on Huges 'n Titanics"] = true,
