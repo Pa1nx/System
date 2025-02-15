@@ -10,7 +10,96 @@ if game.PlaceId ~= 17503543197 then
         wait(5)
     end
 end
-local waittime = 1
+spawn(function()
+    wait()
+
+    local thingsToDestroy = {
+        "Flags",
+        "Cannons",
+        "HiddenPresents",
+        "Eggs",
+        "AnimatedBreakables",
+        "Chests",
+        "RenderedEggs",
+        "Ornaments",
+        "CustomEggs",
+        "Breakables",
+        "ShinyRelics"
+    }
+
+    local parentThing = workspace:FindFirstChild("__THINGS")
+    if parentThing then
+        for _, thingName in ipairs(thingsToDestroy) do
+            local thing = parentThing:FindFirstChild(thingName)
+            if thing then
+                thing:Destroy()
+            end
+        end
+    end
+
+    local objectsToDestroy = {
+        "DELETE ME",
+        "FlyBorder",
+        "FlyBorder3"
+    }
+
+    for _, objectName in ipairs(objectsToDestroy) do
+        local object = workspace:FindFirstChild(objectName)
+        if object then
+            object:Destroy()
+        end
+    end
+
+    local map3 = workspace:FindFirstChild("Map3")
+    if map3 then
+        for _, child in ipairs(map3:GetChildren()) do
+            if child.Name == "SHOP" then
+                local interact = child:FindFirstChild("INTERACT")
+                if interact then
+                    for _, interactChild in ipairs(interact:GetChildren()) do
+                        if interactChild.Name ~= "Portal" then
+                            interactChild:Destroy()
+                        end
+                    end
+                end
+            end
+
+            if child.Name ~= "200 | Void Spawn" and child.Name ~= "SHOP" then
+                child:Destroy()
+            elseif child.Name == "200 | Void Spawn" then
+                local partsLod = child:FindFirstChild("PARTS_LOD")
+                if partsLod then
+                    partsLod:Destroy()
+                end
+
+                local interact = child:FindFirstChild("INTERACT")
+                if interact then
+                    local breakableSpawns = interact:FindFirstChild("BREAKABLE_SPAWNS")
+                    if breakableSpawns then
+                        breakableSpawns:Destroy()
+                    end
+
+                    local breakZones = interact:FindFirstChild("BREAK_ZONES")
+                    if breakZones then
+                        breakZones:Destroy()
+                    end
+
+                    local machines = interact:FindFirstChild("Machines")
+                    if machines then
+                        for _, machineChild in ipairs(machines:GetChildren()) do
+                            if machineChild.Name ~= "SpinnyWheel" then
+                                machineChild:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+
+local waittime = 0
 local function MailClaim()
 while true do
     local player = game.Players.LocalPlayer
