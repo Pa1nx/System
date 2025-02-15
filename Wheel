@@ -289,3 +289,8 @@ end
 
 wait(waittime)
 rejoinServer()
+wait(5)
+while true do
+TeleportService:TeleportToPlaceInstance(placeId, jobId, player)
+wait(20)
+end
