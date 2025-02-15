@@ -295,7 +295,7 @@ end
 spawn(needto)
 
 repeat wait() until found == true
-local random = math.random(20, 30)
+local random = math.random(20, 40)
 wait(random)
 
 rejoinServer()
