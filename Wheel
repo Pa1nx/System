@@ -42,7 +42,7 @@ waittime = 40
 end
 
 spawn(MailClaim)
-
+local found = false
 local function MonitorAndSpin()
     while true do
 
@@ -76,6 +76,7 @@ local function MonitorAndSpin()
 
 for _, child in pairs(wheelCore:GetChildren()) do
             if child:IsA("Frame") and child.Name ~= "Line" then
+found = true
                 if child:FindFirstChild("PrizeRender") and child.PrizeRender.Icon.Image == "rbxassetid://15058306840" then
                     local args = { [1] = "VoidWheel" }
                     game:GetService("ReplicatedStorage").Network:FindFirstChild("Spinny Wheel: Request Spin"):InvokeServer(unpack(args))
@@ -285,12 +286,15 @@ local function rejoinServer()
     end
 end
 
-
-
-wait(waittime)
-rejoinServer()
-wait(5)
+local function needto()
 while true do
-TeleportService:TeleportToPlaceInstance(placeId, jobId, player)
 wait(20)
+TeleportService:TeleportToPlaceInstance(placeId, jobId, player)
 end
+end
+spawn(needto)
+
+repeat wait() until found == true
+rejoinServer()
+
+
