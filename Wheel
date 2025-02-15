@@ -295,7 +295,7 @@ end
 spawn(needto)
 
 repeat wait() until found == true
-wait(2)
+wait(5)
 rejoinServer()
 
 
